@@ -1,0 +1,94 @@
+/* საკონტაქტო გვერდის სტილები */
+
+/* რუკის კონტეინერი */
+.map-container {
+    overflow: hidden;
+}
+
+/* ფერების ამორჩევა */
+:root {
+    --primary-color: #00a4bd;
+    --primary-light: rgba(0, 164, 189, 0.1);
+    --primary-medium: rgba(0, 164, 189, 0.25);
+    --primary-shadow: rgba(0, 164, 189, 0.5);
+}
+
+/* სათაურის სტილები */
+.contact-title {
+    color: var(--primary-color);
+}
+
+.contact-subtitle {
+    color: var(--primary-color);
+}
+
+.contact-divider {
+    height: 4px;
+    width: 80px;
+    background-color: var(--primary-color);
+}
+
+/* აიქონების სტილები */
+.icon-circle {
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-light);
+}
+
+.small-icon-circle {
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-light);
+}
+
+.contact-icon {
+    color: var(--primary-color);
+}
+
+.small-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--primary-color);
+}
+
+/* კონტაქტის ბმულების სტილი */
+.contact-link {
+    color: var(--primary-color);
+}
+
+/* აიქონების ჰოვერ ეფექტი */
+.icon-wrapper {
+    transition: all 0.3s ease;
+}
+
+.contact-card:hover .icon-wrapper {
+    transform: translateY(-5px);
+}
+
+/* კონტაქტის ბარათების სტილები */
+.contact-card {
+    transition: all 0.3s ease;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.contact-card:hover {
+    background-color: var(--primary-light);
+    transform: translateY(-5px);
+}
+
+/* სოციალური აიქონების ეფექტები */
+.social-icon {
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+.social-icon:hover {
+    transform: translateY(-3px);
+}
+
+/* ფორმის ელემენტების სტილები (შემდგომი გამოყენებისთვის) */
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem var(--primary-medium);
+}

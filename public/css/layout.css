@@ -1,0 +1,631 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: rgb(248, 244, 244);
+    font-family: 'BPG Mrgvlovani', sans-serif;
+    max-width: 100%;
+    padding-top: 173px;
+    transition: padding-top 0.3s ease;
+}
+
+@font-face {
+    font-family: 'BPG Mrgvlovani';
+    src: url('/fonts/bpg_mrgvlovani_caps_2010.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* ჰედერის სტილი 248, 244, 244*/
+.header {
+    background-color: #ffffff;
+    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    width: 100%;
+    transition: transform 0.3s ease;
+}
+/* ჰედერის დამალვა (გადატანილება ზემოთ) */
+.header.hidden {
+    transform: translateY(-100%);
+}
+
+/* ბრენდის ნაწილი */
+.brand-section {
+    padding: 12px 0;
+    background-color: #1a365d;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 28px;
+    color: white !important;
+    letter-spacing: 0.8px;
+    transition: all 0.3s ease;
+    margin-right: 0;
+    padding: 5px 0;
+}
+
+.navbar-brand:hover {
+    color: #00a4bd !important;
+    transform: scale(1.02);
+}
+
+/* ნავიგაციის ნაწილი */
+.nav-section {
+    padding: 0;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.navbar-nav {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.navbar-nav .nav-item {
+    position: relative;
+}
+
+.navbar-nav .nav-link {
+    font-size: 16px;
+    color: #495057 !important;
+    font-weight: 500;
+    padding: 15px 20px !important;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #1a365d !important;
+    background-color: rgba(26, 54, 93, 0.05);
+}
+
+.navbar-nav .nav-link.active {
+    color: #1a365d !important;
+    font-weight: 600;
+    position: relative;
+}
+
+.navbar-nav .nav-link.active:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #1a365d;
+}
+
+/* ძიების სექცია */
+.search-section {
+    background-color: #f8f9fa;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.search-form {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.form-control {
+    width: 100%;
+    height: 50px;
+    border-radius: 8px;
+    border: 1px solid #e8e8e8;
+    padding: 14px 55px 14px 45px;
+    font-size: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: all 0.25s ease;
+    background-color: white;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    color: #333;
+    font-weight: 400;
+}
+
+.form-control:focus {
+    border-color: #d0d0d0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    outline: none;
+    background-color: #fefefe;
+}
+
+.form-control::placeholder {
+    color: #999;
+    font-weight: 400;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 16px;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.search-button {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #1a365d;
+    border: none;
+    color: white;
+    width: 38px;
+    height: 38px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    z-index: 5;
+}
+
+.search-button:hover {
+    background-color: #0d2240;
+    transform: translateY(-50%) scale(1.02);
+}
+
+/* გაუმჯობესებული ავტოკომპლიტის სტილები */
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px solid #e8e8e8;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-height: 320px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    margin-top: 1px;
+}
+
+.search-suggestions.show {
+    display: block;
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.suggestion-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f5f5f5;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    min-height: 60px;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+    border-radius: 0 0 8px 8px;
+}
+
+.suggestion-item:hover,
+.suggestion-item.focused {
+    background-color: #f8f9fa;
+}
+
+.suggestion-content-with-image {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.suggestion-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.suggestion-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.suggestion-details {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.suggestion-name {
+    font-weight: 500;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.suggestion-category {
+    font-size: 12px;
+    color: #777;
+    font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.suggestion-price {
+    font-size: 13px;
+    color: #2d8f47;
+    font-weight: 600;
+    margin: 0;
+}
+
+.suggestion-name .highlight {
+    background-color: #fff3cd;
+    color: #856404;
+    font-weight: 600;
+    padding: 1px 3px;
+    border-radius: 3px;
+}
+
+/* Scrollbar სტილები */
+.search-suggestions::-webkit-scrollbar {
+    width: 6px;
+}
+
+.search-suggestions::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 3px;
+}
+
+.search-suggestions::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 3px;
+}
+
+.search-suggestions::-webkit-scrollbar-thumb:hover {
+    background: #bbb;
+}
+
+/* Loading state */
+.suggestion-loading {
+    padding: 20px;
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.suggestion-loading::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #e8e8e8;
+    border-radius: 50%;
+    border-top-color: #777;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* No results state */
+.suggestion-no-results {
+    padding: 20px 16px;
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+    font-style: italic;
+    background-color: #fafafa;
+}
+
+/* ავტოკომპლიტის დივაიდერი */
+.suggestion-divider {
+    height: 1px;
+    background-color: #f0f0f0;
+    margin: 8px 16px;
+}
+
+/* კატეგორიის ჰედერი */
+.suggestion-category-header {
+    padding: 8px 16px;
+    background-color: #f8f9fa;
+    font-size: 11px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* კონტენტის ნაწილი */
+.content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.content-container {
+    width: 100%;
+    max-width: 95%;
+    margin: 0 auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* მობილური მენიუ */
+.mobile-menu {
+    position: fixed;
+    top: 173px;
+    left: 0;
+    right: 0;
+    background-color: white;
+    z-index: 1000;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+.mobile-menu.show {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.mobile-menu .nav-link {
+    padding: 15px 20px !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: block;
+    font-size: 16px;
+    color: #495057 !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.mobile-menu .nav-link:hover {
+    color: #1a365d !important;
+    background-color: rgba(26, 54, 93, 0.05);
+}
+
+.mobile-menu .nav-link.active {
+    color: #1a365d !important;
+    font-weight: 600;
+    background-color: rgba(26, 54, 93, 0.05);
+}
+
+/* მობილური ადაპტაცია */
+@media (max-width: 992px) {
+    body {
+        padding-top: 153px;
+    }
+    .mobile-menu {
+        top: 153px;
+    }
+    .brand-section .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .navbar-toggler {
+        display: block;
+        margin: 0;
+        padding: 6px 10px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .navbar-toggler:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        transition: all 0.3s ease;
+    }
+    .nav-section {
+        display: none;
+    }
+    
+    /* მობილური ავტოკომპლიტი */
+    .search-suggestions {
+        border-radius: 0 0 8px 8px;
+        max-height: 280px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .suggestion-content-with-image {
+        gap: 10px;
+    }
+    
+    .suggestion-image {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .suggestion-name {
+        font-size: 13px;
+    }
+    
+    .suggestion-category {
+        font-size: 11px;
+    }
+    
+    .suggestion-price {
+        font-size: 12px;
+    }
+    
+    .suggestion-item {
+        min-height: 55px;
+        padding: 10px 14px;
+    }
+}
+
+@media (min-width: 993px) {
+    .navbar-toggler {
+        display: none;
+    }
+    .mobile-menu {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    body {
+        padding-top: 143px;
+    }
+    .mobile-menu {
+        top: 143px;
+    }
+    .navbar-brand {
+        font-size: 24px;
+    }
+    .form-control {
+        height: 46px;
+        padding: 12px 50px 12px 40px;
+        font-size: 14px;
+    }
+    
+    .search-icon {
+        left: 14px;
+        font-size: 15px;
+    }
+    
+    .search-button {
+        width: 34px;
+        height: 34px;
+        right: 6px;
+    }
+    
+    /* პატარა ეკრანებისთვის ავტოკომპლიტი */
+    .search-suggestions {
+        max-height: 240px;
+        border-radius: 0 0 6px 6px;
+    }
+    
+    .suggestion-item {
+        padding: 8px 12px;
+        min-height: 50px;
+    }
+    
+    .suggestion-content-with-image {
+        gap: 8px;
+    }
+    
+    .suggestion-image {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .suggestion-name {
+        font-size: 12px;
+    }
+    
+    .suggestion-category {
+        font-size: 10px;
+    }
+    
+    .suggestion-price {
+        font-size: 11px;
+    }
+    
+    .suggestion-loading {
+        padding: 16px;
+        font-size: 13px;
+    }
+    
+    .suggestion-no-results {
+        padding: 16px 12px;
+        font-size: 13px;
+    }
+}
+
+/* ფუთერი */
+.footer {
+    background-color: #1a365d;
+    color: #ffffff;
+    padding: 30px 0 20px;
+    margin-top: auto;
+}
+
+.footer a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: #00a4bd;
+}
+
+.footer-brand {
+    font-weight: 700;
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.footer-contact {
+    margin-top: 15px;
+}
+
+.footer-contact p {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.footer-contact i {
+    margin-right: 10px;
+    color: #00a4bd;
+}

@@ -1,0 +1,550 @@
+/* product.css - სტილები პროდუქტის გვერდისთვის */
+
+/* CSS Variables */
+:root {
+    --breadcrumb-offset: 12px;
+    --primary-color: #00a4bd;
+    --primary-hover: #008a9e;
+    --title-color: #333;
+    --section-title-color: #444;
+    --description-color: #555;
+    --price-color: #2e8540;
+    --box-shadow-color: rgba(0, 0, 0, 0.08);
+    --border-color: #eee;
+    --transition-speed: 0.3s;
+}
+
+/* ძირითადი კონტეინერი */
+.product-details {
+    padding: 15px 0;
+}
+
+/* პროდუქტის სათაური */
+.product-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--title-color);
+    margin-bottom: 15px;
+    line-height: 1.3;
+}
+
+/* პროდუქტის ფასი */
+.product-price {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0;
+    color: var(--price-color);
+}
+
+/* სექციის სათაური */
+.section-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--section-title-color);
+}
+
+/* პროდუქტის აღწერის წრაპერი */
+.product-description-wrapper {
+    position: relative;
+    margin-bottom: 30px;
+    overflow: hidden;
+    transition: max-height var(--transition-speed) ease;
+}
+
+/* პროდუქტის აღწერა */
+.product-description {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--description-color);
+    margin-bottom: 0;
+}
+
+/* აღწერის გრადიენტი */
+.description-gradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+    pointer-events: none;
+    transition: opacity var(--transition-speed) ease;
+}
+
+/* თავდაპირველად აღწერის სიმაღლის შეზღუდვა */
+.description-collapsed {
+    max-height: 120px;
+}
+
+/* როცა გაშლილია, მაშინ უსასრულობა */
+.description-expanded {
+    max-height: 2000px;
+}
+
+/* აღწერის გაშლის ღილაკი */
+.show-more-description {
+    display: inline-block;
+    background-color: transparent;
+    color: var(--primary-color);
+    border: none;
+    border-radius: 20px;
+    padding: 6px 16px;
+    margin-top: 10px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    padding-left: 0;
+}
+
+.show-more-description:hover {
+    color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.show-more-description:after {
+    content: "▼";
+    font-size: 0.6em;
+    margin-left: 8px;
+    display: inline-block;
+    transition: transform var(--transition-speed) ease;
+}
+
+.show-more-description.expanded:after {
+    transform: rotate(180deg);
+}
+
+.show-less-description-text {
+    display: none;
+}
+
+.show-more-description.expanded .show-more-description-text {
+    display: none;
+}
+
+.show-more-description.expanded .show-less-description-text {
+    display: inline;
+}
+
+/* პროდუქტის სურათის კონტეინერი */
+.product-image-wrapper {
+    position: relative;
+    margin-bottom: 25px;
+    box-shadow: 0 6px 16px var(--box-shadow-color);
+    border-radius: 12px;
+    overflow: hidden;
+    max-height: 80vh;
+}
+
+/* სურათის გრაფიკული ეფექტი */
+.product-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform var(--transition-speed) ease-in-out;
+}
+
+.product-image-wrapper:hover .product-image {
+    transform: scale(1.03);
+}
+
+/* პროდუქტის ვიდეოს სექცია */
+.product-video {
+    margin-top: 20px;
+}
+
+/* ვიდეო ლინკის სტილი */
+.product-video-link {
+    display: inline-block;
+    color: white;
+    background-color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    transition: all var(--transition-speed) ease;
+}
+
+.product-video-link:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-video-link:before {
+    content: "▶";
+    margin-right: 8px;
+    font-size: 0.8em;
+}
+
+/* მსგავსი პროდუქტების სექცია */
+.similar-products-section {
+    padding-top: 30px;
+    border-top: 1px solid var(--border-color);
+    margin-left: -15px;
+    margin-right: -15px;
+    padding-left: 0;
+    padding-right: 0;
+    width: auto;
+    padding-top: 5px;
+}
+
+/* მსგავსი პროდუქტების სათაური */
+.similar-products-section .section-title {
+    margin-left: 0px;
+}
+
+/* Enhanced Similar Products Styles */
+.similar-products-container {
+    position: relative;
+    transition: all 0.5s ease;
+}
+
+/* Similar Product Item */
+.similar-product-item {
+    margin-bottom: 20px;
+    transition: opacity 0.5s ease, transform 0.3s ease;
+}
+
+/* მსგავსი პროდუქტის ბარათი */
+.similar-product-card {
+    display: block;
+    text-decoration: none;
+    color: var(--title-color);
+    transition: all var(--transition-speed) ease;
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px var(--box-shadow-color);
+    background-color: white;
+}
+
+.similar-product-card:hover {
+    transform: translateY(-5px);
+    text-decoration: none;
+    color: var(--title-color);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+/* მსგავსი პროდუქტის სურათის კონტეინერი */
+.similar-product-image-wrapper {
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+    box-shadow: none;
+    aspect-ratio: 1/1;
+}
+
+/* მსგავსი პროდუქტის სურათი */
+.similar-product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-speed) ease;
+}
+
+.similar-product-card:hover .similar-product-image {
+    transform: scale(1.05);
+}
+
+/* მსგავსი პროდუქტის ინფორმაცია */
+.similar-product-info {
+    padding: 12px 14px;
+    background-color: white;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+/* მსგავსი პროდუქტის სათაური */
+.similar-product-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--title-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    min-height: 2.8em;
+    line-height: 1.4;
+}
+
+/* მსგავსი პროდუქტის ფასი */
+.similar-product-price {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--price-color);
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Show More Button */
+.show-more-products {
+    display: inline-block;
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 30px;
+    padding: 8px 24px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.show-more-products:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.show-more-products:after {
+    content: "▼";
+    font-size: 0.6em;
+    margin-left: 8px;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.show-more-products.expanded:after {
+    transform: rotate(180deg);
+}
+
+.show-less-text {
+    display: none;
+}
+
+.show-more-products.expanded .show-more-text {
+    display: none;
+}
+
+.show-more-products.expanded .show-less-text {
+    display: inline;
+}
+
+/* Hide extra products by default */
+@media (min-width: 992px) {
+    .hidden-desktop {
+        display: none;
+    }
+    
+    .similar-products-container.show-all .hidden-desktop {
+        display: block;
+        animation: fadeIn 0.5s ease forwards;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .hidden-mobile {
+        display: none;
+    }
+    
+    .similar-products-container.show-all .hidden-mobile {
+        display: block;
+        animation: fadeIn 0.5s ease forwards;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* დესკტოპზე სურათის კონტეინერის გასწორება */
+@media (min-width: 768px) {
+    .product-details {
+        padding-left: 20px;
+    }
+    
+    .col-md-6 .product-image-wrapper {
+        margin-left: calc(-1 * var(--breadcrumb-offset));
+        width: calc(100% + var(--breadcrumb-offset));
+    }
+    
+    .similar-product-title {
+        font-size: 1rem;
+    }
+}
+
+/* მობილური მოწყობილობებისთვის */
+@media (max-width: 767.98px) {
+    /* Reduced spacing on mobile */
+    .row.g-2 {
+        row-gap: 0.5rem !important;
+    }
+    
+    .product-image-wrapper {
+        position: relative;
+        top: 0;
+        margin-bottom: 10px;
+        margin-left: calc(-1 * var(--breadcrumb-offset));
+        width: calc(100% + (var(--breadcrumb-offset) * 2));
+        border-radius: 8px;
+    }
+    
+    .product-title {
+        font-size: 1.5rem;
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+    
+    .product-price {
+        font-size: 1.4rem;
+    }
+    
+    .product-description-wrapper {
+        margin-bottom: 20px;
+    }
+    
+    .description-collapsed {
+        max-height: 80px;
+    }
+    
+    .product-video-link {
+        display: block;
+        text-align: center;
+    }
+    
+    /* Remove extra spacing from Bootstrap container on mobile */
+    .container.py-4 {
+        padding-top: 0.5rem !important;
+        padding-bottom: 1rem !important;
+    }
+    
+    .similar-product-image-wrapper {
+        aspect-ratio: 1/1;
+    }
+    
+    .similar-product-title {
+        font-size: 0.8rem;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        min-height: 2.4em;
+    }
+    
+    .similar-product-price {
+        font-size: 0.85rem;
+    }
+    
+    .similar-product-card {
+        box-shadow: 0 3px 8px var(--box-shadow-color);
+    }
+    
+    .similar-product-info {
+        padding: 8px 10px;
+    }
+    
+    .show-more-products {
+        padding: 6px 18px;
+        font-size: 0.9rem;
+    }
+}
+
+/* ტაბლეტებისთვის */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .product-image-wrapper {
+        max-height: 70vh;
+    }
+    
+    .similar-product-title {
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+    }
+}
+
+/* Flag and price container */
+.price-flag-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+/* Country flag styles */
+.country-flag {
+    display: inline-block;
+    position: relative;
+    top: -2px;
+}
+
+.country-flag-img {
+    width: 24px;
+    height: auto;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile responsiveness for flag */
+@media (max-width: 767.98px) {
+    .country-flag-img {
+        width: 20px;
+    }
+}
+/* დაამატეთ თქვენს product.css ფაილში */
+
+.social-share-buttons {
+    margin-top: 1.5rem;
+}
+
+.share-title {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+    margin-left: 0;
+}
+
+.share-buttons-container {
+    display: flex;
+    gap: 10px;
+}
+
+.share-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: #fff;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.share-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+.facebook-share {
+    background-color: #3b5998;
+}
+
+.whatsapp-share {
+    background-color: #25d366;
+}
+
+.telegram-share {
+    background-color: #0088cc;
+}
+
+.copy-link {
+    background-color: #6c757d;
+    border: none;
+}
+
+.copy-link:hover {
+    background-color: #5a6268;
+}

@@ -1,0 +1,1576 @@
+/* მთავარი სლაიდერის სტილები */
+#mainCarousel {
+    border-radius: 12px;
+    overflow: hidden;
+    -webkit-box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    margin: 0 auto;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    position: relative;
+}
+
+.carousel-item {
+    position: relative;
+    height: 65vh;
+    max-height: 550px;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    -webkit-object-fit: cover;
+    object-fit: cover;
+    -webkit-object-position: center;
+    object-position: center;
+    -webkit-transition: transform 0.5s ease;
+    transition: transform 0.5s ease;
+}
+
+.carousel-item:hover img {
+    -webkit-transform: scale(1.02);
+    transform: scale(1.02);
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: -webkit-linear-gradient(
+        rgba(0, 0, 0, 0) 30%, 
+        rgba(0, 0, 0, 0.4) 60%, 
+        rgba(0, 0, 0, 0.7) 100%
+    );
+    background: linear-gradient(
+        rgba(0, 0, 0, 0) 30%, 
+        rgba(0, 0, 0, 0.4) 60%, 
+        rgba(0, 0, 0, 0.7) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* დემატებული ეფექტი ოვერლეისთვის */
+.overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 149, 189, 0.15); /* #0095bd ფერის ოდნავ გამჭვირვალე ვერსია */
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.carousel-item:hover .overlay::before {
+    opacity: 1;
+}
+
+.caption-custom {
+    position: absolute;
+    bottom: 15%;
+    left: 10%;
+    width: 50%;
+    color: white;
+    z-index: 2;
+    text-align: left;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+.slide-title {
+    font-size: 2.8rem;
+    font-weight: normal;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    -webkit-font-smoothing: antialiased;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s forwards;
+    animation-delay: 0.2s;
+}
+
+.slide-description {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    -webkit-font-smoothing: antialiased;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s forwards;
+    animation-delay: 0.4s;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    opacity: 1;
+}
+
+/* (carousel-indicators კოდი წარმატებით წაშლილია) */
+
+/* ანიმაციის გასახელება */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive სლაიდერი */
+@media (max-width: 1200px) {
+    .carousel-item { height: 55vh; }
+    .slide-title { font-size: 2.2rem; }
+    .slide-description { font-size: 1.2rem; }
+    .caption-custom { width: 60%; }
+}
+
+@media (max-width: 992px) {
+    .carousel-item { height: 45vh; }
+    .caption-custom { width: 70%; }
+}
+
+@media (max-width: 768px) {
+    .carousel-item { height: 35vh; }
+    .caption-custom { width: 80%; bottom: 10%; }
+    .slide-title { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .slide-description { font-size: 1rem; margin-bottom: 0.8rem; }
+    .overlay {
+        background: -webkit-linear-gradient(
+            rgba(0, 0, 0, 0.1) 10%, 
+            rgba(0, 0, 0, 0.5) 70%, 
+            rgba(0, 0, 0, 0.7) 100%
+        );
+        background: linear-gradient(
+            rgba(0, 0, 0, 0.1) 10%, 
+            rgba(0, 0, 0, 0.5) 70%, 
+            rgba(0, 0, 0, 0.7) 100%
+        );
+    }
+}
+
+@media (max-width: 576px) {
+    .carousel-item { height: 30vh; }
+    .caption-custom { width: 85%; left: 7.5%; bottom: 8%; }
+    .slide-title { font-size: 1.5rem; }
+    .slide-description { font-size: 0.9rem; line-height: 1.3; }
+    .carousel-control-prev, .carousel-control-next { width: 10%; }
+}
+
+@media (max-width: 480px) {
+    .carousel-item { height: 28vh; }
+    .caption-custom { bottom: 5%; }
+    .slide-title { font-size: 1.3rem; }
+    .slide-description { font-size: 0.85rem; margin-bottom: 0.5rem; }
+    #mainCarousel {
+        border-radius: 8px;
+    }
+}
+
+/* კატეგორიების სლაიდერის სტილები */
+.category-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 0.8rem;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+.category-slider {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-transition: -webkit-transform 0.5s ease;
+    transition: -webkit-transform 0.5s ease;
+    transition: transform 0.5s ease;
+    transition: transform 0.5s ease, -webkit-transform 0.5s ease;
+    margin: 0 -10px;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+.category-slide {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 auto;
+    flex: 0 0 auto;
+    width: 20%;
+    padding: 0 10px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 100%; /* უზრუნველყოფს მთლიან სიმაღლეს */
+}
+.category-slider-controls {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.category-control-prev,
+.category-control-next {
+    width: 44px;
+    height: 44px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+.category-control-prev:hover,
+.category-control-next:hover {
+    background-color: #00a4bd;
+    color: white;
+    border-color: #00a4bd;
+}
+.category-link {
+    display: block;
+    color: inherit;
+    height: 100%;
+}
+.category-card {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    -webkit-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    height: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+.category-image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 70%;
+    overflow: hidden;
+    background: -webkit-linear-gradient(45deg, #f7f9fc, #ffffff);
+    background: linear-gradient(45deg, #f7f9fc, #ffffff);
+    flex-shrink: 0;
+}
+.category-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    padding: 15px;
+}
+.category-image {
+    max-width: 100%;
+    max-height: 100%;
+    -webkit-object-fit: contain;
+    object-fit: contain;
+}
+.category-content {
+    padding: 14px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-flex: 1;
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    height: 90px;
+    transition: all 0.5s ease; /* Added to smooth out any vertical movement */
+}
+.category-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: normal;
+    color: #1a365d;
+    text-align: center;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    box-orient: vertical;
+    line-height: 1.3;
+    min-height: 42px;
+    height: 42px;
+}
+
+/* (CATEGORY INDICATORS კოდი წაშლილია) */
+
+@media (max-width: 1200px) {
+    .category-slide { width: 25%; }
+    .category-title { font-size: 15px; height: 40px; min-height: 40px; }
+    .category-content { height: 85px; }
+    .category-card .view-more { height: 22px; }
+}
+@media (max-width: 992px) {
+    .category-slide { width: 33.333%; }
+    .category-image-wrapper { padding-top: 75%; }
+    .category-content { padding: 12px; height: 82px; }
+    .category-title { font-size: 14px; height: 38px; min-height: 38px; }
+    .category-card .view-more { height: 20px; }
+}
+@media (max-width: 768px) {
+    .category-slide { width: 50%; }
+    .category-image-wrapper { padding-top: 70%; }
+    .category-content { padding: 10px 8px; height: 78px; }
+    .category-title { font-size: 14px; height: 36px; min-height: 36px; }
+    .category-card .view-more { padding-top: 8px; font-size: 13px; height: 20px; }
+    .category-card .view-more i { font-size: 13px; }
+    /* ასევე, ინდიკატორებთან დაკავშირებული კოდები ამ რეგიონიდან გამოკ исключება */
+}
+@media (max-width: 576px) {
+    .category-slide { width: 50%; }
+    .category-card { border-radius: 10px; }
+    .category-image-wrapper { padding-top: 65%; }
+    .category-image-container { padding: 10px; }
+    .category-content { padding: 8px 6px; height: 74px; }
+    .category-title { font-size: 13px; height: 34px; min-height: 34px; }
+    .category-card .view-more { font-size: 12px; padding-top: 6px; height: 18px; }
+    .category-card .view-more i { font-size: 12px; }
+}
+@media (max-width: 480px) {
+    .category-slider { margin: 0 -5px; }
+    .category-slide { padding: 0 5px; }
+    .category-content { height: 70px; }
+}
+@media (max-width: 359px) {
+    .category-title { font-size: 12px; height: 32px; min-height: 32px; }
+    .category-card .view-more { font-size: 11px; height: 16px; }
+    .category-card .view-more i { font-size: 11px; }
+    .category-content { padding: 6px 5px; height: 66px; }
+}
+
+/* პოპულარული პროდუქთა სლაიდერის სტილები */
+.popular-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 0.8rem;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+.popular-slider {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-transition: -webkit-transform 0.5s ease;
+    transition: -webkit-transform 0.5s ease;
+    transition: transform 0.5s ease;
+    transition: transform 0.5s ease, -webkit-transform 0.5s ease;
+    margin: 0 -10px;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+.popular-slide {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 auto;
+    flex: 0 0 auto;
+    width: 20%;
+    padding: 0 10px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.popular-slider-controls {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.popular-control-prev,
+.popular-control-next {
+    width: 44px;
+    height: 44px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+.popular-control-prev:hover,
+.popular-control-next:hover {
+    background-color: #00a4bd;
+    color: white;
+    border-color: #00a4bd;
+}
+.popular-link {
+    display: block;
+    color: inherit;
+}
+.popular-card {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    height: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.product-image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 75%;
+    overflow: hidden;
+    background: #ffffff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.product-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    padding: 1px;
+}
+
+.product-image {
+    max-width: 90%;
+    max-height: 90%;
+    -webkit-object-fit: contain;
+    object-fit: contain;
+}
+.product-content {
+    padding: 16px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-flex: 1;
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+    position: relative;
+}
+.product-title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: normal;
+    color: #2d3748;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    box-orient: vertical;
+    line-height: 1.4;
+    min-height: 42px;
+    margin-bottom: 4px;
+}
+
+.country-flag {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.country-flag img {
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 2px;
+}
+
+.country-code {
+    color: #718096;
+    font-size: 12px;
+    margin-left: 6px;
+}
+
+.price {
+    font-size: 17px;
+    font-weight: bold;
+    color: #38a169;
+    margin-top: 8px;
+    margin-bottom: 10px;
+}
+
+/* Updated view-more for Popular Cards */
+.popular-card .view-more {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 6px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.popular-card .view-more span {
+    color: #00a4bd;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.popular-card .view-more i {
+    color: #00a4bd;
+    font-size: 14px;
+}
+
+.condition-badge {
+    position: relative;
+    top: auto;
+    left: auto;
+    z-index: 1;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: normal;
+    padding: 4px 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 8px;
+    background-color: #f8f9fa;
+    color: #2d3748;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 1200px) {
+    .popular-slide { width: 25%; }
+    .product-image-wrapper { padding-top: 80%; }
+    .product-content { padding: 14px; }
+}
+
+@media (max-width: 992px) {
+    .popular-slide { width: 33.333%; }
+    .product-image-wrapper { padding-top: 75%; }
+    .product-content { padding: 12px; }
+    .product-title { font-size: 14px; min-height: 38px; }
+    .price { font-size: 16px; }
+    .product-image-container { padding: 15px; }
+}
+
+@media (max-width: 768px) {
+    .popular-slide { width: 50%; }
+    .product-image-wrapper { padding-top: 75%; }
+    .product-image-container { padding: 8px; }
+    .product-title { font-size: 14px; min-height: 36px; }
+    .price { font-size: 15px; margin-top: 6px; margin-bottom: 8px; }
+    .country-flag { margin-bottom: 6px; }
+    .country-code { font-size: 11px; }
+}
+@media (max-width: 576px) {
+    .popular-slide { width: 50%; }
+    .popular-card { border-radius: 10px; }
+    .product-image-wrapper { padding-top: 75%; }
+    .product-image-container { padding: 5px; }
+    .product-content { padding: 8px; }
+    .product-title { font-size: 14px; min-height: 34px; }
+    .price { font-size: 14px; margin-top: 4px; margin-bottom: 6px; }
+    .country-flag img { width: 18px; height: 13px; }
+    .country-code { font-size: 10px; }
+    .condition-badge {
+        font-size: 10px;
+        padding: 2px 5px;
+    }
+    .popular-card .view-more { font-size: 12px; }
+    .popular-card .view-more i { font-size: 12px; }
+}
+
+@media (max-width: 480px) {
+    .popular-slider { margin: 0 -5px; }
+    .popular-slide { padding: 0 5px; }
+    .product-content { padding: 6px; }
+    .product-image-wrapper { padding-top: 95%; }
+    .product-image-container { padding: 3px; }
+    .condition-badge {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+}
+
+@media (max-width: 359px) {
+    .product-title { font-size: 12px; min-height: 32px; }
+    .popular-card .view-more { font-size: 11px; padding-top: 4px; }
+    .popular-card .view-more i { font-size: 11px; }
+    .price { font-size: 13px; }
+}
+
+/* წაარბენის თავიდან ასაცილებლად */
+.carousel-item, .category-card, .popular-card {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* საფარი ანიმაციები - სტანდარტული და WebKit ბრაუზერებისთვის */
+@-webkit-keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* სლაიდინგის ანიმაციები - ორივე ტიპის ბრაუზერებისთვის */
+@-webkit-keyframes slideIn {
+    from { -webkit-transform: translateX(50px); transform: translateX(50px); opacity: 0; }
+    to { -webkit-transform: translateX(0); transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { -webkit-transform: translateX(50px); transform: translateX(50px); opacity: 0; }
+    to { -webkit-transform: translateX(0); transform: translateX(0); opacity: 1; }
+}
+
+/* Safari-სთვის სწრაფი რენდერინგის გასაუმჯობესებლად */
+.carousel-item, .category-slider, .popular-slider {
+    -webkit-will-change: transform;
+    will-change: transform;
+}
+
+/* iOS-ზე გადაფურცლის მომენტში "გადამეტებული" ეფექტის გასაუქმებლად */
+.category-slider-container, .popular-slider-container {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
+}
+
+/* სწრაფი ანიმაციებისთვის აპარატურული აჩქარების გამოყენება */
+.category-slider, .popular-slider {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+/* სტანდარტული ნავიგაციის გამოწერა WebKit მოწყობილობებზე */
+@supports (-webkit-touch-callout: none) {
+    .carousel-item, .category-card, .popular-card {
+        -webkit-user-select: none;
+        user-select: none;
+    }
+}
+
+/* ბოლოს დამატებული პროდუქტების სლაიდერის სტილები */
+.newest-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 0.8rem;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+.newest-slider {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-transition: -webkit-transform 0.5s ease;
+    transition: -webkit-transform 0.5s ease;
+    transition: transform 0.5s ease;
+    transition: transform 0.5s ease, -webkit-transform 0.5s ease;
+    margin: 0 -10px;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+.newest-slide {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 auto;
+    flex: 0 0 auto;
+    width: 20%;
+    padding: 0 10px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.newest-slider-controls {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.newest-control-prev,
+.newest-control-next {
+    width: 44px;
+    height: 44px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+.newest-control-prev:hover,
+.newest-control-next:hover {
+    background-color: #00a4bd;
+    color: white;
+    border-color: #00a4bd;
+}
+/* (newest-slider-indicators კოდი წაშლილია) */
+
+@media (max-width: 1200px) {
+    .newest-slide { width: 25%; }
+}
+@media (max-width: 992px) {
+    .newest-slide { width: 33.333%; }
+}
+@media (max-width: 768px) {
+    .newest-slide { width: 50%; }
+    /* ინდიკატორებთან დაკავშირებული კოდებიც აქვე წაშლილია */
+}
+@media (max-width: 480px) {
+    .newest-slider { margin: 0 -5px; }
+    .newest-slide { padding: 0 5px; }
+}
+
+/* შეფასების ფორმის ძირითადი სტილი */
+.review-form-container {
+    margin-top: 2rem;
+}
+
+.review-toggle-btn {
+    background-color: #00a4bd;
+    border-color: #00a4bd;
+    color: white;
+    border-radius: 8px;
+    padding: 0.65rem 1.5rem;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.review-toggle-btn:hover {
+    background-color: #0095bd;
+    border-color: #0095bd;
+}
+
+.card {
+    border-radius: 12px;
+    overflow: visible;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    transform: translateZ(0);
+}
+
+.card-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card-header.bg-primary {
+    background-color: #00a4bd !important;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* ფორმის ელემენტები */
+.form-label {
+    font-weight: 500;
+    color: #1a365d;
+    margin-bottom: 0.5rem;
+    font-size: 15px;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    padding: 0.75rem;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #00a4bd;
+    box-shadow: 0 0 0 0.25rem rgba(0, 164, 189, 0.25);
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.invalid-feedback {
+    font-size: 14px;
+}
+
+/* ემოჯის სელექტორი */
+.emoji-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.emoji-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.emoji-btn:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.1);
+}
+
+.emoji-selector {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.emoji-selector button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.emoji-selector button:hover {
+    background-color: #e9ecef;
+    transform: scale(1.1);
+}
+
+/* ვარსკვლავი რეიტინგის სისტემა */
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    cursor: pointer;
+    font-size: 25px;
+    color: #ddd;
+    transition: color 0.3s;
+}
+
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating input:checked + label ~ label:hover {
+    color: #ffb700;
+}
+
+.star-rating label:hover ~ label {
+    color: #ffb700;
+}
+
+/* ფაილის ატვირთვის სტილი - გამოსწორებული */
+.custom-file-input-wrapper {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 42px;
+    margin-bottom: 10px;
+}
+
+.custom-file-input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.custom-file-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    color: #495057;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+    z-index: 1;
+}
+
+.custom-file-label:hover {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+}
+
+.custom-file-label i {
+    margin-right: 8px;
+    font-size: 18px;
+    color: #00a4bd;
+}
+
+.custom-file-input:focus ~ .custom-file-label {
+    border-color: #00a4bd;
+    box-shadow: 0 0 0 0.25rem rgba(0, 164, 189, 0.25);
+}
+
+/* ღილაკის სტილი */
+.btn-primary {
+    background-color: #00a4bd;
+    border-color: #00a4bd;
+    color: white;
+    border-radius: 8px;
+    padding: 0.65rem 1.5rem;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary:hover {
+    background-color: #0095bd;
+    border-color: #0095bd;
+}
+
+.btn-primary:focus {
+    box-shadow: 0 0 0 0.25rem rgba(0, 164, 189, 0.25);
+}
+
+/* შეტყობინების სტილი */
+.alert {
+    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+}
+
+.alert-success {
+    background-color: rgba(56, 161, 105, 0.1);
+    border-color: rgba(56, 161, 105, 0.2);
+    color: #2f855a;
+}
+
+/* რესპონსიული სტილები */
+@media (max-width: 992px) {
+    .form-label,
+    .form-control {
+        font-size: 14px;
+    }
+
+    .form-control {
+        padding: 0.6rem;
+    }
+
+    .btn-primary {
+        font-size: 14px;
+        padding: 0.6rem 1.25rem;
+    }
+
+    .star-rating label {
+        font-size: 22px;
+    }
+    
+    .custom-file-input-wrapper {
+        height: 38px;
+    }
+    
+    .custom-file-label {
+        padding: 0.6rem;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-control {
+        font-size: 14px;
+        padding: 0.55rem;
+        border-radius: 6px;
+    }
+
+    .btn-primary {
+        font-size: 14px;
+        padding: 0.6rem 1.2rem;
+        border-radius: 6px;
+    }
+
+    .emoji-selector {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .star-rating label {
+        font-size: 20px;
+    }
+    
+    .custom-file-input-wrapper {
+        height: 36px;
+    }
+    
+    .custom-file-label {
+        padding: 0.55rem;
+        font-size: 14px;
+        border-radius: 6px;
+    }
+    
+    .custom-file-label i {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-label,
+    .form-control,
+    .btn-primary {
+        font-size: 14px;
+    }
+
+    .form-control {
+        padding: 0.55rem;
+    }
+
+    .emoji-picker {
+        gap: 3px;
+    }
+
+    .emoji-btn,
+    .emoji-selector button {
+        font-size: 16px;
+    }
+
+    .emoji-selector {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .star-rating label {
+        font-size: 18px;
+    }
+    
+    .custom-file-input-wrapper {
+        height: 34px;
+    }
+}
+
+@media (max-width: 359px) {
+    .form-label,
+    .form-control,
+    .btn-primary {
+        font-size: 13px;
+    }
+
+    .form-control {
+        padding: 0.5rem;
+    }
+
+    .btn-primary {
+        padding: 0.5rem 1rem;
+    }
+
+    .emoji-btn,
+    .emoji-selector button {
+        font-size: 15px;
+        padding: 3px;
+    }
+
+    .star-rating {
+        gap: 2px;
+    }
+
+    .star-rating label {
+        font-size: 16px;
+    }
+    
+    .custom-file-input-wrapper {
+        height: 32px;
+    }
+    
+    .custom-file-label {
+        padding: 0.45rem;
+        font-size: 13px;
+    }
+    
+    .custom-file-label i {
+        font-size: 14px;
+    }
+}
+
+/* JavaScript ფუნქციების საჭირო კოდი */
+@media (prefers-reduced-motion: no-preference) {
+    .emoji-btn:active, 
+    .emoji-selector button:active {
+        transform: scale(0.95);
+    }
+}
+
+/* შეფასების სლაიდერის სტილები */
+.reviews-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 0.8rem;
+    transform: translate3d(0, 0, 0);
+}
+
+.reviews-slider {
+    display: flex;
+    transition: transform 0.5s ease;
+    margin: 0 -10px;
+    backface-visibility: hidden;
+    align-items: stretch;
+    will-change: transform;
+}
+
+.reviews-slide {
+    flex: 0 0 auto;
+    width: 33.333%;
+    padding: 0 10px;
+    box-sizing: border-box;
+    display: flex;
+}
+
+.review-card {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: visible;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    min-height: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 16px;
+    transform: translateZ(0);
+    width: 100%;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.review-author {
+    display: flex;
+    align-items: center;
+}
+
+.review-author-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.review-author-initial {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #00a4bd;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-right: 12px;
+}
+
+.review-author-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.review-author-name {
+    font-size: 16px;
+    margin-bottom: 3px;
+    color: #1a365d;
+}
+
+.review-date {
+    color: #718096;
+    font-size: 13px;
+}
+
+.review-rating {
+    color: #FFB800;
+    font-size: 16px;
+}
+
+.review-rating i {
+    margin-right: 2px;
+}
+
+.review-content {
+    flex-grow: 1;
+    color: #2d3748;
+    font-size: 14px;
+    line-height: 1.5;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.review-content p {
+    margin-bottom: 0;
+    word-break: break-word;
+    hyphens: auto;
+}
+
+/* (reviews-slider-indicators კოდი წაშლილია) */
+
+@media (max-width: 1200px) {
+    .reviews-slide { width: 33.333%; }
+    .review-card { padding: 14px; }
+    .review-author-image, .review-author-initial { width: 45px; height: 45px; }
+    .review-author-name { font-size: 15px; }
+}
+@media (max-width: 992px) {
+    .reviews-slide { width: 50%; }
+    .review-card { padding: 12px; }
+    .review-header { margin-bottom: 12px; padding-bottom: 10px; }
+    .review-content { font-size: 14px; }
+}
+@media (max-width: 768px) {
+    .reviews-slide { width: 100%; }
+    .review-author-image, .review-author-initial { width: 40px; height: 40px; }
+    .review-author-name { font-size: 16px; }
+    .review-date { font-size: 13px; }
+    .review-rating { font-size: 15px; }
+    .review-content { font-size: 15px; line-height: 1.5; }
+    /* ინდიკატორების სიგრძე ამเอง წაშლილია */
+}
+@media (max-width: 576px) {
+    .reviews-slider { margin: 0 -5px; }
+    .reviews-slide { padding: 0 5px; }
+    .review-card { padding: 12px; border-radius: 10px; }
+    .review-author-image, .review-author-initial { width: 40px; height: 40px; margin-right: 10px; }
+    .review-author-name { font-size: 16px; font-weight: 600; }
+    .review-content { font-size: 15px; line-height: 1.6; margin-top: 10px; }
+}
+@media (max-width: 480px) {
+    .review-card { padding: 10px; }
+    .review-header { margin-bottom: 12px; padding-bottom: 10px; }
+    .review-content { font-size: 16px; line-height: 1.6; margin-bottom: 5px; }
+}
+@media (max-width: 359px) {
+    .review-author-name { font-size: 15px; }
+    .review-date { font-size: 12px; }
+    .review-content { font-size: 15px; line-height: 1.5; }
+}
+
+/* ბრენდების სლაიდერის სტილები */
+.brands-slider-container {
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 0;
+    background-color: #ffffff;
+    border-radius: 8px;
+}
+
+.brands-slider {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.brands-track {
+    display: flex;
+    animation: scrollBrands 30s linear infinite;
+}
+
+.brand-slide {
+    flex: 0 0 16.666%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.brand-logo {
+    max-width: 100%;
+    max-height: 60px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.brand-slide:hover .brand-logo {
+    transform: scale(1.05);
+}
+
+@keyframes scrollBrands {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* მობილური მოწყობილობებისთვის */
+@media (max-width: 992px) {
+    .brand-slide {
+        flex: 0 0 25%;
+    }
+}
+
+@media (max-width: 768px) {
+    .brand-slide {
+        flex: 0 0 33.333%;
+    }
+    
+    .brand-logo {
+        max-height: 50px;
+    }
+}
+
+/* პაუსა მაუსის მიტანისას */
+.brands-slider-container:hover .brands-track {
+    animation-play-state: paused;
+}
+
+/* ბლოგის სექციის სტილები */
+.blog-section {
+    padding: 50px 0;
+}
+
+/* ახალი custom ღილაკის სტილები */
+.btn-custom {
+    background-color: transparent;
+    border-color: #00a4bd;
+    color: #00a4bd;
+}
+
+.btn-custom:hover {
+    background-color: #00a4bd;
+    border-color: #00a4bd;
+    color: #fff;
+}
+
+/* ბლოგის სლაიდერის კონტეინერი */
+.blog-slider-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* სლაიდერის მთავარი კონტეინერი */
+.blog-slider {
+    display: flex;
+    width: 100%;
+    cursor: grab;
+    user-select: none; /* პრევენცია ტექსტის მონიშვნის */
+    margin: 0;
+    padding: 0;
+}
+
+.blog-slider * {
+    user-select: none; /* პრევენცია ყველა შვილობილი ელემენტის ტექსტის მონიშვნის */
+}
+
+/* სლაიდერის ელემენტი */
+.blog-slider-item {
+    padding: 0; /* გავაუქმეთ padding */
+    box-sizing: border-box;
+    flex-shrink: 0;
+    width: 100%; /* მობილურზე 1 სლაიდი */
+}
+
+/* ბლოგის ბარათის სტილები */
+.blog-card {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    margin: 0 5px; /* მცირე მარჯინი მხოლოდ გვერდითა მხარეს ქარდებს შორის */
+}
+
+.blog-card:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.blog-card-img-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.blog-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.blog-card-img-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+}
+
+.blog-card:hover .blog-card-img {
+    transform: scale(1.05);
+}
+
+.blog-card-body {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.blog-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.blog-card-text {
+    color: #6c757d;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.blog-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.blog-date {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+/* სპეციალური სტილები პირველი და ბოლო ქარდებისთვის */
+.blog-slider-item:first-child .blog-card {
+    margin-left: 0; /* პირველი ქარდი მიბჯენილია მარცხენა მხარეს */
+}
+
+.blog-slider-item:last-child .blog-card {
+    margin-right: 0; /* ბოლო ქარდი მიბჯენილია მარჯვენა მხარეს */
+}
+
+/* რესპონსიული სტილები */
+@media (min-width: 576px) {
+    .blog-slider-item {
+        width: 50%; /* ტაბლეტზე 2 სლაიდი */
+    }
+}
+
+@media (min-width: 992px) {
+    .blog-slider-item {
+        width: 33.333%; /* დესკტოპზე 3 სლაიდი */
+    }
+}

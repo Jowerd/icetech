@@ -1,0 +1,319 @@
+.container-fluid {
+    width: 100%;
+    padding: 0;
+}
+
+/* პოპულარული პროდუქტების სტილი */
+.popular-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    height: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    /* მოხსნილია ჰოვერის ტრანზიშენი */
+}
+
+/* მოხსნილია ჰოვერის სტილი */
+
+/* ფოტოს კონტეინერის სიმაღლის გაზრდა */
+.product-image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 100%; /* შეცვლილი 75%-დან 100%-მდე კვადრატული ფორმისთვის */
+    overflow: hidden;
+    background: #ffffff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.product-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px; /* შემცირებული padding მეტი ადგილისთვის */
+}
+
+.product-image {
+    max-width: 95%; /* გაზრდილი 90%-დან 95%-მდე */
+    max-height: 95%; /* გაზრდილი 90%-დან 95%-მდე */
+    object-fit: contain;
+    /* მოხსნილია transform ეფექტი */
+}
+
+/* მოხსნილია ფოტოს ჰოვერის სტილი */
+
+.product-content {
+    padding: 12px; /* შემცირებული padding მეტი ადგილისთვის ფოტოსთვის */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.product-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: normal;
+    color: #2d3748;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-line-clamp: 2;
+    display: box;
+    box-orient: vertical;
+    line-clamp: 2;
+    line-height: 1.4;
+    min-height: 42px;
+    margin-bottom: 4px;
+    text-overflow: ellipsis;
+}
+
+.country-flag {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px; /* შემცირებული margin */
+}
+
+.country-flag img {
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 2px;
+}
+
+.country-code {
+    color: #718096;
+    font-size: 12px;
+    margin-left: 6px;
+}
+
+.price {
+    font-size: 17px;
+    font-weight: bold;
+    color: #38a169;
+    margin-top: 6px; /* შემცირებული margin */
+    margin-bottom: 8px; /* შემცირებული margin */
+}
+
+.view-more {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 6px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.view-more span {
+    color: #00a4bd;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.view-more i {
+    color: #00a4bd;
+    font-size: 14px;
+}
+
+.condition-badge {
+    position: relative;
+    top: auto;
+    left: auto;
+    z-index: 1;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: normal;
+    padding: 4px 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 8px;
+    /* ბეჯის შესაძლო ფერი/ფონი */
+    background-color: #f8f9fa;
+    color: #2d3748;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* გრიდ ხედი */
+.products-grid .product-item {
+    margin-bottom: 1rem;
+}
+
+/* სიის ხედი - სავსე სიგანე */
+.products-list .product-item {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+
+.products-list .popular-card {
+    flex-direction: row;
+}
+
+/* სიის ხედში ფოტოს ზომის გაზრდა */
+.products-list .product-image-wrapper {
+    width: 220px; /* გაზრდილი 180px-დან 220px-მდე */
+    min-width: 220px; /* გაზრდილი 180px-დან 220px-მდე */
+    height: 220px; /* გაზრდილი 180px-დან 220px-მდე */
+    padding-top: 0;
+}
+
+.products-list .product-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-left: 1rem;
+}
+
+.products-list .product-title {
+    -webkit-line-clamp: 3;
+    -moz-line-clamp: 3;
+    line-clamp: 3;
+    min-height: auto;
+    font-size: 1rem;
+}
+
+/* რესპონსიული დიზაინის წესები */
+@media (max-width: 1399.98px) {
+    /* 4 ქარდი ერთ ხაზში ყველა ზომაზე */
+    .col-lg-3.product-item {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+}
+
+@media (max-width: 991.98px) {
+    /* ტაბლეტებზე 2 ქარდი ერთ ხაზში */
+    .col-md-6.product-item {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    .product-image-wrapper { 
+        padding-top: 100%; /* შენარჩუნებული კვადრატი */
+    }
+    .product-content { 
+        padding: 10px; /* უფრო კომპაქტური */
+    }
+    .product-title { 
+        font-size: 14px; 
+        min-height: 38px; 
+    }
+    .price { 
+        font-size: 16px; 
+        margin-top: 5px; 
+        margin-bottom: 7px; 
+    }
+}
+
+@media (max-width: 767.98px) {
+    .products-list .popular-card {
+        flex-direction: column;
+    }
+
+    .products-list .product-image-wrapper {
+        width: 100%;
+        height: auto;
+        padding-top: 100%; /* შენარჩუნებული კვადრატი */
+    }
+    
+    .product-image-wrapper { 
+        padding-top: 100%; /* შენარჩუნებული კვადრატი */
+    }
+    .product-content { 
+        padding: 8px; /* უფრო კომპაქტური */
+    }
+    .product-title { 
+        font-size: 14px; 
+        min-height: 36px; 
+    }
+    .price { 
+        font-size: 15px; 
+        margin-top: 5px; 
+        margin-bottom: 7px; 
+    }
+    .country-flag { 
+        margin-bottom: 5px; 
+    }
+    .country-code { 
+        font-size: 11px; 
+    }
+    .condition-badge { 
+        padding: 3px 6px; 
+        font-size: 10px; 
+    }
+    
+}
+
+@media (max-width: 575.98px) {
+    .product-image-wrapper { 
+        padding-top: 100%; /* შენარჩუნებული კვადრატი */
+    }
+    .product-image-container { 
+        padding: 8px; /* ნაკლები padding */
+    }
+    .product-content { 
+        padding: 7px; /* უფრო კომპაქტური */
+    }
+    .product-title { 
+        font-size: 13px; 
+        min-height: 34px; 
+    }
+    .price { 
+        font-size: 14px; 
+        margin-top: 4px; 
+        margin-bottom: 5px; 
+    }
+    .country-flag img { 
+        width: 18px; 
+        height: 13px; 
+    }
+    .country-code { 
+        font-size: 10px; 
+    }
+    .view-more span { 
+        font-size: 12px; 
+    }
+    .view-more i { 
+        font-size: 12px; 
+    }
+}
+
+@media (max-width: 480px) {
+    .product-content { 
+        padding: 6px; 
+    }
+    .condition-badge {
+        font-size: 12px;
+        padding: 2px 5px;
+    }
+}
+
+@media (max-width: 359px) {
+    .product-title { 
+        font-size: 12px; 
+        min-height: 32px; 
+    }
+    .view-more span { 
+        font-size: 11px; 
+    }
+    .view-more i { 
+        font-size: 11px; 
+    }
+    .price { 
+        font-size: 13px; 
+    }
+}
+
+/* აქტიური ღილაკის სტილი */
+.view-mode.active {
+    background-color: #6c757d;
+    color: white;
+    border-color: #6c757d;
+}
