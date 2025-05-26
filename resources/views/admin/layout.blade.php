@@ -106,7 +106,7 @@
     <ul class="nav flex-column">
         <li class="nav-item">
             <a href="{{ route('admin.dashboard') }}" class="nav-link">
-                <i class="bi bi-speedometer2 me-2"></i> მთავარი 1
+                <i class="bi bi-speedometer2 me-2"></i> მთავარი
             </a>
         </li>
         <li class="nav-item">
