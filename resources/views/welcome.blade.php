@@ -18,7 +18,6 @@
 @endpush
 
 @section('content')
-გამარჯობა
     <!-- პროდუქტების სლაიდერი Schema.org მონიშვნით -->
     <div itemscope itemtype="https://schema.org/ItemList">
         <meta itemprop="name" content="ICETECH-ის პოპულარული პროდუქტები">
