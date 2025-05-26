@@ -1,6 +1,31 @@
 @extends('layouts.app')
 @section('title', $blogPost->title)
 
+@push('head')
+    <meta name="description" content="{{ Str::limit(strip_tags($blogPost->content), 160) }}">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{{ $blogPost->title }}">
+    <meta property="og:description" content="{{ Str::limit(strip_tags($blogPost->content), 160) }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="Icetech">
+    <meta property="og:locale" content="ka_GE">
+    @if($blogPost->image)
+        <meta property="og:image" content="{{ asset('storage/' . $blogPost->image) }}">
+        <meta property="og:image:alt" content="{{ $blogPost->title }}">
+    @endif
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $blogPost->title }}">
+    <meta name="twitter:description" content="{{ Str::limit(strip_tags($blogPost->content), 160) }}">
+    @if($blogPost->image)
+        <meta name="twitter:image" content="{{ asset('storage/' . $blogPost->image) }}">
+    @endif
+@endpush
+
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
     <style>
