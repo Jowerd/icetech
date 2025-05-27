@@ -160,41 +160,47 @@
         </div>
     </main>
 
-    <!-- ფუთერი -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="footer-brand">ICETECH</div>
-                    <p>კომერციული სამზარეულოს და გასაცივებელი მოწყობილობების მიმწოდებელი საქართველოში.</p>
-                </div>
-                <div class="col-md-4">
-                    <h5 class="mb-3">სწრაფი ბმულები</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="{{ route('home') }}"><i class="bi bi-chevron-right" aria-hidden="true"></i> მთავარი</a></li>
-                        <li><a href="{{ route('products') }}"><i class="bi bi-chevron-right" aria-hidden="true"></i> პროდუქცია</a></li>
-                        <li><a href="{{ route('about') }}"><i class="bi bi-chevron-right" aria-hidden="true"></i> ჩვენს შესახებ</a></li>
-                        <li><a href="{{ route('contact') }}"><i class="bi bi-chevron-right" aria-hidden="true"></i> კონტაქტი</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5 class="mb-3">საკონტაქტო ინფორმაცია</h5>
-                    <div class="footer-contact">
-                        <p><i class="bi bi-envelope-fill" aria-hidden="true"></i> <a href="mailto:info@icetech.ge">info@icetech.ge</a></p>
-                        <p><i class="bi bi-telephone-fill" aria-hidden="true"></i> <a href="tel:+995555555555">+995 555 55 55 55</a></p>
-                        <p><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> თბილისი, საქართველო</p>
-                        <a href="#" class="text-white me-3" aria-label="Instagram"><i class="bi bi-instagram fs-5" aria-hidden="true"></i></a>
-                        <a href="#" class="text-white me-3" aria-label="Facebook"><i class="bi bi-facebook fs-5" aria-hidden="true"></i></a>
-                    </div>
-                </div>
+<!-- ფუთერი -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="footer-brand">ICETECH</div>
+                <p>კომერციული სამზარეულოს და გასაცივებელი მოწყობილობების მიმწოდებელი საქართველოში.</p>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; {{ date('Y') }} ICETECH. ყველა უფლება დაცულია.</p>
+            <div class="col-md-4">
+                <h5 class="mb-3">სწრაფი ბმულები</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{{ route('home') }}"><i class="bi bi-chevron-right" aria-hidden="true"></i> მთავარი</a></li>
+                    <li><a href="{{ route('products') }}"><i class="bi bi-chevron-right" aria-hidden="true"></i> პროდუქცია</a></li>
+                    <li><a href="{{ route('about') }}"><i class="bi bi-chevron-right" aria-hidden="true"></i> ჩვენს შესახებ</a></li>
+                    <li><a href="{{ route('contact') }}"><i class="bi bi-chevron-right" aria-hidden="true"></i> კონტაქტი</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5 class="mb-3">საკონტაქტო ინფორმაცია</h5>
+                <div class="footer-contact">
+                    <p><i class="bi bi-envelope-fill" aria-hidden="true"></i> <a href="mailto:info@icetech.ge">info@icetech.ge</a></p>
+                    <p><i class="bi bi-telephone-fill" aria-hidden="true"></i> <a href="tel:+995555555555">+995 555 55 55 55</a></p>
+                    <p><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> თბილისი, საქართველო</p>
+                    <a href="#" class="text-white me-3" aria-label="Instagram"><i class="bi bi-instagram fs-5" aria-hidden="true"></i></a>
+                    <a href="#" class="text-white me-3" aria-label="Facebook"><i class="bi bi-facebook fs-5" aria-hidden="true"></i></a>
+                </div>
             </div>
         </div>
-    </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('js/layout.js') }}" defer></script>
-    @stack('scripts')
+
+        <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 pt-3 border-top border-light">
+            <p class="mb-0">&copy; {{ date('Y') }} ICETECH. ყველა უფლება დაცულია.</p>
+            <p class="mb-0">Designed & Developed by 
+                <a href="https://instagram.com/kapamagaria" target="_blank" rel="noopener noreferrer" class="designer-link">@kapamagaria</a>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<!-- სკრიპტები -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('js/layout.js') }}" defer></script>
+@stack('scripts')
 </body>
 </html>

@@ -590,42 +590,45 @@ body {
     }
 }
 
-/* ფუთერი */
 .footer {
     background-color: #1a365d;
     color: #ffffff;
     padding: 30px 0 20px;
     margin-top: auto;
 }
-
 .footer a {
     color: #ffffff;
     text-decoration: none;
     transition: color 0.3s ease;
 }
-
 .footer a:hover {
     color: #00a4bd;
 }
-
 .footer-brand {
     font-weight: 700;
     font-size: 22px;
     margin-bottom: 10px;
     color: white;
 }
-
 .footer-contact {
     margin-top: 15px;
 }
-
 .footer-contact p {
     margin-bottom: 8px;
     display: flex;
     align-items: center;
 }
-
 .footer-contact i {
     margin-right: 10px;
     color: #00a4bd;
+}
+.footer-bottom {
+    font-size: 14px;
+}
+.designer-link {
+    color: #00a4bd;
+    font-weight: 500;
+}
+.designer-link:hover {
+    text-decoration: underline;
 }
