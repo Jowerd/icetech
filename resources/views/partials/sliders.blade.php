@@ -357,49 +357,49 @@
                 <div class="brands-track">
                     <!-- პირველი სლაიდერის ჯგუფი -->
                     <div class="brand-slide">
-                        <img src="/images/brands/images.jpg" alt="ბრენდი 1" class="brand-logo">
+                        <img src="/images/brands/images.jpg" alt="ბრენდი 1" class="brand-logo" loading="lazy">
                     </div>
                     <div class="brand-slide">
-                        <img src="/images/brands/oven.png" alt="ბრენდი 2" class="brand-logo">
+                        <img src="/images/brands/oven.png" alt="ბრენდი 2" class="brand-logo" loading="lazy">
                     </div>
                     <div class="brand-slide">
-                        <img src="/images/brands/ciq.png" alt="ბრენდი 3" class="brand-logo">
+                        <img src="/images/brands/ciq.png" alt="ბრენდი 3" class="brand-logo" loading="lazy">
                     </div>
                     <div class="brand-slide">
-                        <img src="/images/brands/ai.png" alt="ბრენდი 4" class="brand-logo">
+                        <img src="/images/brands/ai.png" alt="ბრენდი 4" class="brand-logo" loading="lazy">
                     </div>
                     <div class="brand-slide">
-                        <img src="/images/brands/no.webp" alt="ბრენდი 5" class="brand-logo">
+                        <img src="/images/brands/no.webp" alt="ბრენდი 5" class="brand-logo" loading="lazy">
                     </div>
                     <div class="brand-slide">
-                        <img src="/images/brands/k.png" alt="ბრენდი 6" class="brand-logo">
+                        <img src="/images/brands/k.png" alt="ბრენდი 6" class="brand-logo" loading="lazy">
                     </div>
-                    
-                    
-                    <!-- დუბლიკატი სლაიდერისთვის, რომ შეიქმნას უწყვეტი ეფექტი -->
+
+                    <!-- დუბლიკატი სლაიდერისთვის -->
                     <div class="brand-slide">
-                        <img src="/images/brands/images.jpg" alt="ბრენდი 1" class="brand-logo">
-                    </div>
-                    <div class="brand-slide">
-                        <img src="/images/brands/oven.png" alt="ბრენდი 2" class="brand-logo">
+                        <img src="/images/brands/images.jpg" alt="ბრენდი 1" class="brand-logo" loading="lazy">
                     </div>
                     <div class="brand-slide">
-                        <img src="/images/brands/ciq.png" alt="ბრენდი 3" class="brand-logo">
+                        <img src="/images/brands/oven.png" alt="ბრენდი 2" class="brand-logo" loading="lazy">
                     </div>
                     <div class="brand-slide">
-                        <img src="/images/brands/ai.png" alt="ბრენდი 4" class="brand-logo">
+                        <img src="/images/brands/ciq.png" alt="ბრენდი 3" class="brand-logo" loading="lazy">
                     </div>
                     <div class="brand-slide">
-                        <img src="/images/brands/no.webp" alt="ბრენდი 5" class="brand-logo">
+                        <img src="/images/brands/ai.png" alt="ბრენდი 4" class="brand-logo" loading="lazy">
                     </div>
                     <div class="brand-slide">
-                        <img src="/images/brands/k.png" alt="ბრენდი 6" class="brand-logo">
+                        <img src="/images/brands/no.webp" alt="ბრენდი 5" class="brand-logo" loading="lazy">
+                    </div>
+                    <div class="brand-slide">
+                        <img src="/images/brands/k.png" alt="ბრენდი 6" class="brand-logo" loading="lazy">
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- შეფასების ფორმა (კოლაფსური) -->
 <div class="review-form-container mt-5">
