@@ -35,11 +35,24 @@
                     <div class="category-card">
                         <div class="category-image-wrapper">
                             <div class="category-image-container">
-                                @if($category->image)
-                                    <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="category-image" loading="lazy">
-                                @else
-                                    <img src="{{ asset('default-category.png') }}" alt="Default Image" class="category-image" loading="lazy">
-                                @endif
+@if($category->image)
+    <img 
+        src="{{ asset('storage/' . $category->image) }}" 
+        alt="{{ $category->name }}" 
+        class="category-image" 
+        loading="lazy"
+        width="102" height="102"
+    >
+@else
+    <img 
+        src="{{ asset('default-category.png') }}" 
+        alt="Default Image" 
+        class="category-image" 
+        loading="lazy"
+        width="102" height="102"
+    >
+@endif
+
                             </div>
                         </div>
                         <div class="category-content">

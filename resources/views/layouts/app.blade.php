@@ -66,7 +66,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="preload" href="/fonts/BPGMrgvlovaniCaps2010.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-
     @stack('styles')
 </head>
 <body>
