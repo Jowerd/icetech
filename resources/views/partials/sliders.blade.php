@@ -8,7 +8,7 @@
                     <img src="/images/samz.webp" class="d-block w-100" alt="პროფესიონალური სამზარეულო" fetchpriority="high">
                     <div class="overlay"></div>
                     <div class="carousel-caption caption-custom">
-                        <h5 class="slide-title">პროფესიონალური სამზარეულო</h5>
+                        <h1 class="slide-title">პროფესიონალური სამზარეულო</h1>
                         <p class="slide-description">კომერციული სამზარეულოს სრულყოფილი აღჭურვილობა მაღალი სტანდარტებით.</p>
                     </div>
                 </div>
@@ -16,7 +16,7 @@
                     <img src="/images/tuza.webp" class="d-block w-100" alt="მაქსიმალური სისუფთავე">
                     <div class="overlay"></div>
                     <div class="carousel-caption caption-custom">
-                        <h5 class="slide-title">მაქსიმალური სისუფთავე</h5>
+                        <h2 class="slide-title">მაქსიმალური სისუფთავე</h2>
                         <p class="slide-description">ყველა ჰიგიენური მოთხოვნის დაცვით მოწყობილი სივრცე პროფესიონალებისთვის.</p>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                     <img src="/images/utas.webp" class="d-block w-100" alt="მაღალი ხარისხის ტექნიკა">
                     <div class="overlay"></div>
                     <div class="carousel-caption caption-custom">
-                        <h5 class="slide-title">მაღალი ხარისხის ტექნიკა</h5>
+                        <h2 class="slide-title">მაღალი ხარისხის ტექნიკა</h2>
                         <p class="slide-description">უსაფრთხო, გამძლე და ეფექტური ტექნიკა პროფესიონალური სამუშაოსთვის.</p>
                     </div>
                 </div>
@@ -46,11 +46,11 @@
     <div class="col-12 d-flex justify-content-between align-items-center">
         <h2 class="text-uppercase mb-0">კატეგორიები</h2> <!-- fw-bold წაშლილია -->
         <div class="category-slider-controls">
-            <button class="btn btn-sm category-control-prev" type="button">
-                <i class="bi bi-chevron-left"></i>
+            <button class="btn btn-sm category-control-prev" type="button" aria-label="წინა კატეგორია">
+                    <i class="bi bi-chevron-left"></i>
             </button>
-            <button class="btn btn-sm category-control-next" type="button">
-                <i class="bi bi-chevron-right"></i>
+            <button class="btn btn-sm category-control-next" type="button" aria-label="შემდეგი კატეგორია">
+                 <i class="bi bi-chevron-right"></i>
             </button>
         </div>
     </div>
@@ -74,7 +74,7 @@
                                 </div>
                                 </div>
                                 <div class="category-content">
-                                    <h5 class="category-title">{{ $category->name }}</h5>
+                                    <h3 class="category-title">{{ $category->name }}</h3>
                                     <div class="view-more">
                                         <span>ნახვა</span>
                                         <i class="bi bi-arrow-right"></i>
@@ -96,10 +96,10 @@
     <div class="col-12 d-flex justify-content-between align-items-center">
         <h2 class="text-uppercase mb-0">პოპულარული</h2> <!-- fw-bold წაშლილია -->
         <div class="popular-slider-controls">
-            <button class="btn btn-sm popular-control-prev" type="button">
+            <button class="btn btn-sm popular-control-prev" type="button" aria-label="წინა პოპულარული პროდუქტი" disabled style="opacity: 0.5;">
                 <i class="bi bi-chevron-left"></i>
             </button>
-            <button class="btn btn-sm popular-control-next" type="button">
+            <button class="btn btn-sm popular-control-next" type="button" aria-label="შემდეგი პოპულარული პროდუქტი" style="opacity: 1;">
                 <i class="bi bi-chevron-right"></i>
             </button>
         </div>
@@ -146,7 +146,7 @@
                         <img src="{{ $flagPath }}" alt="Country Flag" width="20" height="15">
                         <span class="country-code">{{ strtoupper($product->supplier_country) }}</span>
                     </div>
-                    <h5 class="product-title">{{ $product->name }}</h5>
+                    <h3 class="product-title">{{ $product->name }}</h3>
                     <p class="price">{{ number_format($product->price, 2) }} ₾</p>
                     <div class="view-more">
                         <span>დეტალები</span>
@@ -168,10 +168,10 @@
     <div class="col-12 d-flex justify-content-between align-items-center">
         <h2 class="text-uppercase mb-0">ბოლოს დამატებული</h2>
         <div class="newest-slider-controls">
-            <button class="btn btn-sm newest-control-prev" type="button">
+            <button class="btn btn-sm newest-control-prev" type="button" aria-label="წინა დამატებული პროდუქტი" disabled style="opacity: 0.5;">
                 <i class="bi bi-chevron-left"></i>
             </button>
-            <button class="btn btn-sm newest-control-next" type="button">
+            <button class="btn btn-sm newest-control-next" type="button" aria-label="შემდეგი დამატებული პროდუქტი" disabled style="opacity: 0.5;">
                 <i class="bi bi-chevron-right"></i>
             </button>
         </div>
@@ -234,7 +234,7 @@
                                         <img src="{{ $flagPath }}" alt="Country Flag" width="20" height="15">
                                         <span class="country-code">{{ strtoupper($product->supplier_country) }}</span>
                                     </div>
-                                    <h5 class="product-title">{{ $product->name }}</h5>
+                                    <h3 class="product-title">{{ $product->name }}</h3>
                                     <p class="price">{{ number_format($product->price, 2) }} ₾</p>
                                     <div class="view-more">
                                         <span>დეტალები</span>
@@ -272,7 +272,7 @@
                                         <div class="review-author-initial">{{ substr($review->author_name, 0, 1) }}</div>
                                     @endif
                                     <div class="review-author-info">
-                                        <h5 class="review-author-name">{{ $review->author_name }}</h5>
+                                        <h3 class="review-author-name">{{ $review->author_name }}</h3>
                                         <div class="review-rating">
                                             @for($i = 1; $i <= 5; $i++)
                                                 @if($i <= $review->rating)
@@ -323,7 +323,7 @@
                             </div>
                         @endif
                         <div class="blog-card-body">
-                            <h5 class="blog-card-title">{{ $post->title }}</h5>
+                            <h3 class="blog-card-title">{{ $post->title }}</h3>
                             <p class="blog-card-text">
                                 {{ Str::limit($post->excerpt ?? strip_tags($post->content), 100) }}
                             </p>
