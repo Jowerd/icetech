@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
 @endpush
 
+
+
+
 @section('content')
     <!-- პროდუქტების სლაიდერი Schema.org მონიშვნით -->
     <div itemscope itemtype="https://schema.org/ItemList">

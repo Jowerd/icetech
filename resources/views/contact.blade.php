@@ -61,9 +61,10 @@
 @endpush
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/layout.css') }}">
-<link rel="stylesheet" href="{{ asset('css/contact.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/contact.css') }}">
 @endpush
+
 
 @section('content')
     <!-- რუკა სრულ სიგანეზე -->

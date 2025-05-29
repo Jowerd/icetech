@@ -128,9 +128,11 @@ $meta_desc = $product->meta_description ?? Str::limit($clean_description, 160) ?
 @endpush
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
     <link rel="stylesheet" href="{{ asset('css/product.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
 @endpush
+
+
 
 @section('content')
     @include('partials.product-view')

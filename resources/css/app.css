@@ -1,4 +1,12 @@
 @import 'tailwindcss';
+@import './layout.css';
+@import './home-sliders.css';
+@import './chat.css';
+@import './product.css';
+@import './category.css';
+@import './about.css';
+@import './categories.css';
+@import './contact.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';

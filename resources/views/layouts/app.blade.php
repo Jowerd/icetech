@@ -46,7 +46,7 @@
         "telephone": "+995 511 55 58 88",
         "email": "info@icetech.ge",
         "address": {
-            "@type": "5700",
+            "@type": "PostalAddress",
             "addressLocality": "ხაშური",
             "addressRegion": "შიდა ქართლი",
             "addressCountry": "GE"
@@ -161,6 +161,7 @@
         </div>
     </main>
 
+    
 <!-- ფუთერი -->
 <footer class="footer">
     <div class="container">
@@ -182,7 +183,7 @@
                 <h5 class="mb-3">საკონტაქტო ინფორმაცია</h5>
                 <div class="footer-contact">
                     <p><i class="bi bi-envelope-fill" aria-hidden="true"></i> <a href="mailto:info@icetech.ge">info@icetech.ge</a></p>
-                    <p><i class="bi bi-telephone-fill" aria-hidden="true"></i> <a href="tel:+995555555555">+995 555 55 55 55</a></p>
+                    <p><i class="bi bi-telephone-fill" aria-hidden="true"></i> <a href="tel:+995511555888">+995 511 555 888</a></p>
                     <p><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> თბილისი, საქართველო</p>
                     <a href="#" class="text-white me-3" aria-label="Instagram"><i class="bi bi-instagram fs-5" aria-hidden="true"></i></a>
                     <a href="#" class="text-white me-3" aria-label="Facebook"><i class="bi bi-facebook fs-5" aria-hidden="true"></i></a>
