@@ -5,7 +5,7 @@
             <!-- მთავარი სლაიდერის ინდიკატორები წაშლილია -->
             <div class="carousel-inner text-start">
                 <div class="carousel-item active position-relative">
-                    <img src="/images/samz.webp" class="d-block w-100" alt="პროფესიონალური სამზარეულო">
+                    <img src="/images/samz.webp" class="d-block w-100" alt="პროფესიონალური სამზარეულო" fetchpriority="high">
                     <div class="overlay"></div>
                     <div class="carousel-caption caption-custom">
                         <h5 class="slide-title">პროფესიონალური სამზარეულო</h5>
