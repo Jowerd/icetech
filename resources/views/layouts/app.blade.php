@@ -67,8 +67,18 @@
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="preload" href="/fonts/BPGMrgvlovaniCaps2010.woff2" as="font" type="font/woff2" crossorigin="anonymous">
     @stack('styles')
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0VJEBWMJL1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0VJEBWMJL1');
+</script>
 </head>
 <body>
+    
     <!-- ჰედერი -->
     <header class="header">
         <!-- ბრენდის სექცია -->
@@ -168,7 +178,7 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="footer-brand">ICETECH</div>
-                <p>კომერციული სამზარეულოს და გასაცივებელი მოწყობილობების მიმწოდებელი საქართველოში.</p>
+                <p>შენი კომერციული საქმიანობის მხარდამჭერი.</p>
             </div>
             <div class="col-md-4">
                 <h5 class="mb-3">სწრაფი ბმულები</h5>
@@ -184,9 +194,9 @@
                 <div class="footer-contact">
                     <p><i class="bi bi-envelope-fill" aria-hidden="true"></i> <a href="mailto:info@icetech.ge">info@icetech.ge</a></p>
                     <p><i class="bi bi-telephone-fill" aria-hidden="true"></i> <a href="tel:+995511555888">+995 511 555 888</a></p>
-                    <p><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> თბილისი, საქართველო</p>
-                    <a href="#" class="text-white me-3" aria-label="Instagram"><i class="bi bi-instagram fs-5" aria-hidden="true"></i></a>
+                    <p><i class="bi bi-geo-alt-fill" aria-hidden="true"></i>ხაშური,ბორჯომის ქუჩა #2</p>
                     <a href="#" class="text-white me-3" aria-label="Facebook"><i class="bi bi-facebook fs-5" aria-hidden="true"></i></a>
+                    <a href="#" class="text-white me-3" aria-label="Instagram"><i class="bi bi-instagram fs-5" aria-hidden="true"></i></a>
                 </div>
             </div>
         </div>
