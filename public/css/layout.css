@@ -3,18 +3,20 @@ body {
     flex-direction: column;
     min-height: 100vh;
     background-color: rgb(248, 244, 244);
-    font-family: 'BPG Mrgvlovani', sans-serif;
+    font-family: 'BPG Mrgvlovani', Tahoma, Arial, sans-serif;
     max-width: 100%;
     padding-top: 173px;
     transition: padding-top 0.3s ease;
 }
 
 @font-face {
-    font-family: 'BPG Mrgvlovani';
-    src: url('/fonts/bpg_mrgvlovani_caps_2010.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'BPG Mrgvlovani';
+  src: url('/fonts/BPGMrgvlovaniCaps2010.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
+
 
 /* ჰედერის სტილი 248, 244, 244*/
 .header {

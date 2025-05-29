@@ -43,7 +43,7 @@
         "url": "{{ url('/') }}",
         "logo": "{{ asset('favicon.svg') }}",
         "image": "{{ asset('images/icetech-og-image.jpg') }}",
-        "telephone": "+995 555 55 55 55",
+        "telephone": "+995 511 55 58 88",
         "email": "info@icetech.ge",
         "address": {
             "@type": "5700",
@@ -65,6 +65,8 @@
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preload" href="/fonts/BPGMrgvlovaniCaps2010.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
     @stack('styles')
 </head>
 <body>

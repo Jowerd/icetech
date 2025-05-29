@@ -32,7 +32,7 @@
     },
     "contactPoint": {
         "@type": "ContactPoint",
-        "telephone": "+995 555 55 55 55",
+        "telephone": "+995 511 55 58 88",
         "contactType": "customer service",
         "email": "info@icetech.ge",
         "areaServed": "GE",
@@ -130,7 +130,7 @@
                         </div>
                         <div>
                             <strong class="d-block mb-2 fs-5">ტელეფონი</strong>
-                            <a href="tel:+995555555555" class="text-decoration-none contact-link">+995 555 55 55 55</a>
+                            <a href="tel:+995511555888" class="text-decoration-none contact-link">+995 511 555 888</a>
                         </div>
                     </div>
                 </div>
@@ -145,7 +145,7 @@
                         </div>
                         <div>
                             <strong class="d-block mb-2 fs-5">WhatsApp</strong>
-                            <a href="https://wa.me/995555555555" target="_blank" class="text-decoration-none contact-link">მოგვწერე WhatsApp-ზე</a>
+                            <a href="https://wa.me/995511555888" target="_blank" class="text-decoration-none contact-link">მოგვწერე WhatsApp-ზე</a>
                         </div>
                     </div>
                 </div>
