@@ -634,3 +634,331 @@ body {
 .designer-link:hover {
     text-decoration: underline;
 }
+/* ქუქის ბანერის სტილები */
+.cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #1a365d 0%, #2d4a6b 100%);
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0 -3px 20px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    transform: translateY(100%);
+    transition: all 0.4s ease;
+    border-top: 3px solid #00a4bd;
+}
+
+.cookie-banner.show {
+    transform: translateY(0);
+}
+
+.cookie-banner.hide {
+    opacity: 0;
+    transform: translateY(100%);
+}
+
+.cookie-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.cookie-text {
+    flex: 1;
+    min-width: 280px;
+}
+
+.cookie-text h5 {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #00a4bd;
+    font-size: 18px;
+}
+
+.cookie-text p {
+    margin-bottom: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: 0.95;
+}
+
+.cookie-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.cookie-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'BPG Mrgvlovani', Tahoma, Arial, sans-serif;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.cookie-btn-accept {
+    background-color: #00a4bd;
+    color: white;
+}
+
+.cookie-btn-accept:hover {
+    background-color: #008fa5;
+    transform: translateY(-1px);
+    color: white;
+}
+
+.cookie-btn-decline {
+    background-color: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.cookie-btn-decline:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: white;
+}
+
+.cookie-btn-settings {
+    background-color: transparent;
+    color: #00a4bd;
+    border: 1px solid #00a4bd;
+    font-size: 13px;
+    padding: 8px 16px;
+}
+
+.cookie-btn-settings:hover {
+    background-color: #00a4bd;
+    color: white;
+}
+
+/* მობილური ადაპტაცია */
+@media (max-width: 768px) {
+    .cookie-banner {
+        padding: 15px 0;
+    }
+    
+    .cookie-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .cookie-text {
+        min-width: auto;
+    }
+    
+    .cookie-text h5 {
+        font-size: 16px;
+    }
+    
+    .cookie-text p {
+        font-size: 13px;
+    }
+    
+    .cookie-actions {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .cookie-btn {
+        padding: 12px 20px;
+        font-size: 13px;
+        min-width: 110px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cookie-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .cookie-btn {
+        width: 100%;
+        max-width: 250px;
+    }
+}
+
+/* ქუქის პარამეტრების მოდალი */
+.cookie-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.cookie-modal.show {
+    display: flex;
+}
+
+.cookie-modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.cookie-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.cookie-modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a365d;
+    margin: 0;
+}
+
+.cookie-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cookie-modal-close:hover {
+    color: #1a365d;
+}
+
+.cookie-category {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.cookie-category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.cookie-category-title {
+    font-weight: 600;
+    color: #1a365d;
+    margin: 0;
+    font-size: 16px;
+}
+
+.cookie-toggle {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.cookie-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.cookie-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+.cookie-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+.cookie-toggle input:checked + .cookie-slider {
+    background-color: #00a4bd;
+}
+
+.cookie-toggle input:checked + .cookie-slider:before {
+    transform: translateX(26px);
+}
+
+.cookie-toggle input:disabled + .cookie-slider {
+    background-color: #4CAF50;
+    cursor: not-allowed;
+}
+
+.cookie-category-desc {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.cookie-modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+@media (max-width: 480px) {
+    .cookie-modal-content {
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    .cookie-modal-actions {
+        flex-direction: column;
+    }
+    
+    .cookie-btn {
+        width: 100%;
+    }
+}

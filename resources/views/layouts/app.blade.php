@@ -67,14 +67,25 @@
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="preload" href="/fonts/BPGMrgvlovaniCaps2010.woff2" as="font" type="font/woff2" crossorigin="anonymous">
     @stack('styles')
-    <!-- Google tag (gtag.js) -->
+<!-- Google tag (gtag.js) with Consent Mode -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0VJEBWMJL1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-0VJEBWMJL1');
+  // Default consent state - denied until user accepts
+  gtag('consent', 'default', {
+    'analytics_storage': 'denied',
+    'ad_storage': 'denied'
+  });
+
+  // Initialize Google Analytics with anonymized data
+  gtag('config', 'G-0VJEBWMJL1', {
+    'anonymize_ip': true,
+    'cookie_flags': 'secure;samesite=lax',
+    'allow_google_signals': false
+  });
 </script>
 </head>
 <body>
@@ -213,6 +224,70 @@
 <!-- სკრიპტები -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset('js/layout.js') }}" defer></script>
+<script src="{{ asset('js/cookies.js') }}" defer></script>
 @stack('scripts')
+<!-- ქუქის მაფრთხილებელი ბანერი -->
+<div class="cookie-banner" id="cookieBanner">
+    <div class="cookie-content">
+        <div class="cookie-text">
+            <h5><i class="bi bi-info-circle me-2"></i>ქუქების გამოყენება</h5>
+            <p>ჩვენ ვიყენებთ ქუქებს საიტის მუშაობის გასაუმჯობესებლად და თქვენი გამოცდილების პერსონალიზებისთვის. საიტის გამოყენებით თქვენ ეთანხმებით ქუქების გამოყენებას. <a href="#" class="text-white text-decoration-underline">მეტი ინფორმაცია</a></p>
+        </div>
+        <div class="cookie-actions">
+            <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">
+                <i class="bi bi-check-lg"></i> მიღება
+            </button>
+            <button class="cookie-btn cookie-btn-decline" onclick="declineCookies()">
+                <i class="bi bi-x-lg"></i> უარყოფა
+            </button>
+            <button class="cookie-btn cookie-btn-settings" onclick="openCookieSettings()">
+                <i class="bi bi-gear"></i> პარამეტრები
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ქუქის პარამეტრების მოდალი -->
+<div class="cookie-modal" id="cookieModal">
+    <div class="cookie-modal-content">
+        <div class="cookie-modal-header">
+            <h4 class="cookie-modal-title">ქუქების პარამეტრები</h4>
+            <button class="cookie-modal-close" onclick="closeCookieSettings()">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
+        
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h5 class="cookie-category-title">აუცილებელი ქუქები</h5>
+                <div class="cookie-toggle">
+                    <input type="checkbox" id="essential" checked disabled>
+                    <span class="cookie-slider"></span>
+                </div>
+            </div>
+            <p class="cookie-category-desc">ეს ქუქები აუცილებელია საიტის სწორი მუშაობისთვის და არ შეიძლება გათიშვა.</p>
+        </div>
+        
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h5 class="cookie-category-title">ანალიტიკური ქუქები</h5>
+                <div class="cookie-toggle">
+                    <input type="checkbox" id="analytics" checked>
+                    <span class="cookie-slider"></span>
+                </div>
+            </div>
+            <p class="cookie-category-desc">ეს ქუქები გვეხმარება საიტის გამოყენების სტატისტიკის შეგროვებაში (Google Analytics).</p>
+        </div>
+        
+        <div class="cookie-modal-actions">
+            <button class="cookie-btn cookie-btn-decline" onclick="declineCookies()">
+                უარყოფა
+            </button>
+            <button class="cookie-btn cookie-btn-accept" onclick="saveSettings()">
+                შენახვა
+            </button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
