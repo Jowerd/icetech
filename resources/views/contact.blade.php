@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'კონტაქტი • ICETECH - დაგვიკავშირდით კომერციული სამზარეულოს აღჭურვილობისთვის')
+@section('title', 'კონტაქტი • ICETECH')
 
 @section('meta_description', 'დაგვიკავშირდით ICETECH-ს - პროფესიონალური სამზარეულოს და გასაცივებელი მოწყობილობების მიმწოდებელი საქართველოში. გაიგეთ ჩვენი მისამართი, ტელეფონი და ელ.ფოსტა.')
 
@@ -22,37 +22,50 @@
 <!-- დამატებითი სტრუქტურირებული მონაცემები კონტაქტის გვერდისთვის -->
 <script type="application/ld+json">
 {
-    "@context": "https://schema.org",
-    "@type": "ContactPage",
-    "name": "ICETECH კონტაქტი",
-    "description": "დაგვიკავშირდით ICETECH-ს - პროფესიონალური სამზარეულოს და გასაცივებელი მოწყობილობების მიმწოდებელი საქართველოში",
-    "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "{{ route('contact') }}"
-    },
-    "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+995 511 55 58 88",
-        "contactType": "customer service",
-        "email": "info@icetech.ge",
-        "areaServed": "GE",
-        "availableLanguage": "Georgian"
-    },
-    "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "ხაშური",
-        "addressRegion": "შიდა ქართლი",
-        "addressCountry": "GE"
-    },
-    "openingHoursSpecification": {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        "opens": "10:00",
-        "closes": "18:00"
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "name": "ICETECH კონტაქტი",
+  "description": "დაგვიკავშირდით ICETECH-ს - პროფესიონალური სამზარეულოს და გასაცივებელი მოწყობილობების მიმწოდებელი საქართველოში",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ route('contact') }}"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+995 511 55 58 88",
+    "contactType": "customer service",
+    "email": "info@icetech.ge",
+    "areaServed": "GE",
+    "availableLanguage": {
+      "@type": "Language",
+      "name": "Georgian"
     }
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "ბორჯომის ქუჩა #2",
+    "postalCode": "5700",
+    "addressLocality": "ხაშური",
+    "addressRegion": "შიდა ქართლი",
+    "addressCountry": {
+      "@type": "Country",
+      "name": "GE"
+    }
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    "opens": "10:00",
+    "closes": "18:00"
+  }
 }
 </script>
-
 <!-- სოციალური მედიის მეტა ტეგები ფოტოს გამოსაჩენად -->
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
