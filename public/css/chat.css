@@ -16,9 +16,7 @@
     box-shadow: 0 4px 12px rgba(0, 164, 189, 0.3);
     z-index: 1050;
     transition: all 0.3s ease;
-    /* position: relative; ← წასაშლელია */
 }
-
 
 .chat-icon:hover {
     transform: scale(1.1);
@@ -27,14 +25,6 @@
 
 .chat-icon.pulse {
     animation: pulse-animation 2s infinite;
-}
-
-.chat-icon.admin-online {
-    background-color: #28a745;
-}
-
-.chat-icon.admin-online .admin-status {
-    display: flex;
 }
 
 @keyframes pulse-animation {
@@ -46,18 +36,6 @@
     }
     100% {
         box-shadow: 0 0 0 0 rgba(0, 164, 189, 0);
-    }
-}
-
-@keyframes admin-pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
     }
 }
 
@@ -75,24 +53,6 @@
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    z-index: 2;
-}
-
-.admin-status {
-    position: absolute;
-    top: -8px;
-    left: -8px;
-    background-color: #28a745;
-    color: white;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 10px;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid white;
-    z-index: 3;
 }
 
 .chat-modal {
@@ -136,66 +96,10 @@
     border-top-right-radius: 16px;
 }
 
-.header-info h5 {
+.chat-header h5 {
     margin: 0;
     font-size: 16px;
     font-weight: 600;
-}
-
-.status-indicator {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 3px;
-}
-
-.status-dot {
-    width: 8px;
-    height: 8px;
-    background-color: #28a745;
-    border-radius: 50%;
-    display: inline-block;
-    animation: status-blink 2s infinite;
-}
-
-.status-dot.bot-mode {
-    background-color: #00a4bd;
-}
-
-.status-dot.admin-mode {
-    background-color: #28a745;
-}
-
-.status-text {
-    font-size: 11px;
-    opacity: 0.9;
-}
-
-@keyframes status-blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0.3; }
-}
-
-.admin-notification {
-    background: linear-gradient(135deg, #28a745, #20c997);
-    color: white;
-    padding: 10px 15px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-    from {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
 }
 
 .chat-controls {
@@ -259,11 +163,6 @@
     border-bottom-left-radius: 5px;
 }
 
-.admin-message.live-admin .message-content {
-    background-color: #d4edda;
-    border: 1px solid #c3e6cb;
-}
-
 .user-message .message-content {
     background-color: #00a4bd;
     color: white;
@@ -291,11 +190,6 @@
     background-color: #ffffff;
 }
 
-.chat-footer.live-mode {
-    background: linear-gradient(135deg, #e8f5e8, #f0fff0);
-    border-top: 2px solid #28a745;
-}
-
 .chat-input-container {
     display: flex;
     align-items: center;
@@ -316,10 +210,6 @@
     border-color: #00a4bd;
 }
 
-.chat-input.live-mode:focus {
-    border-color: #28a745;
-}
-
 .chat-send-btn {
     background-color: #00a4bd;
     color: white;
@@ -337,14 +227,6 @@
 .chat-send-btn:hover {
     background-color: #008ca0;
     transform: scale(1.05);
-}
-
-.chat-send-btn.live-mode {
-    background-color: #28a745;
-}
-
-.chat-send-btn.live-mode:hover {
-    background-color: #218838;
 }
 
 .chat-send-btn i {

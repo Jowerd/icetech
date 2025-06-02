@@ -5,21 +5,12 @@
 <div id="chatIcon" class="chat-icon">
     <i class="bi bi-chat-dots-fill"></i>
     <span class="chat-badge">1</span>
-    <div class="admin-status" id="adminStatus">
-        <i class="bi bi-person-fill"></i>
-    </div>
 </div>
 
 <!-- ჩათის მოდალი -->
 <div id="chatModal" class="chat-modal">
     <div class="chat-header">
-        <div class="header-info">
-            <h5>ICETECH</h5>
-            <div class="status-indicator" id="statusIndicator">
-                <span class="status-dot"></span>
-                <span class="status-text">ბოტი ონლაინ</span>
-            </div>
-        </div>
+        <h5>ICETECH ბოტი</h5>
         <div class="chat-controls">
             <button id="chatMinimize" class="chat-control-btn">
                 <i class="bi bi-dash-lg"></i>
@@ -29,13 +20,6 @@
             </button>
         </div>
     </div>
-    
-    <!-- ადმინის შემოსვლის შეტყობინება -->
-    <div id="adminJoinedNotification" class="admin-notification" style="display: none;">
-        <i class="bi bi-person-check-fill"></i>
-        <span>ადმინისტრატორი შემოვიდა ჩათში</span>
-    </div>
-    
     <div class="chat-body">
         <div id="chatMessages" class="chat-messages">
             <!-- ადმინისტრატორის მისალმება -->

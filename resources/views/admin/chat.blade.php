@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ადმინპანელი - ლაივ ჩათი</title>
+    <title>ლაივ ჩათი - Firebase</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
         * {
@@ -14,276 +14,213 @@
         
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
+            background-color: #f0f2f5;
         }
         
-        .admin-header {
-            background: linear-gradient(135deg, #1a365d, #2d5a87);
+        .chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00a4bd, #007a8c);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 164, 189, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .chat-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(0, 164, 189, 0.6);
+        }
+        
+        .chat-icon i {
             color: white;
-            padding: 1rem 2rem;
+            font-size: 24px;
+        }
+        
+        .chat-modal {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 380px;
+            height: 500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-modal.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, #00a4bd, #007a8c);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px 15px 0 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
-        .admin-title {
+        .chat-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .chat-controls {
             display: flex;
-            align-items: center;
             gap: 10px;
         }
         
-        .status-badge {
-            background-color: #28a745;
-            padding: 5px 12px;
-            border-radius: 20px;
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .control-btn i {
+            color: white;
             font-size: 12px;
+        }
+        
+        .chat-status {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
         }
         
         .status-dot {
             width: 8px;
             height: 8px;
-            background-color: white;
             border-radius: 50%;
+            background-color: #28a745;
             animation: pulse 2s infinite;
         }
         
         @keyframes pulse {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.5; }
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
         
-        .main-container {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            height: calc(100vh - 80px);
-            gap: 20px;
-            padding: 20px;
+        .status-text {
+            font-size: 12px;
+            color: #666;
         }
         
-        .chat-sessions {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        .chat-messages {
+            flex: 1;
             padding: 20px;
             overflow-y: auto;
+            background: #f8f9fa;
         }
         
-        .sessions-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e9ecef;
-        }
-        
-        .session-item {
-            padding: 15px;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .session-item:hover {
-            border-color: #00a4bd;
-            background-color: #f8f9fa;
-        }
-        
-        .session-item.active {
-            border-color: #00a4bd;
-            background-color: #e3f2fd;
-        }
-        
-        .session-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .session-details h6 {
-            margin: 0;
-            color: #333;
-            font-size: 14px;
-        }
-        
-        .session-details p {
-            margin: 5px 0 0 0;
-            color: #666;
-            font-size: 12px;
-        }
-        
-        .new-message-indicator {
-            width: 10px;
-            height: 10px;
-            background-color: #e74c3c;
-            border-radius: 50%;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            animation: pulse 1s infinite;
-        }
-        
-        .chat-window {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        .message {
+            margin-bottom: 15px;
             display: flex;
             flex-direction: column;
         }
         
-        .chat-window-header {
-            padding: 20px;
-            border-bottom: 1px solid #e9ecef;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .message.user-message {
+            align-items: flex-end;
         }
         
-        .customer-info h5 {
-            margin: 0;
-            color: #333;
+        .message.admin-message {
+            align-items: flex-start;
         }
         
-        .customer-info p {
-            margin: 5px 0 0 0;
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .chat-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .action-btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary {
-            background-color: #00a4bd;
-            color: white;
-        }
-        
-        .btn-success {
-            background-color: #28a745;
-            color: white;
-        }
-        
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
-        
-        .action-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-        
-        .messages-container {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background-color: #f8f9fa;
-        }
-        
-        .admin-message-item {
-            display: flex;
-            margin-bottom: 15px;
-            max-width: 70%;
-        }
-        
-        .admin-message-item.user {
-            margin-left: auto;
-        }
-        
-        .admin-message-item.admin {
-            margin-right: auto;
-        }
-        
-        .message-bubble {
+        .message-content {
+            max-width: 80%;
             padding: 12px 16px;
-            border-radius: 15px;
+            border-radius: 18px;
             position: relative;
         }
         
-        .admin-message-item.user .message-bubble {
-            background-color: #00a4bd;
+        .user-message .message-content {
+            background: #00a4bd;
             color: white;
             border-bottom-right-radius: 5px;
         }
         
-        .admin-message-item.admin .message-bubble {
-            background-color: #e9ecef;
+        .admin-message .message-content {
+            background: white;
             color: #333;
+            border: 1px solid #e9ecef;
             border-bottom-left-radius: 5px;
         }
         
-        .message-text {
+        .message-content p {
             margin: 0;
             line-height: 1.4;
-            font-size: 14px;
         }
         
-        .message-timestamp {
-            display: block;
+        .message-time {
             font-size: 10px;
-            margin-top: 5px;
             opacity: 0.7;
-            text-align: right;
+            margin-top: 5px;
+            display: block;
         }
         
-        .admin-input-area {
-            padding: 20px;
+        .chat-input-container {
+            padding: 15px 20px;
             border-top: 1px solid #e9ecef;
-            background-color: white;
-        }
-        
-        .input-container {
+            background: white;
+            border-radius: 0 0 15px 15px;
             display: flex;
             gap: 10px;
-            align-items: flex-end;
+            align-items: center;
         }
         
-        .message-input {
+        .chat-input {
             flex: 1;
-            padding: 12px 15px;
             border: 1px solid #dee2e6;
             border-radius: 20px;
+            padding: 10px 15px;
             outline: none;
             font-size: 14px;
-            resize: vertical;
-            min-height: 40px;
-            max-height: 120px;
         }
         
-        .message-input:focus {
+        .chat-input:focus {
             border-color: #00a4bd;
             box-shadow: 0 0 0 0.2rem rgba(0, 164, 189, 0.25);
         }
         
-        .send-button {
-            background-color: #00a4bd;
-            color: white;
+        .send-btn {
+            background: #00a4bd;
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -291,659 +228,379 @@
             transition: all 0.3s ease;
         }
         
-        .send-button:hover {
-            background-color: #008ca0;
+        .send-btn:hover {
+            background: #008ca0;
             transform: scale(1.05);
         }
         
-        .send-button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-            transform: none;
+        .send-btn i {
+            color: white;
+            font-size: 14px;
         }
         
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            color: #666;
+        .admin-joined {
+            background: #d4edda;
+            color: #155724;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 10px 0;
             text-align: center;
+            border: 1px solid #c3e6cb;
         }
         
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-
-        .typing-indicator {
-            background-color: #e9ecef;
-            padding: 10px 15px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            max-width: 70%;
+        .connection-status {
+            padding: 8px 15px;
+            text-align: center;
+            font-size: 12px;
+            border-radius: 20px;
+            margin: 10px 0;
         }
         
-        .typing-dots {
-            display: flex;
-            gap: 3px;
+        .connection-status.connected {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
         
-        .typing-dots .dot {
-            width: 6px;
-            height: 6px;
-            background-color: #666;
-            border-radius: 50%;
-            animation: typing 1.4s infinite ease-in-out;
-        }
-        
-        .typing-dots .dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dots .dot:nth-child(2) { animation-delay: -0.16s; }
-        
-        @keyframes typing {
-            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-            40% { transform: scale(1); opacity: 1; }
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .main-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: 300px 1fr;
-            }
+        .connection-status.disconnected {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
     </style>
 </head>
 <body>
-    <div class="admin-header">
-        <div class="admin-title">
-            <i class="bi bi-chat-square-dots-fill" style="font-size: 24px;"></i>
-            <h4>ლაივ ჩათი - ადმინპანელი</h4>
-        </div>
-        <div class="status-badge">
-            <span class="status-dot"></span>
-            ონლაინ
-        </div>
+    <!-- Chat Icon -->
+    <div class="chat-icon" id="chatIcon">
+        <i class="bi bi-chat-dots-fill"></i>
     </div>
 
-    <div class="main-container">
-        <!-- Chat Sessions List -->
-        <div class="chat-sessions">
-            <div class="sessions-header">
-                <i class="bi bi-people-fill"></i>
-                <h5>აქტიური ჩათები</h5>
-                <span id="sessionCount" style="background: #00a4bd; color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px;">0</span>
-            </div>
-            
-            <div id="sessionsList">
-                <!-- Sessions will be loaded here -->
+    <!-- Chat Modal -->
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-header">
+            <div class="chat-title">ტექნიკური მხარდაჭერა</div>
+            <div class="chat-controls">
+                <button class="control-btn" id="chatMinimize">
+                    <i class="bi bi-dash"></i>
+                </button>
+                <button class="control-btn" id="chatClose">
+                    <i class="bi bi-x"></i>
+                </button>
             </div>
         </div>
-
-        <!-- Chat Window -->
-        <div class="chat-window">
-            <div id="chatWindowContent">
-                <div class="empty-state">
-                    <i class="bi bi-chat-dots"></i>
-                    <h5>აირჩიეთ ჩათი საუბრის დასაწყებად</h5>
-                    <p>მარცხნივ აირჩიეთ აქტიური ჩათი რომ დაიწყოთ კომუნიკაცია მომხმარებელთან</p>
+        
+        <div class="chat-status">
+            <div class="status-dot" id="statusDot"></div>
+            <span class="status-text" id="statusText">დაკავშირება...</span>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="message admin-message">
+                <div class="message-content">
+                    <p>გამარჯობა! როგორ შეგვიძლია დაგეხმაროთ?</p>
+                    <span class="message-time" id="initialTime"></span>
                 </div>
             </div>
         </div>
+        
+        <div class="chat-input-container">
+            <input type="text" class="chat-input" id="chatInput" placeholder="დაწერეთ შეტყობინება...">
+            <button class="send-btn" id="sendBtn">
+                <i class="bi bi-send-fill"></i>
+            </button>
+        </div>
     </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-app-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-database-compat.min.js"></script>
 
     <script>
-        // ადმინპანელის JavaScript კოდი
-        let currentSessionId = null;
-        let sessions = {};
-        let adminOnline = true;
-
-        // LocalStorage-ში მონაცემების შენახვა/განახლება
-        function saveToStorage(key, data) {
-            try {
-                localStorage.setItem(key, JSON.stringify(data));
-            } catch (e) {
-                console.error('Error saving to localStorage:', e);
-            }
-        }
-
-        function getFromStorage(key) {
-            try {
-                const data = localStorage.getItem(key);
-                return data ? JSON.parse(data) : null;
-            } catch (e) {
-                console.error('Error reading from localStorage:', e);
-                return null;
-            }
-        }
-
-        // ადმინის სტატუსის დაყენება
-        function setAdminStatus(online) {
-            adminOnline = online;
-            const statusData = {
-                online: online,
-                timestamp: new Date().toISOString()
-            };
-            saveToStorage('admin_status', statusData);
-        }
-
-        // ადმინის შეტყობინების გაგზავნა მომხმარებლისთვის
-        function sendMessageToUser(sessionId, message) {
-            const messageData = {
-                id: Date.now() + Math.random(),
-                sessionId: sessionId,
-                message: message,
-                type: 'admin',
-                timestamp: new Date().toISOString(),
-                read: false
-            };
-            
-            // შეტყობინების შენახვა
-            let messages = getFromStorage('chat_messages') || [];
-            messages.push(messageData);
-            saveToStorage('chat_messages', messages);
-            
-            return messageData;
-        }
-
-        // გვერდის ჩატვირთვისას
-        document.addEventListener('DOMContentLoaded', function() {
-            // ადმინის სტატუსის დაყენება
-            setAdminStatus(true);
-            
-            // სესიების ჩატვირთვა
-            loadChatSessions();
-            
-            // პერიოდული განახლება
-            setInterval(loadChatSessions, 2000);
-            setInterval(updateCurrentChatMessages, 1000);
-        });
-
-        // გვერდის დატოვებისას/დახურვისას
-        window.addEventListener('beforeunload', function() {
-            setAdminStatus(false);
-        });
-
-        // ბრაუზერის დახურვისას
-        document.addEventListener('visibilitychange', function() {
-            if (document.hidden) {
-                setAdminStatus(false);
-            } else {
-                setAdminStatus(true);
-            }
-        });
-
-        // ჩათის სესიების ჩატვირთვა localStorage-იდან
-        function loadChatSessions() {
-            const storedSessions = getFromStorage('chat_sessions') || [];
-            const messages = getFromStorage('chat_messages') || [];
-            
-            // აქტიური სესიების ფილტრაცია (ბოლო 2 საათში აქტიური)
-            const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
-            const activeSessions = storedSessions.filter(session => {
-                const lastActivity = new Date(session.last_activity);
-                return lastActivity > twoHoursAgo && session.status === 'active';
-            });
-
-            // თითოეული სესიისთვის უახლესი შეტყობინების პოვნა
-            activeSessions.forEach(session => {
-                const sessionMessages = messages.filter(msg => msg.sessionId === session.id);
-                if (sessionMessages.length > 0) {
-                    const lastMessage = sessionMessages[sessionMessages.length - 1];
-                    session.last_message = lastMessage.message;
-                    session.last_message_time = new Date(lastMessage.timestamp);
-                    
-                    // წაუკითხავი ადმინის შეტყობინებების რაოდენობა
-                    session.unread_admin_count = sessionMessages.filter(msg => 
-                        msg.type === 'user' && 
-                        !msg.read && 
-                        new Date(msg.timestamp) > (session.admin_last_read || new Date(0))
-                    ).length;
-                } else {
-                    session.last_message = 'ახალი ჩათი';
-                    session.last_message_time = new Date(session.last_activity);
-                    session.unread_admin_count = 0;
-                }
-            });
-
-            // სესიების დალაგება ბოლო აქტივობის მიხედვით
-            activeSessions.sort((a, b) => {
-                return new Date(b.last_message_time || b.last_activity) - new Date(a.last_message_time || a.last_activity);
-            });
-
-            displaySessions(activeSessions);
-        }
-
-        // სესიების ჩვენება
-        function displaySessions(sessionsData) {
-            const sessionsList = document.getElementById('sessionsList');
-            const sessionCount = document.getElementById('sessionCount');
-            
-            sessionCount.textContent = sessionsData.length;
-            sessionsList.innerHTML = '';
-            
-            if (sessionsData.length === 0) {
-                sessionsList.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #666;">
-                        <i class="bi bi-chat-dots" style="font-size: 32px; margin-bottom: 15px; opacity: 0.5;"></i>
-                        <p>აქტიური ჩათები არ არის</p>
-                        <small>მომხმარებლები რომლებიც ბოლო 2 საათში იყვნენ აქტიურნი გამოჩნდებიან აქ</small>
-                    </div>
-                `;
-                return;
-            }
-            
-            sessionsData.forEach(session => {
-                const sessionElement = createSessionElement(session);
-                sessionsList.appendChild(sessionElement);
-                sessions[session.id] = session;
-            });
-        }
-
-        // სესიის ელემენტის შექმნა
-        function createSessionElement(session) {
-            const div = document.createElement('div');
-            div.className = `session-item ${currentSessionId === session.id ? 'active' : ''}`;
-            div.setAttribute('data-session-id', session.id);
-            
-            const timeString = formatTimestamp(session.last_message_time || new Date(session.last_activity));
-            
-            div.innerHTML = `
-                <div class="session-info">
-                    <div class="session-details">
-                        <h6>${session.customer_name}</h6>
-                        <p>${session.last_message || 'ახალი ჩათი'}</p>
-                        <small style="color: #999;">${timeString}</small>
-                    </div>
-                </div>
-                ${session.unread_admin_count > 0 ? '<div class="new-message-indicator"></div>' : ''}
-            `;
-            
-            div.addEventListener('click', () => selectSession(session.id));
-            
-            return div;
-        }
-
-        // სესიის არჩევა
-        function selectSession(sessionId) {
-            // წინა აქტიური სესიის გამორთვა
-            document.querySelectorAll('.session-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // ახალი სესიის გააქტიურება
-            const selectedSession = document.querySelector(`[data-session-id="${sessionId}"]`);
-            if (selectedSession) {
-                selectedSession.classList.add('active');
-            }
-            
-            currentSessionId = sessionId;
-            loadChatWindow(sessionId);
-            
-            // ადმინის ხედვის დროის მონიშვნა
-            markAdminRead(sessionId);
-        }
-
-        // ადმინის მიერ წაკითხვის მონიშვნა
-        function markAdminRead(sessionId) {
-            let sessions = getFromStorage('chat_sessions') || [];
-            const sessionIndex = sessions.findIndex(s => s.id === sessionId);
-            if (sessionIndex >= 0) {
-                sessions[sessionIndex].admin_last_read = new Date().toISOString();
-                saveToStorage('chat_sessions', sessions);
-            }
-        }
-
-        // ჩათის ფანჯრის ჩატვირთვა
-        function loadChatWindow(sessionId) {
-            const session = sessions[sessionId];
-            if (!session) return;
-            
-            const chatWindow = document.getElementById('chatWindowContent');
-            chatWindow.innerHTML = `
-                <div class="chat-window-header">
-                    <div class="customer-info">
-                        <h5>${session.customer_name}</h5>
-                        <p><i class="bi bi-clock"></i> სესია: ${formatTimestamp(new Date(session.last_activity))}</p>
-                    </div>
-                    <div class="chat-actions">
-                        <button class="action-btn btn-success" onclick="markAsResolved('${sessionId}')">
-                            <i class="bi bi-check-circle"></i> გადაწყვეტილი
-                        </button>
-                        <button class="action-btn btn-danger" onclick="endSession('${sessionId}')">
-                            <i class="bi bi-x-circle"></i> დასრულება
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="messages-container" id="messagesContainer">
-                    <!-- Messages will be loaded here -->
-                </div>
-                
-                <div class="admin-input-area">
-                    <div class="input-container">
-                        <textarea 
-                            id="messageInput" 
-                            class="message-input" 
-                            placeholder="დაწერეთ შეტყობინება..."
-                            rows="1"
-                        ></textarea>
-                        <button class="send-button" onclick="sendAdminMessage()">
-                            <i class="bi bi-send-fill"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            loadMessages(sessionId);
-            
-            // Auto-resize textarea
-            const messageInput = document.getElementById('messageInput');
-            messageInput.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
-            });
-            
-            // Enter ღილაკით გაგზავნა
-            messageInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendAdminMessage();
-                }
-            });
-        }
-
-        // შეტყობინებების ჩატვირთვა
-        function loadMessages(sessionId) {
-            const messages = getFromStorage('chat_messages') || [];
-            const sessionMessages = messages.filter(msg => msg.sessionId === sessionId);
-            
-            // დროის მიხედვით დალაგება
-            sessionMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-            
-            displayMessages(sessionMessages);
-        }
-
-        // შეტყობინებების ჩვენება
-        function displayMessages(messages) {
-            const container = document.getElementById('messagesContainer');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            if (messages.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #666;">
-                        <i class="bi bi-chat-text" style="font-size: 32px; margin-bottom: 15px; opacity: 0.5;"></i>
-                        <p>შეტყობინებები არ არის</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            messages.forEach(message => {
-                const messageElement = createMessageElement(message);
-                container.appendChild(messageElement);
-            });
-            
-            container.scrollTop = container.scrollHeight;
-        }
-
-        // შეტყობინების ელემენტის შექმნა
-        function createMessageElement(message) {
-            const div = document.createElement('div');
-            div.className = `admin-message-item ${message.type}`;
-            
-            const timeString = formatTimestamp(new Date(message.timestamp));
-            
-            div.innerHTML = `
-                <div class="message-bubble">
-                    <p class="message-text">${message.message}</p>
-                    <span class="message-timestamp">${timeString}</span>
-                </div>
-            `;
-            
-            return div;
-        }
-
-        // მიმდინარე ჩათის შეტყობინებების განახლება
-        function updateCurrentChatMessages() {
-            if (currentSessionId) {
-                const container = document.getElementById('messagesContainer');
-                if (container && !container.innerHTML.includes('შეტყობინებები არ არის')) {
-                    const currentHeight = container.scrollHeight;
-                    const wasAtBottom = container.scrollTop + container.clientHeight >= currentHeight - 50;
-                    
-                    loadMessages(currentSessionId);
-                    
-                    // თუ მომხმარებელი ბოლოში იყო, ავტომატურად ჩამოვასკროლოთ
-                    if (wasAtBottom) {
-                        setTimeout(() => {
-                            container.scrollTop = container.scrollHeight;
-                        }, 100);
-                    }
-                }
-            }
-        }
-
-        // ადმინის შეტყობინების გაგზავნა
-        function sendAdminMessage() {
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            
-            if (!message || !currentSessionId) return;
-            
-            // შეტყობინების შენახვა
-            const messageData = sendMessageToUser(currentSessionId, message);
-            
-            // შეტყობინების დამატება UI-ში
-            const messageElement = createMessageElement(messageData);
-            const container = document.getElementById('messagesContainer');
-            container.appendChild(messageElement);
-            
-            // Input-ის გასუფთავება
-            input.value = '';
-            input.style.height = 'auto';
-            
-            // სკროლი ბოლოში
-            container.scrollTop = container.scrollHeight;
-            
-            // სესიის განახლება
-            updateSessionActivity(currentSessionId);
-        }
-
-        // სესიის აქტივობის განახლება
-        function updateSessionActivity(sessionId) {
-            let sessions = getFromStorage('chat_sessions') || [];
-            const sessionIndex = sessions.findIndex(s => s.id === sessionId);
-            if (sessionIndex >= 0) {
-                sessions[sessionIndex].last_activity = new Date().toISOString();
-                saveToStorage('chat_sessions', sessions);
-            }
-        }
-
-        // დროის ფორმატირება
-        function formatTimestamp(timestamp) {
-            const date = new Date(timestamp);
-            const now = new Date();
-            const diff = now - date;
-            
-            if (diff < 60000) return 'ახლახან';
-            if (diff < 3600000) return `${Math.floor(diff / 60000)} წუთის წინ`;
-            if (diff < 86400000) return `${Math.floor(diff / 3600000)} საათის წინ`;
-            
-            const today = new Date();
-            const yesterday = new Date(today);
-            yesterday.setDate(yesterday.getDate() - 1);
-            
-            if (date.toDateString() === today.toDateString()) {
-                return date.toLocaleTimeString('ka-GE', {hour: '2-digit', minute: '2-digit'});
-            } else if (date.toDateString() === yesterday.toDateString()) {
-                return 'გუშინ ' + date.toLocaleTimeString('ka-GE', {hour: '2-digit', minute: '2-digit'});
-            } else {
-                return date.toLocaleDateString('ka-GE') + ' ' + date.toLocaleTimeString('ka-GE', {hour: '2-digit', minute: '2-digit'});
-            }
-        }
-
-        // სესიის დასრულების ფუნქციები
-        function markAsResolved(sessionId) {
-            if (confirm('დარწმუნებული ხართ რომ ეს ჩათი გადაწყვეტილია?')) {
-                let sessions = getFromStorage('chat_sessions') || [];
-                const sessionIndex = sessions.findIndex(s => s.id === sessionId);
-                if (sessionIndex >= 0) {
-                    sessions[sessionIndex].status = 'resolved';
-                    sessions[sessionIndex].resolved_at = new Date().toISOString();
-                    saveToStorage('chat_sessions', sessions);
-                    
-                    // UI-ის განახლება
-                    loadChatSessions();
-                    
-                    // თუ ეს იყო აქტიური ჩათი, ცარიელი სტეიტის ჩვენება
-                    if (currentSessionId === sessionId) {
-                        document.getElementById('chatWindowContent').innerHTML = `
-                            <div class="empty-state">
-                                <i class="bi bi-check-circle" style="color: #28a745;"></i>
-                                <h5>ჩათი გადაწყვეტილია</h5>
-                                <p>ეს ჩათი მონიშნულია როგორც გადაწყვეტილი</p>
-                            </div>
-                        `;
-                        currentSessionId = null;
-                    }
-                }
-            }
-        }
-
- function endSession(sessionId) {
-            if (confirm('დარწმუნებული ხართ რომ გინდათ ჩათის დასრულება?')) {
-                let sessions = getFromStorage('chat_sessions') || [];
-                const sessionIndex = sessions.findIndex(s => s.id === sessionId);
-                if (sessionIndex >= 0) {
-                    sessions[sessionIndex].status = 'ended';
-                    sessions[sessionIndex].ended_at = new Date().toISOString();
-                    saveToStorage('chat_sessions', sessions);
-                    
-                    // UI-ის განახლება
-                    loadChatSessions();
-                    
-                    // თუ ეს იყო აქტიური ჩათი, ცარიელი სტეიტის ჩვენება
-                    if (currentSessionId === sessionId) {
-                        document.getElementById('chatWindowContent').innerHTML = `
-                            <div class="empty-state">
-                                <i class="bi bi-x-circle" style="color: #dc3545;"></i>
-                                <h5>ჩათი დასრულებულია</h5>
-                                <p>ეს ჩათი დასრულდა ადმინისტრატორის მიერ</p>
-                            </div>
-                        `;
-                        currentSessionId = null;
-                    }
-                }
-            }
-        }
-
-        // გვერდის დატოვების ან დახურვის ივენთის გამოჩენა
-        window.addEventListener('beforeunload', function(e) {
-            // ადმინის სტატუსის განახლება
-            setAdminStatus(false);
-        });
-
-        // ვისიბილიტის ცვლილების მონიტორინგი
-        document.addEventListener('visibilitychange', function() {
-            if (document.visibilityState === 'hidden') {
-                setAdminStatus(false);
-            } else if (document.visibilityState === 'visible') {
-                setAdminStatus(true);
-                // გვერდზე დაბრუნებისას სესიების განახლება
-                loadChatSessions();
-                if (currentSessionId) {
-                    loadMessages(currentSessionId);
-                }
-            }
-        });
-
-        // ფოკუსის ივენთები
-        window.addEventListener('focus', function() {
-            setAdminStatus(true);
-            loadChatSessions();
-        });
-
-        window.addEventListener('blur', function() {
-            setAdminStatus(false);
-        });
-
-        // ერრორის ჰენდლინგი localStorage-ისთვის
-        function handleStorageError(error) {
-            console.error('Storage Error:', error);
-            // შეტყობინება მომხმარებლისთვის
-            alert('შეცდომა მონაცემების შენახვისას. გთხოვთ განაახლოთ გვერდი.');
-        }
-
-        // Storage ივენთის მოსმენა სხვა ტაბებიდან ცვლილებებისთვის
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'chat_sessions' || e.key === 'chat_messages') {
-                loadChatSessions();
-                if (currentSessionId) {
-                    updateCurrentChatMessages();
-                }
-            }
-        });
-
-        // კლავიატურის შორთკატები
-        document.addEventListener('keydown', function(e) {
-            // ESC ღილაკით ჩათის დახურვა
-            if (e.key === 'Escape' && currentSessionId) {
-                currentSessionId = null;
-                document.getElementById('chatWindowContent').innerHTML = `
-                    <div class="empty-state">
-                        <i class="bi bi-chat-dots"></i>
-                        <h5>აირჩიეთ ჩათი საუბრის დასაწყებად</h5>
-                        <p>მარცხნივ აირჩიეთ აქტიური ჩათი რომ დაიწყოთ კომუნიკაცია მომხმარებელთან</p>
-                    </div>
-                `;
-                document.querySelectorAll('.session-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-            }
-        });
-
-        // პროგრესის ბარის დამატება დიდი ფაილების ატვირთვისთვის
-        function showLoadingState() {
-            const sessionsList = document.getElementById('sessionsList');
-            sessionsList.innerHTML = `
-                <div style="text-align: center; padding: 40px; color: #666;">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                    <p style="margin-top: 15px;">ჩატვირთვა...</p>
-                </div>
-            `;
-        }
-
-        // Debug ფუნქციები განვითარების დროს
-        function debugClearStorage() {
-            if (confirm('გსურთ ყველა ჩათის მონაცემის წაშლა?')) {
-                localStorage.removeItem('chat_sessions');
-                localStorage.removeItem('chat_messages');
-                localStorage.removeItem('admin_status');
-                location.reload();
-            }
-        }
-
-        // Debug ფუნქცია კონსოლში
-        window.debugChat = {
-            clearStorage: debugClearStorage,
-            getSessions: () => getFromStorage('chat_sessions'),
-            getMessages: () => getFromStorage('chat_messages'),
-            getAdminStatus: () => getFromStorage('admin_status')
+        // Firebase Configuration - აქ ჩაწერეთ თქვენი Firebase config
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com/",
+            projectId: "YOUR_PROJECT",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "YOUR_APP_ID"
         };
 
-        // საწყისი ინიციალიზაცია
-        console.log('ადმინპანელი ჩაიტვირთა წარმატებით');
-        console.log('Debug კომანდები: window.debugChat');
+        // Firebase ინიციალიზაცია
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        
+        // Chat State
+        let chatSessionId = null;
+        let isConnected = false;
+        let currentUser = {
+            id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            name: 'მომხმარებელი'
+        };
+        
+        // DOM Elements
+        const chatIcon = document.getElementById('chatIcon');
+        const chatModal = document.getElementById('chatModal');
+        const chatMinimize = document.getElementById('chatMinimize');
+        const chatClose = document.getElementById('chatClose');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatMessages = document.getElementById('chatMessages');
+        const statusText = document.getElementById('statusText');
+        const statusDot = document.getElementById('statusDot');
+        const initialTime = document.getElementById('initialTime');
+        
+        // Set initial time
+        const now = new Date();
+        initialTime.textContent = formatTime(now);
+        
+        // Connection monitoring
+        const connectedRef = database.ref('.info/connected');
+        connectedRef.on('value', (snapshot) => {
+            isConnected = snapshot.val();
+            updateConnectionStatus();
+        });
+        
+        function updateConnectionStatus() {
+            if (isConnected) {
+                statusText.textContent = 'ონლაინ';
+                statusDot.style.background = '#28a745';
+                
+                // Remove disconnected message if exists
+                const disconnectedMsg = document.querySelector('.connection-status.disconnected');
+                if (disconnectedMsg) {
+                    disconnectedMsg.remove();
+                }
+            } else {
+                statusText.textContent = 'კავშირი გაწყდა';
+                statusDot.style.background = '#dc3545';
+                
+                // Add disconnected message
+                const disconnectedMsg = document.createElement('div');
+                disconnectedMsg.className = 'connection-status disconnected';
+                disconnectedMsg.textContent = 'კავშირი Firebase-თან გაწყდა';
+                chatMessages.appendChild(disconnectedMsg);
+                scrollToBottom();
+            }
+        }
+        
+        // Create or get chat session
+        function initializeChat() {
+            if (chatSessionId) return;
+            
+            chatSessionId = 'chat_' + currentUser.id;
+            
+            // Create session in database
+            database.ref(`sessions/${chatSessionId}`).set({
+                userId: currentUser.id,
+                userName: currentUser.name,
+                startTime: firebase.database.ServerValue.TIMESTAMP,
+                status: 'active',
+                lastActivity: firebase.database.ServerValue.TIMESTAMP
+            });
+            
+            // Listen for new messages
+            listenForMessages();
+            
+            // Listen for admin status
+            listenForAdminStatus();
+        }
+        
+        // Listen for messages
+        function listenForMessages() {
+            const messagesRef = database.ref(`messages/${chatSessionId}`);
+            messagesRef.on('child_added', (snapshot) => {
+                const message = snapshot.val();
+                if (message.senderId !== currentUser.id) {
+                    displayMessage(message, false);
+                }
+            });
+        }
+        
+        // Listen for admin status
+        function listenForAdminStatus() {
+            const adminRef = database.ref(`admin/status`);
+            adminRef.on('value', (snapshot) => {
+                const adminStatus = snapshot.val();
+                if (adminStatus && adminStatus.online) {
+                    if (statusText.textContent !== 'ადმინი ონლაინ') {
+                        statusText.textContent = 'ადმინი ონლაინ';
+                        statusDot.style.background = '#007bff';
+                        showAdminJoinedMessage();
+                    }
+                } else if (isConnected) {
+                    statusText.textContent = 'ბოტი ონლაინ';
+                    statusDot.style.background = '#28a745';
+                }
+            });
+        }
+        
+        // Send message
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message || !isConnected) return;
+            
+            const messageData = {
+                senderId: currentUser.id,
+                senderName: currentUser.name,
+                message: message,
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                type: 'user'
+            };
+            
+            // Save to database
+            database.ref(`messages/${chatSessionId}`).push(messageData);
+            
+            // Display message locally
+            displayMessage({
+                ...messageData,
+                timestamp: Date.now()
+            }, true);
+            
+            // Clear input
+            chatInput.value = '';
+            
+            // Update session activity
+            updateSessionActivity();
+            
+            // Send auto-reply if admin not online
+            setTimeout(() => {
+                sendAutoReply(message);
+            }, 1000);
+        }
+        
+        // Display message
+        function displayMessage(messageData, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'admin-message'}`;
+            
+            const time = formatTime(new Date(messageData.timestamp));
+            
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <p>${messageData.message}</p>
+                    <span class="message-time">${time}</span>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+        
+        // Auto-reply system
+        function sendAutoReply(userMessage) {
+            const adminStatus = database.ref(`admin/status`);
+            adminStatus.once('value', (snapshot) => {
+                const admin = snapshot.val();
+                if (!admin || !admin.online) {
+                    const reply = getAutoReply(userMessage);
+                    
+                    const botMessage = {
+                        senderId: 'bot',
+                        senderName: 'ბოტი',
+                        message: reply,
+                        timestamp: firebase.database.ServerValue.TIMESTAMP,
+                        type: 'bot'
+                    };
+                    
+                    setTimeout(() => {
+                        database.ref(`messages/${chatSessionId}`).push(botMessage);
+                    }, 500 + Math.random() * 2000);
+                }
+            });
+        }
+        
+        // Auto-reply responses
+        function getAutoReply(userMessage) {
+            const responses = {
+                'გამარჯობა': 'გამარჯობა! როგორ შეგვიძლია დაგეხმაროთ?',
+                'დახმარება': 'რა სახის დახმარება გჭირდებათ?',
+                'მისამართი': 'ჩვენი მისამართია: ხაშური, ბორჯომის ქუჩა №2',
+                'ტელეფონი': 'დაგვიკავშირდით: 511 555 888',
+                'სამუშაო საათები': 'ვმუშაობთ ორშ-შაბ 10:00-18:00',
+                'მადლობა': 'მადლობას გიხდით! სხვა რაიმე დაგჭირდებათ?'
+            };
+            
+            const lowerMessage = userMessage.toLowerCase();
+            
+            for (const [key, response] of Object.entries(responses)) {
+                if (lowerMessage.includes(key.toLowerCase())) {
+                    return response;
+                }
+            }
+            
+            return 'მადლობა შეკითხვისთვის! ჩვენი ოპერატორი მალე დაგიკავშირდებათ.';
+        }
+        
+        // Update session activity
+        function updateSessionActivity() {
+            if (chatSessionId) {
+                database.ref(`sessions/${chatSessionId}/lastActivity`).set(firebase.database.ServerValue.TIMESTAMP);
+            }
+        }
+        
+        // Show admin joined message
+        function showAdminJoinedMessage() {
+            const adminJoinedDiv = document.createElement('div');
+            adminJoinedDiv.className = 'admin-joined';
+            adminJoinedDiv.textContent = 'ადმინისტრატორი შემოუერთდა ჩათს';
+            chatMessages.appendChild(adminJoinedDiv);
+            scrollToBottom();
+            
+            setTimeout(() => {
+                adminJoinedDiv.remove();
+            }, 5000);
+        }
+        
+        // Utility functions
+        function formatTime(date) {
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+        
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Event Listeners
+        chatIcon.addEventListener('click', () => {
+            chatModal.classList.add('open');
+            chatInput.focus();
+            initializeChat();
+        });
+        
+        chatClose.addEventListener('click', () => {
+            chatModal.classList.remove('open');
+        });
+        
+        chatMinimize.addEventListener('click', () => {
+            chatModal.classList.remove('open');
+        });
+        
+        sendBtn.addEventListener('click', sendMessage);
+        
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Auto-open chat after 3 seconds
+        setTimeout(() => {
+            if (!chatModal.classList.contains('open')) {
+                chatIcon.style.animation = 'pulse 1s infinite';
+            }
+        }, 3000);
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (chatSessionId) {
+                database.ref(`sessions/${chatSessionId}/status`).set('offline');
+            }
+        });
     </script>
 </body>
 </html>

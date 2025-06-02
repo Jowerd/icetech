@@ -50,7 +50,6 @@ Route::get('/contact', function () {
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{blogPost}', [BlogController::class, 'show'])->name('blog.show');
 Route::post('/api/products/suggestions', [ProductController::class, 'getSuggestions'])->name('products.suggestions');
-
 // ========================
 // 🔐 ადმინის პანელი & აუთენთიკაცია
 // ========================
@@ -68,11 +67,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', function () {
             return view('admin.dashboard');
         })->name('dashboard');
-
-        // ✅ ჩათის ადმინ პანელი - გამოსწორებული
-        Route::get('/chat', function () {
-            return view('admin.chat');
-        })->name('chat');
 
         // კატეგორიების მართვა
         Route::resource('/categories', CategoryController::class)->names('categories');
