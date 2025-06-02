@@ -230,12 +230,12 @@
 <div class="cookie-banner" id="cookieBanner">
     <div class="cookie-content">
         <div class="cookie-text">
-            <h5><i class="bi bi-info-circle me-2"></i>ქუქების გამოყენება</h5>
-            <p>ჩვენ ვიყენებთ ქუქებს საიტის მუშაობის გასაუმჯობესებლად და თქვენი გამოცდილების პერსონალიზებისთვის. საიტის გამოყენებით თქვენ ეთანხმებით ქუქების გამოყენებას. <a href="#" class="text-white text-decoration-underline">მეტი ინფორმაცია</a></p>
+            <h5><i class="bi bi-info-circle me-2"></i>Cookies</h5>
+            <p>ჩვენ ვიყენებთ ქუქებს საიტის მუშაობის გასაუმჯობესებლად და თქვენი გამოცდილების პერსონალიზებისთვის. საიტის გამოყენებით თქვენ ეთანხმებით ქუქების გამოყენებას.</p>
         </div>
         <div class="cookie-actions">
             <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">
-                <i class="bi bi-check-lg"></i> მიღება
+                <i class="bi bi-check-lg"></i> თანხმობა
             </button>
             <button class="cookie-btn cookie-btn-decline" onclick="declineCookies()">
                 <i class="bi bi-x-lg"></i> უარყოფა
