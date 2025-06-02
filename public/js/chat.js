@@ -7,6 +7,111 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatInput = document.getElementById('chatInput');
     const chatSend = document.getElementById('chatSend');
     const chatMessages = document.getElementById('chatMessages');
+    const statusIndicator = document.getElementById('statusIndicator');
+    const adminJoinedNotification = document.getElementById('adminJoinedNotification');
+    const chatFooter = document.querySelector('.chat-footer');
+    
+    // ჩათის მდგომარეობა
+    let isAdminOnline = false;
+    let chatSessionId = generateSessionId();
+    let messageQueue = []; // შეტყობინებების რიგი
+    let lastCheckTime = Date.now();
+    
+    // სესიის ID-ის გენერირება
+    function generateSessionId() {
+        return 'chat_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
+    
+    // LocalStorage-ში მონაცემების შენახვა/წაკითხვა
+    function saveToStorage(key, data) {
+        localStorage.setItem(key, JSON.stringify(data));
+    }
+    
+    function getFromStorage(key) {
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : null;
+    }
+    
+    // შეტყობინების შენახვა
+    function saveMessage(message, type, timestamp = new Date()) {
+        const messageData = {
+            id: Date.now() + Math.random(),
+            sessionId: chatSessionId,
+            message: message,
+            type: type, // 'user' ან 'admin'
+            timestamp: timestamp.toISOString(),
+            read: type === 'admin' && !isAdminOnline ? false : true // ბოტის შეტყობინებები მაშინვე წაკითხულად ინიშნება
+        };
+        
+        let messages = getFromStorage('chat_messages') || [];
+        messages.push(messageData);
+        saveToStorage('chat_messages', messages);
+        
+        // სესიის ინფორმაციის განახლება
+        updateSessionInfo();
+        
+        return messageData;
+    }
+    
+    // სესიის ინფორმაციის განახლება
+    function updateSessionInfo() {
+        const sessionData = {
+            id: chatSessionId,
+            customer_name: 'მომხმარებელი #' + chatSessionId.substr(-4),
+            last_activity: new Date().toISOString(),
+            status: 'active',
+            unread_admin_count: 0
+        };
+        
+        let sessions = getFromStorage('chat_sessions') || [];
+        const existingIndex = sessions.findIndex(s => s.id === chatSessionId);
+        
+        if (existingIndex >= 0) {
+            sessions[existingIndex] = { ...sessions[existingIndex], ...sessionData };
+        } else {
+            sessions.push(sessionData);
+        }
+        
+        saveToStorage('chat_sessions', sessions);
+    }
+    
+    // ადმინის შეტყობინებების შემოწმება
+    function checkForAdminMessages() {
+        // მხოლოდ ნამდვილი ადმინის შეტყობინებების შემოწმება (არა ბოტისა)
+        if (!isAdminOnline) return; // თუ ადმინი ონლაინ არ არის, არ ვამოწმებთ
+        
+        const messages = getFromStorage('chat_messages') || [];
+        const newAdminMessages = messages.filter(msg => 
+            msg.sessionId === chatSessionId && 
+            msg.type === 'admin' && 
+            !msg.read &&
+            new Date(msg.timestamp) > new Date(lastCheckTime)
+        );
+        
+        newAdminMessages.forEach(msg => {
+            displayAdminMessage(msg.message, new Date(msg.timestamp));
+            // მესიჯის როგორც წაკითხულის მონიშვნა
+            msg.read = true;
+        });
+        
+        if (newAdminMessages.length > 0) {
+            saveToStorage('chat_messages', messages);
+            lastCheckTime = Date.now();
+        }
+    }
+    
+    // ადმინის სტატუსის შემოწმება
+    function checkAdminStatus() {
+        const adminStatus = getFromStorage('admin_status');
+        if (adminStatus && adminStatus.online !== isAdminOnline) {
+            setAdminOnline(adminStatus.online);
+        }
+        
+        // ადმინის შეტყობინებების შემოწმება მხოლოდ თუ ადმინი ონლაინია
+        if (isAdminOnline) {
+            checkForAdminMessages();
+        }
+    }
     
     // საწყისი ტაიმსტამპის დაყენება
     const initialMessageTime = document.getElementById('initialMessageTime');
@@ -36,6 +141,65 @@ document.addEventListener('DOMContentLoaded', function() {
         'გააქვთ თუ არა რეგიონებში': 'დიახ, პროდუქციის მიწოდება ხორციელდება საქართველოს ყველა რეგიონში.'
     };
     
+    // ადმინის ონლაინ სტატუსის დაყენება
+    function setAdminOnline(status) {
+        isAdminOnline = status;
+        const statusText = statusIndicator.querySelector('.status-text');
+        const statusDot = statusIndicator.querySelector('.status-dot');
+        
+        if (isAdminOnline) {
+            chatIcon.classList.add('admin-online');
+            statusText.textContent = 'ადმინი ონლაინ';
+            statusDot.classList.remove('bot-mode');
+            statusDot.classList.add('admin-mode');
+            chatFooter.classList.add('live-mode');
+            chatInput.classList.add('live-mode');
+            chatSend.classList.add('live-mode');
+            
+            showAdminJoinedNotification();
+        } else {
+            chatIcon.classList.remove('admin-online');
+            statusText.textContent = 'ბოტი ონლაინ';
+            statusDot.classList.remove('admin-mode');
+            statusDot.classList.add('bot-mode');
+            chatFooter.classList.remove('live-mode');
+            chatInput.classList.remove('live-mode');
+            chatSend.classList.remove('live-mode');
+            
+            hideAdminJoinedNotification();
+        }
+    }
+    
+    // ადმინის შემოსვლის შეტყობინების ჩვენება
+    function showAdminJoinedNotification() {
+        adminJoinedNotification.style.display = 'flex';
+        setTimeout(() => {
+            adminJoinedNotification.style.display = 'none';
+        }, 5000);
+    }
+    
+    // ადმინის შემოსვლის შეტყობინების დამალვა
+    function hideAdminJoinedNotification() {
+        adminJoinedNotification.style.display = 'none';
+    }
+    
+    // ადმინისგან შეტყობინების ჩვენება
+    function displayAdminMessage(message, timestamp) {
+        const timeString = formatTime(timestamp);
+        
+        removeTypingIndicator();
+        
+        const adminMessageHTML = `
+            <div class="message admin-message live-admin">
+                <div class="message-content">
+                    <p>${message}</p>
+                    <span class="message-time">${timeString}</span>
+                </div>
+            </div>
+        `;
+        chatMessages.insertAdjacentHTML('beforeend', adminMessageHTML);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
     
     // შესაბამისი სიტყვებზე პასუხების გამოტანის ფუნქცია
     function getAutoReply(userMessage) {
@@ -74,8 +238,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (badge) badge.style.display = 'none';
         setTimeout(() => { chatInput.focus(); }, 300);
         
-        // პულსაციის გაუქმება გახსნის შემდეგ
         chatIcon.classList.remove('pulse');
+        checkAdminStatus();
     });
     
     chatClose.addEventListener('click', function() {
@@ -90,11 +254,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // ტაიპინგ ინდიკატორის ფუნქციები
     function showTypingIndicator() {
         const now = new Date();
-        const hours = now.getHours().toString().padStart(2, '0');
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        const timeString = `${hours}:${minutes}`;
+        const timeString = formatTime(now);
         
-        // ტაიპინგ ინდიკატორი ჯერ წაშალე თუ უკვე არსებობს
         removeTypingIndicator();
         
         const typingHTML = `
@@ -121,11 +282,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // დროის ფორმატის ფუნქცია
-    function getFormattedTime() {
-        const now = new Date();
-        const hours = now.getHours().toString().padStart(2, '0');
-        const minutes = now.getMinutes().toString().padStart(2, '0');
+    function formatTime(date) {
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
         return `${hours}:${minutes}`;
+    }
+    
+    function getFormattedTime() {
+        return formatTime(new Date());
     }
     
     // შეტყობინების გაგზავნის ფუნქცია
@@ -148,32 +312,45 @@ document.addEventListener('DOMContentLoaded', function() {
         chatInput.value = '';
         chatMessages.scrollTop = chatMessages.scrollHeight;
         
-        // ტაიპინგ ინდიკატორის გამოჩენა
-        setTimeout(() => {
-            showTypingIndicator();
-            
-            // შეტყობინების სიგრძესთან დაკავშირებული დაყოვნება
-            const delay = Math.min(1000 + message.length * 30, 3000);
-            
-            // ავტომატური პასუხის გამოტანა დაყოვნებით
+        // შეტყობინების შენახვა
+        saveMessage(message, 'user');
+        
+        // თუ ადმინი ონლაინია
+        if (isAdminOnline) {
+            // ტაიპინგ ინდიკატორის ჩვენება
             setTimeout(() => {
-                removeTypingIndicator();
+                showTypingIndicator();
+            }, 1000);
+        } else {
+            // ბოტის რეჟიმი - ავტომატური პასუხები
+            setTimeout(() => {
+                showTypingIndicator();
                 
-                const reply = getAutoReply(message);
-                const replyTimeString = getFormattedTime();
+                const delay = Math.min(1000 + message.length * 30, 3000);
                 
-                const replyHTML = `
-                    <div class="message admin-message">
-                        <div class="message-content">
-                            <p>${reply}</p>
-                            <span class="message-time">${replyTimeString}</span>
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    
+                    const reply = getAutoReply(message);
+                    const replyTimeString = getFormattedTime();
+                    
+                    // ბოტის პასუხის მაშინვე ჩვენება (არ ველოდებით checkForAdminMessages-ს)
+                    const replyHTML = `
+                        <div class="message admin-message">
+                            <div class="message-content">
+                                <p>${reply}</p>
+                                <span class="message-time">${replyTimeString}</span>
+                            </div>
                         </div>
-                    </div>
-                `;
-                chatMessages.insertAdjacentHTML('beforeend', replyHTML);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, delay);
-        }, 500);
+                    `;
+                    chatMessages.insertAdjacentHTML('beforeend', replyHTML);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    
+                    // ბოტის პასუხის შენახვა როგორც უკვე წაკითხული
+                    //saveMessage(reply, 'admin');////////////////////////////////////////////
+                }, delay);
+            }, 500);
+        }
     }
     
     // ღილაკებზე ივენთ ლისენერების მიბმა
@@ -185,10 +362,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // ჩატის აიკონის ანიმაცია, თუ ის არ გაიხსნა გარკვეული დროის განმავლობაში
+    // ჩტის აიკონის ანიმაცია
     setTimeout(() => {
         if (!chatModal.classList.contains('open')) {
             chatIcon.classList.add('pulse');
         }
     }, 3000);
+    
+    // პერიოდული შემოწმებები
+    setInterval(checkAdminStatus, 2000); // ყოველ 2 წამში
+    
+    // სესიის ინფორმაციის საწყისი შენახვა
+    updateSessionInfo();
+    
+    // საწყისი ადმინის სტატუსის შემოწმება
+    checkAdminStatus();
 });
