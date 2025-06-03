@@ -125,15 +125,9 @@
             </a>
         </li>
 
-        <!-- ✅ დამატებული ბლოგის ლინკი -->
         <li class="nav-item">
             <a href="{{ route('admin.blog.index') }}" class="nav-link">
                 <i class="bi bi-journal-text me-2"></i> რჩევების ბლოგი
-            </a>
-        </li>
-                <li class="nav-item">
-            <a href="{{ route('admin.chat') }}" class="nav-link">
-                <i class="bi bi-chat-dots"></i> CHAT
             </a>
         </li>
 
