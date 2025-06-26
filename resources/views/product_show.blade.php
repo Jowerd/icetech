@@ -3,7 +3,7 @@
 @section('title', $product->name . ' • ICETECH')
 
 @php
-// HTML ტეგების და სპეციალური სიმბოლოების გაწმენდა
+// HTML ტეგების და სპეციალური სიმბოლოების გაწმმენდა
 $clean_description = html_entity_decode(strip_tags($product->description ?? ''));
 $meta_desc = $product->meta_description ?? Str::limit($clean_description, 160) ?? 'პროფესიონალური ' . $product->name . ' ICETECH-ისგან. მაღალი ხარისხის კომერციული აღჭურვილობა საქართველოში.';
 @endphp
@@ -20,7 +20,6 @@ $meta_desc = $product->meta_description ?? Str::limit($clean_description, 160) ?
 @section('twitter_image', $product->image ? url('storage/' . $product->image) : url('images/icetech-twitter-image.jpg'))
 
 @push('meta')
-    <!-- Open Graph დამატებითი მეტა ტეგები -->
     <meta property="og:type" content="product" />
     <meta property="og:site_name" content="ICETECH" />
     <meta property="og:image:width" content="1200" />
@@ -29,11 +28,9 @@ $meta_desc = $product->meta_description ?? Str::limit($clean_description, 160) ?
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:image:alt" content="{{ $product->name }}" />
 
-    <!-- Twitter Card დამატებითი მეტა ტეგები -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="{{ url()->current() }}" />
 
-    <!-- პროდუქტის მეტა ტეგები -->
     <meta property="product:brand" content="ICETECH" />
     <meta property="product:name" content="{{ $product->name }}" />
     <meta property="product:condition" content="@if($product->condition == 'new') ახალი @elseif($product->condition == 'used') მეორადი @elseif($product->condition == 'like_new') ახალივით @else {{ $product->condition }} @endif" />
@@ -43,7 +40,6 @@ $meta_desc = $product->meta_description ?? Str::limit($clean_description, 160) ?
     <meta property="product:item_group_id" content="commercial-equipment" />
     <meta property="product:supplier_country" content="{{ $product->supplier_country ?? '' }}" />
     
-    <!-- სტრუქტურირებული მონაცემები (JSON-LD) -->
     @if($product->price)
     <script type="application/ld+json">
     {
@@ -86,11 +82,22 @@ $meta_desc = $product->meta_description ?? Str::limit($clean_description, 160) ?
         @if(!empty($product->category))
         ,"category": "{{ $product->category->name }}"
         @endif
+        {{-- მახასიათებლების დამატება JSON-LD-ში --}}
+        @if(isset($product->features) && is_array($product->features) && !empty($product->features))
+        ,"additionalProperty": [
+            @foreach($product->features as $key => $feature)
+            {
+                "@type": "PropertyValue",
+                "name": "{{ $feature['name'] ?? '' }}",
+                "value": "{{ $feature['value'] ?? '' }}"
+            }{{ !$loop->last ? ',' : '' }}
+            @endforeach
+        ]
+        @endif
     }
     </script>
     @endif
 
-    <!-- Breadcrumb სტრუქტურირებული მონაცემები -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -129,12 +136,15 @@ $meta_desc = $product->meta_description ?? Str::limit($clean_description, 160) ?
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/product.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
+    {{-- Font Awesome-ის CSS ლინკი (საჭიროა გაზიარების იკონებისთვის) --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {{-- Bootstrap Icons --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 @endpush
 
-
-
 @section('content')
+    {{-- `partials.product-view` ახლა მოიცავს პროდუქტის ძირითად ინფორმაციას, მახასიათებლებს და მსგავს პროდუქტებს --}}
     @include('partials.product-view')
 @endsection
 

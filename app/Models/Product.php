@@ -16,9 +16,16 @@ class Product extends Model
         'supplier_country',
         'condition',
         'video_link',
-        'slug', // ✅ სლაგი დაემატა
-        'sub_type', // ეს აუცილებლად იყოს
+        'slug',
+        'sub_type',
+        'features', // ✅ დარწმუნდით, რომ 'features' აქაც არის დამატებული!
     ];
+
+    // --- ეს არის ყველაზე მნიშვნელოვანი ცვლილება ---
+    protected $casts = [
+        'features' => 'array',
+    ];
+    // --- დასასრული მნიშვნელოვანი ცვლილების ---
 
     protected static function boot()
     {
@@ -32,7 +39,6 @@ class Product extends Model
         });
     }
 
-    // ეს არის შენი უკვე არსებული Accessor (არ შეცვალო)
     public function getVideoEmbedUrlAttribute()
     {
         if ($this->video_link && strpos($this->video_link, 'youtube.com/watch') !== false) {
@@ -44,13 +50,8 @@ class Product extends Model
         return $this->video_link;
     }
 
-    // შენი არსებული მეთოდი (არ შეცვალო)
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
-
-
-
-    
 }
