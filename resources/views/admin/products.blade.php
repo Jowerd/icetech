@@ -117,7 +117,7 @@
 
             <div class="mb-3">
                 <label class="form-label">პროდუქტის ქვეკატეგორია (ტიპი)</label>
-                <input type="text" name="sub_type" value="{{ old('sub_type') }}" class="form-control" placeholder="მაგ. Showcase, Upright, Countertop...">
+                <input type="text" name="sub_type" value="{{ old('sub_type') }}" class="form-control" placeholder="მაგ. საყინულე მაც, შოკ-მაც, დახლ-მაც...">
             </div>
 
             <div class="mb-3">
