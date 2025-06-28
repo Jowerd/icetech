@@ -1,38 +1,32 @@
-/* მთავარი სლაიდერის სტილები */
+/* --- მთავარი სლაიდერის სტილები (გაუმჯობესებული ტექსტის ანიმაციით) --- */
+
 #mainCarousel {
     border-radius: 12px;
     overflow: hidden;
-    -webkit-box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
     width: 100%;
     margin: 0 auto;
+    position: relative;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    position: relative;
+    transform: translateZ(0);
 }
 
 .carousel-item {
     position: relative;
     height: 65vh;
     max-height: 550px;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
+    overflow: hidden;
 }
 
 .carousel-item img {
     width: 100%;
     height: 100%;
-    -webkit-object-fit: cover;
     object-fit: cover;
-    -webkit-object-position: center;
     object-position: center;
-    -webkit-transition: transform 0.5s ease;
-    transition: transform 0.5s ease;
 }
-
-.carousel-item:hover img {
-    -webkit-transform: scale(1.02);
-    transform: scale(1.02);
+.carousel-item.active img {
+    animation: kenBurnsEffect 20s infinite alternate ease-in-out;
 }
 
 .overlay {
@@ -41,21 +35,12 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: -webkit-linear-gradient(
-        rgba(0, 0, 0, 0) 30%, 
-        rgba(0, 0, 0, 0.4) 60%, 
-        rgba(0, 0, 0, 0.7) 100%
-    );
-    background: linear-gradient(
-        rgba(0, 0, 0, 0) 30%, 
-        rgba(0, 0, 0, 0.4) 60%, 
-        rgba(0, 0, 0, 0.7) 100%
-    );
+    background: linear-gradient(rgba(0,0,0,0) 30%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.7) 100%);
     z-index: 1;
     pointer-events: none;
+    transition: background-color 0.4s ease;
 }
 
-/* დემატებული ეფექტი ოვერლეისთვის */
 .overlay::before {
     content: '';
     position: absolute;
@@ -63,11 +48,10 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 149, 189, 0.15); /* #0095bd ფერის ოდნავ გამჭვირვალე ვერსია */
+    background: rgba(0, 149, 189, 0.15);
     opacity: 0;
     transition: opacity 0.4s ease;
 }
-
 .carousel-item:hover .overlay::before {
     opacity: 1;
 }
@@ -80,21 +64,60 @@
     color: white;
     z-index: 2;
     text-align: left;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
+}
+
+/* --- ტექსტის ანიმაციის ახალი სტილები --- */
+.slide-title, 
+.slide-description {
+    opacity: 0;
+    /* დაემატა filter: blur() ეფექტი */
+    filter: blur(5px); 
+    transform: translateY(30px);
+    /* ტრანზიციას დაემატა filter */
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out, filter 0.8s ease-out;
+}
+
+.carousel-item.active .slide-title {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+    transition-delay: 0.3s;
+}
+
+.carousel-item.active .slide-description {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+    transition-delay: 0.5s;
 }
 
 .slide-title {
-    font-size: 2.8rem;
+    font-size: 2.8rem; 
     font-weight: normal;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem; /* გაიზარდა დაშორება ხაზისთვის */
+    padding-bottom: 1rem;  /* დაემატა შიდა დაშორება */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     -webkit-font-smoothing: antialiased;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.5s forwards;
-    animation-delay: 0.2s;
+    position: relative; /* აუცილებელია ::after ელემენტისთვის */
 }
+
+/* --- დაემატა ანიმირებული ხაზი სათაურისთვის --- */
+.slide-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background-color: #00a4bd;
+    transition: width 0.7s ease-out;
+    transition-delay: 0.7s; /* ანიმაცია დაიწყება ტექსტის გამოჩენის შემდეგ */
+}
+
+.carousel-item.active .slide-title::after {
+    width: 60%; /* ხაზის სიგრძე */
+}
+
 
 .slide-description {
     font-size: 1.4rem;
@@ -102,10 +125,6 @@
     line-height: 1.5;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
     -webkit-font-smoothing: antialiased;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.5s forwards;
-    animation-delay: 0.4s;
 }
 
 .carousel-control-prev,
@@ -120,17 +139,12 @@
     opacity: 1;
 }
 
-/* (carousel-indicators კოდი წარმატებით წაშლილია) */
-
-/* ანიმაციის გასახელება */
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+@keyframes kenBurnsEffect {
+    0% { transform: scale(1.0) translate(0, 0); }
+    100% { transform: scale(1.1) translate(-1%, 1%); }
 }
 
-/* Responsive სლაიდერი */
+/* --- Responsive სტილები (თქვენი ორიგინალი კოდი) --- */
 @media (max-width: 1200px) {
     .carousel-item { height: 55vh; }
     .slide-title { font-size: 2.2rem; }
@@ -149,16 +163,7 @@
     .slide-title { font-size: 1.8rem; margin-bottom: 0.5rem; }
     .slide-description { font-size: 1rem; margin-bottom: 0.8rem; }
     .overlay {
-        background: -webkit-linear-gradient(
-            rgba(0, 0, 0, 0.1) 10%, 
-            rgba(0, 0, 0, 0.5) 70%, 
-            rgba(0, 0, 0, 0.7) 100%
-        );
-        background: linear-gradient(
-            rgba(0, 0, 0, 0.1) 10%, 
-            rgba(0, 0, 0, 0.5) 70%, 
-            rgba(0, 0, 0, 0.7) 100%
-        );
+        background: linear-gradient(rgba(0,0,0,0.1) 10%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0.7) 100%);
     }
 }
 
@@ -318,7 +323,7 @@
     justify-content: space-between;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
     height: 90px;
-    transition: all 0.5s ease; /* Added to smooth out any vertical movement */
+    transition: all 0.5s ease;
 }
 .category-title {
     margin: 0;
@@ -335,7 +340,38 @@
     line-height: 1.3;
     min-height: 42px;
     height: 42px;
+    margin-bottom: 4px; /* Added margin for spacing */
 }
+
+/* === MODIFIED/ADDED CODE START === */
+.category-card .view-more {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    margin-top: auto; /* Pushes to the bottom */
+    padding-top: 6px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    height: 24px; /* Default height */
+}
+
+.category-card .view-more span {
+    color: #00a4bd;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.category-card .view-more i {
+    color: #00a4bd;
+    font-size: 14px;
+}
+/* === MODIFIED/ADDED CODE END === */
+
 
 /* (CATEGORY INDICATORS კოდი წაშლილია) */
 
@@ -357,9 +393,8 @@
     .category-image-wrapper { padding-top: 70%; }
     .category-content { padding: 10px 8px; height: 78px; }
     .category-title { font-size: 14px; height: 36px; min-height: 36px; }
-    .category-card .view-more { padding-top: 8px; font-size: 13px; height: 20px; }
-    .category-card .view-more i { font-size: 13px; }
-    /* ასევე, ინდიკატორებთან დაკავშირებული კოდები ამ რეგიონიდან გამოკ исключება */
+    .category-card .view-more { padding-top: 8px; height: 20px; }
+    .category-card .view-more span, .category-card .view-more i { font-size: 13px; }
 }
 @media (max-width: 576px) {
     .category-slide { width: 50%; }
@@ -368,8 +403,8 @@
     .category-image-container { padding: 10px; }
     .category-content { padding: 8px 6px; height: 74px; }
     .category-title { font-size: 13px; height: 34px; min-height: 34px; }
-    .category-card .view-more { font-size: 12px; padding-top: 6px; height: 18px; }
-    .category-card .view-more i { font-size: 12px; }
+    .category-card .view-more { padding-top: 6px; height: 18px; }
+    .category-card .view-more span, .category-card .view-more i { font-size: 12px; }
 }
 @media (max-width: 480px) {
     .category-slider { margin: 0 -5px; }
@@ -378,9 +413,9 @@
 }
 @media (max-width: 359px) {
     .category-title { font-size: 12px; height: 32px; min-height: 32px; }
-    .category-card .view-more { font-size: 11px; height: 16px; }
-    .category-card .view-more i { font-size: 11px; }
     .category-content { padding: 6px 5px; height: 66px; }
+    .category-card .view-more { height: 16px; }
+    .category-card .view-more span, .category-card .view-more i { font-size: 11px; }
 }
 
 /* პოპულარული პროდუქთა სლაიდერის სტილები */
@@ -647,8 +682,7 @@
         font-size: 10px;
         padding: 2px 5px;
     }
-    .popular-card .view-more { font-size: 12px; }
-    .popular-card .view-more i { font-size: 12px; }
+    .popular-card .view-more span, .popular-card .view-more i { font-size: 12px; }
 }
 
 @media (max-width: 480px) {
@@ -665,8 +699,8 @@
 
 @media (max-width: 359px) {
     .product-title { font-size: 12px; min-height: 32px; }
-    .popular-card .view-more { font-size: 11px; padding-top: 4px; }
-    .popular-card .view-more i { font-size: 11px; }
+    .popular-card .view-more { padding-top: 4px; }
+    .popular-card .view-more span, .popular-card .view-more i { font-size: 11px; }
     .price { font-size: 13px; }
 }
 
@@ -804,7 +838,6 @@
     .newest-slider { margin: 0 -5px; }
     .newest-slide { padding: 0 5px; }
 }
-
 /* შეფასების ფორმის ძირითადი სტილი */
 .review-form-container {
     margin-top: 2rem;
