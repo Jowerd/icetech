@@ -1,8 +1,6 @@
 <div class="row">
-    <!-- მთავარი სლაიდერი -->
     <div class="col-12">
         <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
-            <!-- მთავარი სლაიდერის ინდიკატორები წაშლილია -->
             <div class="carousel-inner text-start">
                 <div class="carousel-item active position-relative">
                     <img src="/images/samz.webp" class="d-block w-100" alt="პროფესიონალური სამზარეულო" fetchpriority="high">
