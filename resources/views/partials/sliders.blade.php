@@ -250,7 +250,6 @@
         </div>
     </div>
 </div>
-<!-- შეფასებების კარუსელი (მთავარ გვერდზე დასამატებლად) -->
 <div class="row mt-5">
     <div class="col-12 d-flex justify-content-between align-items-center">
         <h2 class="text-uppercase mb-0">მომხმარებელთა შეფასებები</h2>
@@ -266,11 +265,9 @@
                         <div class="review-card">
                             <div class="review-header">
                                 <div class="review-author">
-                                    @if($review->image)
-                                        <img src="{{ asset('storage/' . $review->image) }}" alt="{{ $review->author_name }}" class="review-author-image">
-                                    @else
-                                        <div class="review-author-initial">{{ substr($review->author_name, 0, 1) }}</div>
-                                    @endif
+                                    <div class="review-author-icon-wrapper">
+                                        <i class="bi bi-person-fill"></i>
+                                    </div>
                                     <div class="review-author-info">
                                         <h3 class="review-author-name">{{ $review->author_name }}</h3>
                                         <div class="review-rating">
@@ -295,7 +292,6 @@
                     </div>
                 @endforeach
             </div>
-            <!-- შეფასებების სლაიდერის ინდიკატორები წაშლილია -->
         </div>
     </div>
 </div>
@@ -401,7 +397,6 @@
 </div>
 
 
-<!-- შეფასების ფორმა (კოლაფსური) -->
 <div class="review-form-container mt-5">
     <button class="btn btn-primary review-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#reviewFormCollapse" aria-expanded="false" aria-controls="reviewFormCollapse">
         <i class="bi bi-star-fill me-2"></i>დატოვეთ შეფასება
@@ -419,7 +414,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('reviews.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('reviews.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
                         <label for="author_name" class="form-label">თქვენი სახელი</label>
@@ -440,7 +435,6 @@
                     <div class="mb-3">
                         <label for="content" class="form-label">თქვენი შეფასება</label>
                         
-                        <!-- ემოჯების სელექტორი -->
                         <div class="emoji-picker">
                             <button type="button" class="emoji-btn" onclick="addEmoji('😊')">😊</button>
                             <button type="button" class="emoji-btn" onclick="addEmoji('👍')">👍</button>
@@ -451,7 +445,6 @@
                             <button type="button" class="emoji-btn" onclick="toggleEmojiSelector()">➕</button>
                         </div>
                         
-                        <!-- დამატებითი ემოჯების პანელი (თავდაპირველად დამალული) -->
                         <div id="emojiSelector" class="emoji-selector" style="display: none;">
                             <button type="button" onclick="addEmoji('😃')">😃</button>
                             <button type="button" onclick="addEmoji('😁')">😁</button>
@@ -498,19 +491,6 @@
                         @enderror
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="image" class="form-label">სურათი (არჩევითი)</label>
-                        <div class="custom-file-input-wrapper">
-                            <input type="file" class="form-control custom-file-input @error('image') is-invalid @enderror" id="image" name="image">
-                            <label class="custom-file-label" for="image">
-                                <i class="bi bi-upload me-2"></i>აირჩიეთ ფაილი
-                            </label>
-                        </div>
-                        @error('image')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    
                     <button type="submit" class="btn btn-primary">
                         <i class="bi bi-send me-2"></i>გაგზავნა
                     </button>
@@ -519,7 +499,6 @@
         </div>
     </div>
 </div>
-
 
 
 
