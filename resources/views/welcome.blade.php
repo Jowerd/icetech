@@ -33,5 +33,5 @@
 
 @push('scripts')
     <script src="{{ asset('js/chat.js') }}"></script>
-    <script src="{{ mix('js/home-sliders.js') }}" defer></script>
+    <script src="{{ asset('js/home-sliders.js?v=' . filemtime(public_path('js/home-sliders.js'))) }}" defer></script>
 @endpush
