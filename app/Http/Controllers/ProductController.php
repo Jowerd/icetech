@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\Category;
+use App\Models\Category; // ✅ დაამატეთ Category მოდელი
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log; // სასარგებლოა debugging-ისთვის
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -25,10 +25,6 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        // ProductController-ში 'admin.products_create' დაბრუნებისას,
-        // თუ რედაქტირებისთვისაც იყენებთ, შეგიძლიათ ცარიელი $product გადასცეთ.
-        // მაგრამ რადგან ეს create მეთოდია, უმჯობესია ცალკე view გქონდეთ ან
-        // $product-ის გარეშე გადასცეთ.
         return view('admin.products_create', compact('categories'));
     }
 
@@ -42,18 +38,18 @@ class ProductController extends Controller
             'category_id'       => 'required|exists:categories,id',
             'name'              => 'required|string|max:255',
             'description'       => 'nullable|string',
-            'price'             => 'required|numeric|min:0', // დავამატე min:0 ფასისთვის
-            'supplier_country'  => 'required|string|max:255', // თუ Country code-ია, max:2 უნდა იყოს
+            'price'             => 'required|numeric|min:0',
+            'supplier_country'  => 'required|string|max:255',
             'condition'         => 'required|in:new,like_new,used',
             'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'video_link'        => 'nullable|url|max:255', // დავამატე max:255
+            'video_link'        => 'nullable|url|max:255',
             'sub_type'          => 'nullable|string|max:255',
             // --- მახასიათებლების ვალიდაცია ---
-            'features'          => 'nullable|array', // features უნდა იყოს მასივი
-            'features.*.name'   => 'nullable|string|max:255', // თითოეული მახასიათებლის სახელი
-            'features.*.value'  => 'nullable|string|max:255', // თითოეული მახასიათებლის მნიშვნელობა
+            'features'          => 'nullable|array',
+            'features.*.name'   => 'nullable|string|max:255',
+            'features.*.value'  => 'nullable|string|max:255',
         ]);
-    
+
         // 2. სურათის ატვირთვა
         $imagePath = null;
         if ($request->hasFile('image')) {
@@ -64,7 +60,6 @@ class ProductController extends Controller
         $featuresToStore = [];
         if ($request->has('features') && is_array($request->input('features'))) {
             foreach ($request->input('features') as $feature) {
-                // ვამოწმებთ, რომ name და value არ არის ცარიელი
                 if (!empty($feature['name']) && !empty($feature['value'])) {
                     $featuresToStore[] = [
                         'name' => $feature['name'],
@@ -76,18 +71,18 @@ class ProductController extends Controller
         
         // 4. პროდუქტის შექმნა
         Product::create([
-            'category_id'      => $validatedData['category_id'],
-            'name'             => $validatedData['name'],
-            'description'      => $validatedData['description'],
-            'price'            => $validatedData['price'],
-            'supplier_country' => $validatedData['supplier_country'],
-            'condition'        => $validatedData['condition'],
-            'video_link'       => $validatedData['video_link'],
-            'sub_type'         => $validatedData['sub_type'],
-            'image'            => $imagePath, // სურათის გზის შენახვა
-            'features'         => $featuresToStore, // დამუშავებული მახასიათებლების შენახვა
+            'category_id'       => $validatedData['category_id'],
+            'name'              => $validatedData['name'],
+            'description'       => $validatedData['description'],
+            'price'             => $validatedData['price'],
+            'supplier_country'  => $validatedData['supplier_country'],
+            'condition'         => $validatedData['condition'],
+            'video_link'        => $validatedData['video_link'],
+            'sub_type'          => $validatedData['sub_type'],
+            'image'             => $imagePath,
+            'features'          => $featuresToStore,
         ]);
-    
+        
         return redirect()->route('admin.products.index')->with('success', 'პროდუქტი წარმატებით დაემატა!');
     }
 
@@ -103,7 +98,9 @@ class ProductController extends Controller
                 return response()->json(['suggestions' => []]);
             }
 
-            // ვეძებთ პროდუქტებს სახელით, კატეგორიით და ქვეკატეგორიით
+            $suggestions = collect(); // შევქმნათ კოლექცია, სადაც შევინახავთ შემოთავაზებებს
+
+            // 1. ვეძებთ პროდუქტებს სახელით, კატეგორიით და ქვეკატეგორიით
             $products = Product::where('name', 'LIKE', "%{$query}%")
                 ->orWhereHas('category', function ($q) use ($query) {
                     $q->where('name', 'LIKE', "%{$query}%");
@@ -113,39 +110,50 @@ class ProductController extends Controller
                 ->limit(10)
                 ->get();
 
-            $suggestions = $products->map(function ($product) {
-                return [
+            foreach ($products as $product) {
+                $suggestions->push([
                     'name' => $product->name,
                     'category' => $product->category ? $product->category->name : null,
                     'price' => $product->price,
                     'formatted_price' => number_format($product->price, 2) . ' ₾',
                     'image' => $product->image ? asset('storage/' . $product->image) : asset('images/no-image.jpg'),
-                    'url' => route('products.show', $product->id), // თუ იყენებთ ID-ს URL-ში
+                    'url' => route('products.show', $product->slug), // 🚨 **აქ არის ცვლილება: ID-ის ნაცვლად $product->slug**
                     'type' => 'product'
-                ];
-            });
+                ]);
+            }
 
-            // თუ პროდუქტები არ მოიძებნა, შევეცადოთ მხოლოდ კატეგორიებით
-            if ($suggestions->isEmpty()) {
-                $categories = Category::where('name', 'LIKE', "%{$query}%")
-                    ->limit(5)
-                    ->get();
+            // 2. ვეძებთ კატეგორიებს (თუ პროდუქტების შედეგები ცოტაა ან არ მოიძებნა, ან ყოველთვის გვინდა)
+            // შეგიძლიათ ეს ლოგიკა თქვენს საჭიროებებს მოარგოთ.
+            // მაგალითად, თუ ყოველთვის გინდათ პროდუქტებთან ერთად კატეგორიებიც გამოჩნდეს:
+            $categories = Category::where('name', 'LIKE', "%{$query}%")
+                ->limit(5)
+                ->get();
 
-                $suggestions = $categories->map(function ($category) {
-                    return [
+            foreach ($categories as $category) {
+                // შეამოწმეთ, ხომ არ არის უკვე დამატებული კატეგორია პროდუქტის ძიებიდან (თუ სახელი ემთხვევა)
+                $exists = $suggestions->contains(function ($item) use ($category) {
+                    return $item['name'] === $category->name && $item['type'] === 'category';
+                });
+
+                if (!$exists) {
+                    $suggestions->push([
                         'name' => $category->name,
-                        'category' => 'კატეგორია',
+                        'category' => 'კატეგორია', // ან რამე სხვა აღწერა
                         'price' => null,
                         'formatted_price' => null,
                         'image' => $category->image ? asset('storage/' . $category->image) : asset('images/category-default.jpg'),
-                        'url' => route('categories.show', $category->id), // თუ იყენებთ ID-ს URL-ში
+                        'url' => route('categories.show', $category->slug), // 🚨 **აქ არის ცვლილება: ID-ის ნაცვლად $category->slug**
                         'type' => 'category'
-                    ];
-                });
+                    ]);
+                }
             }
+            
+            // შეგიძლიათ აქ დაამატოთ დალაგების ლოგიკა, მაგალითად, ჯერ პროდუქტები, შემდეგ კატეგორიები.
+            // $suggestions = $suggestions->sortBy(function ($item) {
+            //     return $item['type'] === 'product' ? 0 : 1; // პროდუქტები პირველ ადგილზე
+            // });
 
-            return response()->json(['suggestions' => $suggestions]);
-
+            return response()->json(['suggestions' => $suggestions->values()->all()]); // დააბრუნეთ მასივი
         } catch (\Exception $e) {
             Log::error('Search suggestions error: ' . $e->getMessage());
             return response()->json(['suggestions' => []], 500);
@@ -172,25 +180,25 @@ class ProductController extends Controller
             'category_id'       => 'required|exists:categories,id',
             'name'              => 'required|string|max:255',
             'description'       => 'nullable|string',
-            'price'             => 'required|numeric|min:0', // დავამატე min:0
-            'supplier_country'  => 'required|string|max:255', // თუ Country code-ია, max:2 უნდა იყოს
+            'price'             => 'required|numeric|min:0',
+            'supplier_country'  => 'required|string|max:255',
             'condition'         => 'required|in:new,like_new,used',
             'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'video_link'        => 'nullable|url|max:255', // დავამატე max:255
+            'video_link'        => 'nullable|url|max:255',
             'sub_type'          => 'nullable|string|max:255',
             // --- მახასიათებლების ვალიდაცია ---
             'features'          => 'nullable|array',
             'features.*.name'   => 'nullable|string|max:255',
             'features.*.value'  => 'nullable|string|max:255',
         ]);
-    
+        
         $product = Product::findOrFail($id);
-    
+        
         // 2. სურათის ატვირთვა/განახლება
         $imagePath = $product->image; // არსებული სურათის გზა
         if ($request->hasFile('image')) {
             if ($product->image) {
-                Storage::disk('public')->delete($product->image); // წაშალეთ ძველი სურათი
+                Storage::disk('public')->delete($product->image); // წაშალეთ ძველი სურაცთი
             }
             $imagePath = $request->file('image')->store('products', 'public');
         }
@@ -210,18 +218,18 @@ class ProductController extends Controller
         
         // 4. პროდუქტის განახლება
         $product->update([
-            'category_id'      => $validatedData['category_id'],
-            'name'             => $validatedData['name'],
-            'description'      => $validatedData['description'],
-            'price'            => $validatedData['price'],
-            'supplier_country' => $validatedData['supplier_country'],
-            'condition'        => $validatedData['condition'],
-            'video_link'       => $validatedData['video_link'],
-            'sub_type'         => $validatedData['sub_type'],
-            'image'            => $imagePath, // განახლებული სურათის გზა
-            'features'         => $featuresToStore, // განახლებული მახასიათებლების შენახვა
+            'category_id'       => $validatedData['category_id'],
+            'name'              => $validatedData['name'],
+            'description'       => $validatedData['description'],
+            'price'             => $validatedData['price'],
+            'supplier_country'  => $validatedData['supplier_country'],
+            'condition'         => $validatedData['condition'],
+            'video_link'        => $validatedData['video_link'],
+            'sub_type'          => $validatedData['sub_type'],
+            'image'             => $imagePath,
+            'features'          => $featuresToStore,
         ]);
-    
+        
         return redirect()->route('admin.products.index')->with('success', 'პროდუქტი წარმატებით განახლდა!');
     }
     
@@ -231,13 +239,13 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-    
+        
         if ($product->image) {
             Storage::disk('public')->delete($product->image);
         }
-    
+        
         $product->delete();
-    
+        
         return redirect()->route('admin.products.index')->with('success', 'პროდუქტი წარმატებით წაიშალა!');
     }
     
@@ -269,7 +277,7 @@ class ProductController extends Controller
         $country = $request->input('country');
         $condition = $request->input('condition');
         $sort = $request->input('sort', 'asc');
-    
+        
         $products = Product::where(function ($q) use ($query) {
                 $q->where('name', 'LIKE', "%{$query}%")
                   ->orWhereHas('category', function ($q) use ($query) {
@@ -292,9 +300,9 @@ class ProductController extends Controller
             ->with('category')
             ->orderBy('price', $sort)
             ->get();
-    
+        
         $countries = Product::select('supplier_country')->distinct()->pluck('supplier_country');
-    
+        
         return view('products.search_results', compact('products', 'query', 'sort', 'minPrice', 'maxPrice', 'country', 'condition', 'countries'));
     }
 
@@ -304,7 +312,7 @@ class ProductController extends Controller
      */
     public function resetViews()
     {
-        Product::query()->update(['views_count' => 0]); // დარწმუნდით, რომ views_count არის სწორი ველი
+        Product::query()->update(['views_count' => 0]);
         return redirect()->route('admin.products.index')->with('success', 'ყველა პროდუქტის ნახვა განულებულია!');
     }
 }
