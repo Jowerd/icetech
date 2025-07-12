@@ -370,6 +370,9 @@
                     <div class="brand-slide">
                         <img src="/images/brands/k.png" alt="ბრენდი 6" class="brand-logo" loading="lazy">
                     </div>
+                    <div class="brand-slide">
+                        <img src="/images/brands/aht.png" alt="ბრენდი 7" class="brand-logo" loading="lazy">
+                    </div>
 
                     <!-- დუბლიკატი სლაიდერისთვის -->
                     <div class="brand-slide">
@@ -389,6 +392,9 @@
                     </div>
                     <div class="brand-slide">
                         <img src="/images/brands/k.png" alt="ბრენდი 6" class="brand-logo" loading="lazy">
+                    </div>
+                    <div class="brand-slide">
+                        <img src="/images/brands/aht.png" alt="ბრენდი 7" class="brand-logo" loading="lazy">
                     </div>
                 </div>
             </div>
