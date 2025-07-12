@@ -1,0 +1,249 @@
+/* about.css */
+
+/* ფერების განსაზღვრა */
+:root {
+    --primary-color: #00a4bd;
+    --primary-light: rgba(0, 164, 189, 0.05);
+    --primary-medium: rgba(0, 164, 189, 0.25);
+    --primary-shadow: rgba(0, 164, 189, 0.5);
+    --text-muted: #6c757d;
+}
+
+/* სათაურების სტილები */
+.about-title {
+    color: var(--primary-color);
+}
+
+.about-subtitle {
+    color: var(--primary-color);
+}
+
+.about-divider {
+    height: 4px;
+    width: 80px;
+    background-color: var(--primary-color);
+}
+
+/* ფასეულობების სექცია */
+.values-section {
+    background-color: var(--primary-light);
+    border-top: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.value-card {
+    background-color: #fff;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.value-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.07);
+}
+
+.icon-circle {
+    width: 80px;
+    height: 80px;
+    background-color: var(--primary-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.about-icon {
+    width: 40px;
+    height: 40px;
+    color: var(--primary-color);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    padding: 12px 30px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #008a9e;
+    border-color: #008a9e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px var(--primary-shadow);
+}
+
+/* ხშირად დასმული კითხვების აკორდეონი */
+.accordion-item {
+    border: 1px solid #e9ecef;
+    margin-bottom: 10px;
+    border-radius: 8px !important;
+    overflow: hidden;
+}
+
+.accordion-button {
+    font-weight: 600;
+    color: #343a40;
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.25rem;
+}
+
+.accordion-button:not(.collapsed) {
+    color: var(--primary-color);
+    background-color: var(--primary-light);
+    box-shadow: none;
+}
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 0.25rem var(--primary-medium);
+    border-color: var(--primary-color);
+}
+
+.accordion-button:not(.collapsed) .faq-icon {
+    color: var(--primary-color);
+}
+
+.accordion-body {
+    color: var(--text-muted);
+    padding: 1rem 1.25rem;
+}
+
+/* FAQ აიქონების სტილები */
+.faq-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+    flex-shrink: 0;
+}
+
+.accordion-button:hover .faq-icon {
+    color: var(--primary-color);
+}
+
+/* რესპონსივი დიზაინი */
+@media (max-width: 768px) {
+    .about-title {
+        font-size: 1.8rem;
+    }
+    
+    .about-subtitle {
+        font-size: 1.5rem;
+    }
+    
+    .value-card {
+        margin-bottom: 2rem;
+    }
+    
+    .icon-circle {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .about-icon {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .btn-primary {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .accordion-button {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .accordion-body {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* ტაბლეტისთვის */
+@media (max-width: 992px) {
+    .about-title {
+        font-size: 2rem;
+    }
+    
+    .about-subtitle {
+        font-size: 1.7rem;
+    }
+    
+    .value-card {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* მცირე ეკრნებისთვის */
+@media (max-width: 576px) {
+    .about-title {
+        font-size: 1.5rem;
+    }
+    
+    .about-subtitle {
+        font-size: 1.3rem;
+    }
+    
+    .lead {
+        font-size: 1rem;
+    }
+    
+    .about-divider {
+        width: 60px;
+        height: 3px;
+    }
+    
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .value-card {
+        padding: 1.5rem !important;
+    }
+}
+
+/* დამატებითი ანიმაციები */
+.value-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.value-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.value-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.value-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* აკორდეონის გლუვი ანიმაცია */
+.accordion-collapse {
+    transition: all 0.3s ease;
+}
+
+.accordion-button::after {
+    transition: transform 0.3s ease;
+}
+
+.accordion-button:not(.collapsed)::after {
+    transform: rotate(180deg);
+}
