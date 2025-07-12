@@ -206,7 +206,7 @@
                     <p><i class="bi bi-envelope-fill" aria-hidden="true"></i> <a href="mailto:info@icetech.ge">info@icetech.ge</a></p>
                     <p><i class="bi bi-telephone-fill" aria-hidden="true"></i> <a href="tel:+995511555888">+995 511 555 888</a></p>
                     <p><i class="bi bi-geo-alt-fill" aria-hidden="true"></i>ხაშური,ბორჯომის ქუჩა #2</p>
-                    <a href="#" class="text-white me-3" aria-label="Facebook"><i class="bi bi-facebook fs-5" aria-hidden="true"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=61578383425424" class="text-white me-3" aria-label="Facebook"><i class="bi bi-facebook fs-5" aria-hidden="true"></i></a>
                     <a href="#" class="text-white me-3" aria-label="Instagram"><i class="bi bi-instagram fs-5" aria-hidden="true"></i></a>
                 </div>
             </div>
