@@ -182,7 +182,7 @@
                     </div>
                     
                     <div class="social-links">
-                        <a href="#" class="me-3 social-icon">
+                        <a href="https://www.facebook.com/profile.php?id=61578383425424" class="me-3 social-icon">
                             <div class="d-flex align-items-center justify-content-center rounded-circle small-icon-circle">
                                 <i data-lucide="facebook" class="small-icon"></i>
                             </div>
