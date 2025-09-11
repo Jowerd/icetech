@@ -6,10 +6,9 @@ use Illuminate\Console\Command;
 use Spatie\Sitemap\SitemapGenerator;
 use Spatie\Sitemap\Tags\Url;
 
-// დარწმუნდი, რომ აქ სწორად არის მითითებული შენი მოდელები
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Post;
+use App\Models\BlogPost; // <-- შეიცვალა Post-ის ნაცვლად
 
 class GenerateSitemap extends Command
 {
@@ -30,7 +29,7 @@ class GenerateSitemap extends Command
         $sitemap->add(Url::create('/contact')->setPriority(0.8)->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY));
         $sitemap->add(Url::create('/blog')->setPriority(0.8)->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY));
 
-        // დინამიური გვერდები (პროდუქტები, კატეგორიები, პოსტები)
+        // დინამიური გვერდები (პროდუქტები, კატეგორიები, ბლოგის პოსტები)
         Category::all()->each(function (Category $category) use ($sitemap) {
             $sitemap->add(Url::create("/categories/{$category->slug}")->setPriority(0.8));
         });
@@ -39,11 +38,11 @@ class GenerateSitemap extends Command
             $sitemap->add(Url::create("/products/{$product->slug}")->setPriority(0.8)->setLastModificationDate($product->updated_at));
         });
 
-        Post::all()->each(function (Post $post) use ($sitemap) {
+        // <-- შეიცვალა Post-ის ნაცვლად
+        BlogPost::all()->each(function (BlogPost $post) use ($sitemap) {
             $sitemap->add(Url::create("/blog/{$post->slug}")->setPriority(0.8)->setLastModificationDate($post->updated_at));
         });
 
-        // sitemap-ის შენახვა public დირექტორიაში
         $sitemap->writeToFile(public_path('sitemap.xml'));
 
         $this->info('Sitemap generated successfully!');
