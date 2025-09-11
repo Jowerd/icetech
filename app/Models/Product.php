@@ -4,14 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+// ✅ დამატებული use ბრძანებები
+use Spatie\Sitemap\Contracts\Sitemapable;
+use Spatie\Sitemap\Tags\Url;
 
-class Product extends Model
+// ✅ დამატებული ინტერფეისი: implements Sitemapable
+class Product extends Model implements Sitemapable
 {
     protected $fillable = [
         'category_id',
         'name',
         'description',
-        'features_text', // ✅ ცვლილება: 'features'-ის ნაცვლად დაემატა 'features_text'
+        'features_text',
         'price',
         'image',
         'supplier_country',
@@ -20,11 +24,6 @@ class Product extends Model
         'slug',
         'sub_type',
     ];
-
-    // ❌ წაშლილია: $casts მასივი, რადგან 'features_text' ჩვეულებრივი ტექსტია და არა მასივი.
-    // protected $casts = [
-    //     'features' => 'array',
-    // ];
 
     protected static function boot()
     {
@@ -52,5 +51,14 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    // ✅ დამატებული ფუნქცია საიტის რუკისთვის
+    public function toSitemapTag(): Url | string | array
+    {
+        return Url::create(route('products.show', $this))
+            ->setLastModificationDate($this->updated_at)
+            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+            ->setPriority(0.9);
     }
 }
