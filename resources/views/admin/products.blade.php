@@ -76,25 +76,7 @@
         flex-shrink: 0; /* Prevent buttons from shrinking */
         border-radius: 0.5rem; /* Rounded buttons */
     }
-    /* Styles for the dynamic feature fields */
-    .feature-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-        gap: 10px;
-    }
-    .feature-item .form-control {
-        flex: 1;
-    }
-    .feature-item .btn-danger {
-        flex-shrink: 0;
-        width: 38px;
-        height: 38px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
-    }
+    /* ❌ ძველი სტილები დინამიური ველებისთვის წაშლილია */
 </style>
 
 <h1 class="mb-4"><i class="bi bi-box-seam"></i> პროდუქტის მართვა</h1>
@@ -130,16 +112,13 @@
                 <textarea name="description" id="description" class="form-control">{{ old('description') }}</textarea>
             </div>
 
-            {{-- New Section: Product Features --}}
-            <div class="mb-4">
-                <label class="form-label d-block"><i class="bi bi-list-stars"></i> პროდუქტის მახასიათებლები</label>
-                <div id="features-container">
-                    {{-- Dynamic fields will be added here via JS --}}
-                </div>
-                <button type="button" id="add-feature-btn" class="btn btn-info btn-sm mt-2">
-                    <i class="bi bi-plus-lg"></i> მახასიათებლის დამატება
-                </button>
+            {{-- ✅ ცვლილება: დამატებულია ტექსტური ველი მახასიათებლებისთვის --}}
+            <div class="mb-3">
+                <label class="form-label"><i class="bi bi-list-stars"></i> მახასიათებლები (ტექსტი)</label>
+                <textarea name="features_text" class="form-control" rows="6" placeholder="თითოეული მახასიათებელი ჩაწერეთ ახალ ხაზზე, მაგ:&#10;ზომა: 200x150x100&#10;ფერი: უჟანგავი მეტალი&#10;სიმძლავრე: 2kW">{{ old('features_text') }}</textarea>
             </div>
+            
+            {{-- ❌ ძველი დინამიური მახასიათებლების ბლოკი წაშლილია --}}
 
             <div class="mb-3">
                 <label class="form-label"><i class="bi bi-currency-exchange"></i> ფასი (₾)</label>
@@ -152,21 +131,13 @@
                     <button class="btn btn-light dropdown-toggle w-100 text-start" type="button" id="countryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         @php
                             $selectedCountryCode = old('supplier_country', 'DE'); // Default to DE if not set
-                            $selectedCountryName = config('countries.list')[$selectedCountryCode] ?? 'გერმანია';
+                            $countriesList = ['DE' => 'გერმანია', 'IT' => 'იტალია', 'TR' => 'თურქეთი', 'CN' => 'ჩინეთი', 'AT' => 'ავსტრია'];
+                            $selectedCountryName = $countriesList[$selectedCountryCode] ?? 'გერმანია';
                         @endphp
                         <img id="selectedFlag" src="https://flagcdn.com/w40/{{ strtolower($selectedCountryCode) }}.png" width="20" class="me-1"> {{ $selectedCountryName }}
                     </button>
                     <ul class="dropdown-menu w-100" aria-labelledby="countryDropdown">
-                        @php
-                            $countries = [
-                                'DE' => 'გერმანია',
-                                'IT' => 'იტალია',
-                                'TR' => 'თურქეთი',
-                                'CN' => 'ჩინეთი',
-                                'AT' => 'ავსტრია'
-                            ];
-                        @endphp
-                        @foreach ($countries as $code => $country)
+                        @foreach ($countriesList as $code => $country)
                             <li>
                                 <a class="dropdown-item d-flex align-items-center country-option" href="#" data-value="{{ $code }}">
                                     <img src="https://flagcdn.com/w40/{{ strtolower($code) }}.png" width="20" class="me-2">
@@ -332,7 +303,7 @@
     });
 </script>
 
-{{-- Custom Scripts (including feature logic) --}}
+{{-- Custom Scripts --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Category Filter Script
@@ -340,12 +311,12 @@
             const categoryId = this.value;
             document.querySelectorAll('.product-item').forEach(item => {
                 item.style.display = (categoryId === 'all' || item.dataset.category === categoryId) 
-                                        ? 'block' 
-                                        : 'none';
+                                       ? 'block' 
+                                       : 'none';
             });
         });
 
-        // Country Dropdown Script (for new product form)
+        // Country Dropdown Script
         let countryDropdown = document.querySelector('#countryDropdown');
         let selectedCountryInput = document.querySelector('#selectedCountry');
         let countryOptions = document.querySelectorAll('.country-option');
@@ -364,43 +335,7 @@
             });
         }
 
-        // Dynamic Features Logic (for new product form)
-        const featuresContainer = document.getElementById('features-container');
-        const addFeatureBtn = document.getElementById('add-feature-btn');
-        let featureIndex = 0; // Index to keep field names unique for new additions
-
-        function createFeatureFieldHTML(index, name = '', value = '') {
-            return `
-                <div class="feature-item" data-index="${index}">
-                    <input type="text" name="features[${index}][name]" class="form-control form-control-sm" placeholder="მახასიათებლის სახელი (მაგ. ფერი)" value="${name}" required>
-                    <input type="text" name="features[${index}][value]" class="form-control form-control-sm" placeholder="მნიშვნელობა (მაგ. წითელი)" value="${value}" required>
-                    <button type="button" class="btn btn-danger btn-sm remove-feature-btn"><i class="bi bi-x"></i></button>
-                </div>
-            `;
-        }
-
-        function addFeatureField(name = '', value = '') {
-            const htmlString = createFeatureFieldHTML(featureIndex, name, value);
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = htmlString.trim();
-            const newFeatureItem = tempDiv.firstChild; 
-
-            featuresContainer.appendChild(newFeatureItem); 
-            
-            newFeatureItem.querySelector('.remove-feature-btn').addEventListener('click', function() {
-                this.closest('.feature-item').remove();
-            });
-
-            featureIndex++; 
-        }
-
-        addFeatureBtn.addEventListener('click', function() {
-            addFeatureField(); 
-        });
-
-        if (featuresContainer && featuresContainer.children.length === 0) {
-            addFeatureField();
-        }
+        // ❌ დინამიური მახასიათებლების JavaScript ლოგიკა წაშლილია
     });
 </script>
 @endsection

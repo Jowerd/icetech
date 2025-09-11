@@ -1,28 +1,6 @@
 @extends('admin.layout')
 @section('title', 'პროდუქტის რედაქტირება • ICETECH')
 @section('content')
-    <style>
-        /* Styles for the dynamic feature fields */
-        .feature-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            gap: 10px;
-        }
-        .feature-item .form-control {
-            flex: 1;
-        }
-        .feature-item .btn-danger {
-            flex-shrink: 0;
-            width: 38px;
-            height: 38px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-        }
-    </style>
-
     <h1 class="mb-4"><i class="bi bi-pencil-square"></i> პროდუქტის რედაქტირება</h1>
 
     <div class="card shadow-sm border-0">
@@ -58,16 +36,13 @@
                     <textarea name="description" id="description" class="form-control">{{ old('description', $product->description) }}</textarea>
                 </div>
 
-                {{-- New Section: Product Features --}}
-                <div class="mb-4">
-                    <label class="form-label d-block"><i class="bi bi-list-stars"></i> პროდუქტის მახასიათებლები</label>
-                    <div id="features-container">
-                        {{-- Dynamic fields will be added here via JS --}}
-                    </div>
-                    <button type="button" id="add-feature-btn" class="btn btn-info btn-sm mt-2">
-                        <i class="bi bi-plus-lg"></i> მახასიათებლის დამატება
-                    </button>
+                {{-- ✅ 변경: 텍스트 기능을 위한 텍스트 영역 추가 --}}
+                <div class="mb-3">
+                    <label class="form-label"><i class="bi bi-list-stars"></i> მახასიათებლები (ტექსტი)</label>
+                    <textarea name="features_text" class="form-control" rows="6" placeholder="თითოეული მახასიათებელი ჩაწერეთ ახალ ხაზზე, მაგ:&#10;ზომა: 200x150x100&#10;ფერი: უჟანგავი მეტალი&#10;სიმძლავრე: 2kW">{{ old('features_text', $product->features_text) }}</textarea>
                 </div>
+
+                {{-- ❌ 이전 동적 기능 블록 제거됨 --}}
 
                 <div class="mb-3">
                     <label class="form-label"><i class="bi bi-currency-exchange"></i> ფასი</label>
@@ -78,20 +53,16 @@
                     <label class="form-label"><i class="bi bi-flag-fill"></i> მწარმოებელი ქვეყანა</label>
                     <div class="dropdown">
                         <button class="btn btn-light dropdown-toggle w-100 text-start" type="button" id="countryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img id="selectedFlag" src="https://flagcdn.com/w40/{{ strtolower($product->supplier_country) }}.png" width="20" class="me-1">
-                            {{ config('countries.list')[$product->supplier_country] ?? 'აირჩიე ქვეყანა' }}
+                             @php
+                                $countriesList = ['DE' => 'გერმანია', 'IT' => 'იტალია', 'TR' => 'თურქეთი', 'CN' => 'ჩინეთი', 'AT' => 'ავსტრია'];
+                                $countryCode = old('supplier_country', $product->supplier_country);
+                                $countryName = $countriesList[$countryCode] ?? 'აირჩიე ქვეყანა';
+                            @endphp
+                            <img id="selectedFlag" src="https://flagcdn.com/w40/{{ strtolower($countryCode) }}.png" width="20" class="me-1">
+                            {{ $countryName }}
                         </button>
                         <ul class="dropdown-menu w-100" aria-labelledby="countryDropdown">
-                            @php
-                                $countries = [
-                                    'DE' => 'გერმანია',
-                                    'IT' => 'იტალია',
-                                    'TR' => 'თურქეთი',
-                                    'CN' => 'ჩინეთი',
-                                    'AT' => 'ავსტრია'
-                                ];
-                            @endphp
-                            @foreach ($countries as $code => $country)
+                            @foreach ($countriesList as $code => $country)
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center country-option" href="#" data-value="{{ $code }}">
                                         <img src="https://flagcdn.com/w40/{{ strtolower($code) }}.png" width="20" class="me-2">
@@ -101,7 +72,7 @@
                             @endforeach
                         </ul>
                     </div>
-                    <input type="hidden" name="supplier_country" id="selectedCountry" value="{{ old('supplier_country', $product->supplier_country) }}">
+                    <input type="hidden" name="supplier_country" id="selectedCountry" value="{{ $countryCode }}">
                 </div>
 
                 <div class="mb-3">
@@ -131,7 +102,7 @@
                 @else
                     <div class="mb-3 text-center">
                         <p class="mb-1"><i class="bi bi-eye-slash"></i> ფოტო არ არის ატვირთული</p>
-                        <img id="currentImage" src="https://via.placeholder.com/150?text=No+Image" class="rounded shadow-sm" width="150" height="150" style="object-fit: cover; display: none;">
+                        <img id="currentImage" src="" class="rounded shadow-sm" width="150" height="150" style="object-fit: cover; display: none;">
                     </div>
                 @endif
 
@@ -154,37 +125,10 @@
         plugins: 'lists link image preview code',
         toolbar: 'undo redo | bold italic underline | bullist numlist | alignleft aligncenter alignright alignjustify | outdent indent | link image | preview | code',
         promotion: false,
-        content_css: false,
-        content_style: `
-            body { 
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; 
-                line-height: 1.6; 
-                margin: 15px; 
-            }
-            p { 
-                margin-top: 0; 
-                margin-bottom: 0.5em; 
-            }
-            p:last-child {
-                margin-bottom: 0;
-            }
-            h1, h2, h3, h4, h5, h6 { 
-                margin-top: 1em; 
-                margin-bottom: 0.5em; 
-            }
-            ul, ol {
-                margin-top: 0.5em;
-                margin-bottom: 0.5em;
-                padding-left: 1.5em;
-            }
-            li {
-                margin-bottom: 0.2em;
-            }
-        `
     });
 </script>
 
-{{-- Custom Scripts (including feature logic) --}}
+{{-- Custom Scripts --}}
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // Country Dropdown Logic
@@ -204,75 +148,7 @@
             });
         });
 
-        // Dynamic Features Logic
-        const featuresContainer = document.getElementById('features-container');
-        const addFeatureBtn = document.getElementById('add-feature-btn');
-        let featureIndex = 0; // Initialize featureIndex to 0.
-
-        // Function to create and add a new feature field to the DOM
-        function addFeatureField(name = '', value = '') {
-            // Create the main div for the feature item
-            const featureItemDiv = document.createElement('div');
-            featureItemDiv.classList.add('feature-item');
-            featureItemDiv.dataset.index = featureIndex; // Store index for potential future use
-
-            // Create input for feature name
-            const nameInput = document.createElement('input');
-            nameInput.type = 'text';
-            nameInput.name = `features[${featureIndex}][name]`; // Unique name
-            nameInput.classList.add('form-control', 'form-control-sm');
-            nameInput.placeholder = 'მახასიათებლის სახელი (მაგ. ფერი)';
-            nameInput.value = name;
-            nameInput.required = true;
-
-            // Create input for feature value
-            const valueInput = document.createElement('input');
-            valueInput.type = 'text';
-            valueInput.name = `features[${featureIndex}][value]`; // Unique name
-            valueInput.classList.add('form-control', 'form-control-sm');
-            valueInput.placeholder = 'მნიშვნელობა (მაგ. წითელი)';
-            valueInput.value = value;
-            valueInput.required = true;
-
-            // Create remove button
-            const removeButton = document.createElement('button');
-            removeButton.type = 'button';
-            removeButton.classList.add('btn', 'btn-danger', 'btn-sm', 'remove-feature-btn');
-            removeButton.innerHTML = '<i class="bi bi-x"></i>';
-
-            // Add event listener to the remove button
-            removeButton.addEventListener('click', function() {
-                featureItemDiv.remove(); // Remove the entire feature item div
-            });
-
-            // Append all elements to the feature item div
-            featureItemDiv.appendChild(nameInput);
-            featureItemDiv.appendChild(valueInput);
-            featureItemDiv.appendChild(removeButton);
-
-            // Append the new feature item div to the container
-            featuresContainer.appendChild(featureItemDiv);
-
-            // Increment featureIndex for the next field
-            featureIndex++; 
-        }
-
-        // Load existing features if available
-        const existingFeatures = @json($product->features);
-        if (Array.isArray(existingFeatures) && existingFeatures.length > 0) {
-            existingFeatures.forEach(feature => {
-                addFeatureField(feature.name, feature.value); 
-            });
-            // featureIndex will automatically be correct after this loop
-        } else {
-            // If no features initially, add one empty field
-            addFeatureField(); 
-        }
-
-        // Event listener for "Add Feature" button
-        addFeatureBtn.addEventListener('click', function() {
-            addFeatureField(); // Add a new empty field
-        });
+        // ❌ 동적 기능 JavaScript 로직 제거됨
     });
 
     function previewImage(event) {
@@ -280,6 +156,7 @@
         if (output) {
             output.src = URL.createObjectURL(event.target.files[0]);
             output.style.display = 'block'; 
+            output.onload = () => URL.revokeObjectURL(output.src) // free memory
         }
     }
 </script>

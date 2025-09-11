@@ -11,6 +11,7 @@ class Product extends Model
         'category_id',
         'name',
         'description',
+        'features_text', // ✅ ცვლილება: 'features'-ის ნაცვლად დაემატა 'features_text'
         'price',
         'image',
         'supplier_country',
@@ -18,14 +19,12 @@ class Product extends Model
         'video_link',
         'slug',
         'sub_type',
-        'features', // ✅ დარწმუნდით, რომ 'features' აქაც არის დამატებული!
     ];
 
-    // --- ეს არის ყველაზე მნიშვნელოვანი ცვლილება ---
-    protected $casts = [
-        'features' => 'array',
-    ];
-    // --- დასასრული მნიშვნელოვანი ცვლილების ---
+    // ❌ წაშლილია: $casts მასივი, რადგან 'features_text' ჩვეულებრივი ტექსტია და არა მასივი.
+    // protected $casts = [
+    //     'features' => 'array',
+    // ];
 
     protected static function boot()
     {

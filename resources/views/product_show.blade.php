@@ -6,6 +6,18 @@
 // HTML ტეგების და სპეციალური სიმბოლოების გაწმმენდა
 $clean_description = html_entity_decode(strip_tags($product->description ?? ''));
 $meta_desc = $product->meta_description ?? Str::limit($clean_description, 160) ?? 'პროფესიონალური ' . $product->name . ' ICETECH-ისგან. მაღალი ხარისხის კომერციული აღჭურვილობა საქართველოში.';
+
+// ✅ ცვლილება: მახასიათებლების ტექსტის დამუშავება Schema-სთვის
+$features_for_schema = [];
+if (!empty($product->features_text)) {
+    $lines = explode("\n", trim($product->features_text));
+    foreach ($lines as $line) {
+        if (strpos($line, ':') !== false) {
+            list($name, $value) = explode(':', $line, 2);
+            $features_for_schema[] = ['name' => trim($name), 'value' => trim($value)];
+        }
+    }
+}
 @endphp
 
 @section('meta_description', $meta_desc)
@@ -58,38 +70,16 @@ $meta_desc = $product->meta_description ?? Str::limit($clean_description, 160) ?
             "priceCurrency": "GEL",
             "price": "{{ $product->price }}",
             "itemCondition": "https://schema.org/{{ $product->condition == 'new' ? 'NewCondition' : ($product->condition == 'used' ? 'UsedCondition' : 'NewCondition') }}",
-            "availability": "https://schema.org/{{ $product->availability_status == 'in_stock' ? 'InStock' : ($product->availability_status == 'out_of_stock' ? 'OutOfStock' : 'PreOrder') }}"
+            "availability": "https://schema.org/InStock"
         }
-        @if(!empty($product->sku))
-        ,"sku": "{{ $product->sku }}"
-        @endif
-        @if(!empty($product->model))
-        ,"model": "{{ $product->model }}"
-        @endif
-        @if(!empty($product->manufacturer))
-        ,"manufacturer": {
-            "@type": "Organization",
-            "name": "{{ $product->manufacturer }}"
-        }
-        @endif
-        @if(!empty($product->weight))
-        ,"weight": {
-            "@type": "QuantitativeValue",
-            "value": "{{ $product->weight }}",
-            "unitCode": "{{ $product->weight_unit ?? 'KGM' }}"
-        }
-        @endif
-        @if(!empty($product->category))
-        ,"category": "{{ $product->category->name }}"
-        @endif
-        {{-- მახასიათებლების დამატება JSON-LD-ში --}}
-        @if(isset($product->features) && is_array($product->features) && !empty($product->features))
+        {{-- ✅ ცვლილება: მახასიათებლების დამატება JSON-LD-ში ახალი ლოგიკით --}}
+        @if(!empty($features_for_schema))
         ,"additionalProperty": [
-            @foreach($product->features as $key => $feature)
+            @foreach($features_for_schema as $feature)
             {
                 "@type": "PropertyValue",
-                "name": "{{ $feature['name'] ?? '' }}",
-                "value": "{{ $feature['value'] ?? '' }}"
+                "name": "{{ $feature['name'] }}",
+                "value": "{{ $feature['value'] }}"
             }{{ !$loop->last ? ',' : '' }}
             @endforeach
         ]
@@ -137,14 +127,11 @@ $meta_desc = $product->meta_description ?? Str::limit($clean_description, 160) ?
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/product.css') }}">
     <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
-    {{-- Font Awesome-ის CSS ლინკი (საჭიროა გაზიარების იკონებისთვის) --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    {{-- Bootstrap Icons --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 @endpush
 
 @section('content')
-    {{-- `partials.product-view` ახლა მოიცავს პროდუქტის ძირითად ინფორმაციას, მახასიათებლებს და მსგავს პროდუქტებს --}}
     @include('partials.product-view')
 @endsection
 

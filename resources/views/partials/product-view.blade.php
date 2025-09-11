@@ -17,24 +17,33 @@
                     </div>
                 </div>
 
-                {{-- პროდუქტის მახასიათებლების სექცია (მხოლოდ დესკტოპისთვის - ფოტოს ქვემოთ) --}}
-                @if(isset($product->features) && is_array($product->features) && !empty($product->features))
+                {{-- ✅ ცვლილება: პროდუქტის მახასიათებლების სექცია (მხოლოდ დესკტოპისთვის) ახალი ლოგიკით --}}
+                @if($product->features_text)
                     <div class="product-features-section card mb-4 p-3 shadow-sm d-none d-lg-block">
                         <h4 class="card-title mb-3 feature-section-title">
                             <i class="bi bi-card-list me-2"></i> პროდუქტის მახასიათებლები
                         </h4>
                         <ul class="features-list list-unstyled mb-0">
-                            @foreach($product->features as $feature)
-                                @if(!empty($feature['name']) && !empty($feature['value']))
+                            @foreach(explode("\n", $product->features_text) as $line)
+                                @if(trim($line)) {{-- ცარიელი ხაზების გამოტოვება --}}
+                                    @php
+                                        // ვამოწმებთ, შეიცავს თუ არა ხაზი ':' სიმბოლოს და ვშლით მას
+                                        $parts = str_contains($line, ':') ? explode(':', $line, 2) : [null, $line];
+                                        $name = trim($parts[0]);
+                                        $value = trim($parts[1]);
+                                    @endphp
                                     <li class="feature-item mb-2 d-flex justify-content-between align-items-baseline">
-                                        <span class="feature-name fw-semibold text-muted">{{ $feature['name'] }}:</span>
-                                        <span class="feature-value text-end">{{ $feature['value'] }}</span>
+                                        @if($name)
+                                            <span class="feature-name fw-semibold text-muted">{{ $name }}:</span>
+                                        @endif
+                                        <span class="feature-value text-end">{{ $value }}</span>
                                     </li>
                                 @endif
                             @endforeach
                         </ul>
                     </div>
                 @endif
+                {{-- /დესკტოპის მახასიათებლების ბლოკის დასასრული --}}
 
             </div>
 
@@ -49,8 +58,8 @@
                         <h3 class="product-price mb-0">₾ {{ number_format($product->price, 2) }}</h3>
                         <span class="country-flag" title="მწარმოებელი ქვეყანა: {{ config('countries.list')[strtoupper($product->supplier_country)] ?? $product->supplier_country }}">
                             <img src="https://flagcdn.com/24x18/{{ strtolower($product->supplier_country) }}.png"
-                                alt="{{ $product->supplier_country }} Flag"
-                                class="country-flag-img shadow-sm">
+                                 alt="{{ $product->supplier_country }} Flag"
+                                 class="country-flag-img shadow-sm">
                         </span>
                     </div>
 
@@ -81,54 +90,59 @@
                         <span class="show-less-description-text">ნაკლები</span>
                     </button>
 
-                    {{-- პროდუქტის მახასიათებლების სექცია (მხოლოდ მობილურისთვის - ახლა აქ) --}}
-                    @if(isset($product->features) && is_array($product->features) && !empty($product->features))
+                    {{-- ✅ ცვლილება: პროდუქტის მახასიათებლების სექცია (მხოლოდ მობილურისთვის) ახალი ლოგიკით --}}
+                    @if($product->features_text)
                         <div class="product-features-section card mb-4 p-3 shadow-sm d-block d-lg-none">
                             <h4 class="card-title mb-3 feature-section-title">
                                 <i class="bi bi-card-list me-2"></i> პროდუქტის მახასიათებლები
                             </h4>
                             <ul class="features-list list-unstyled mb-0">
-                                @foreach($product->features as $feature)
-                                    @if(!empty($feature['name']) && !empty($feature['value']))
+                                @foreach(explode("\n", $product->features_text) as $line)
+                                    @if(trim($line)) {{-- ცარიელი ხაზების გამოტოვება --}}
+                                        @php
+                                            $parts = str_contains($line, ':') ? explode(':', $line, 2) : [null, $line];
+                                            $name = trim($parts[0]);
+                                            $value = trim($parts[1]);
+                                        @endphp
                                         <li class="feature-item mb-2 d-flex justify-content-between align-items-baseline">
-                                            <span class="feature-name fw-semibold text-muted">{{ $feature['name'] }}:</span>
-                                            <span class="feature-value text-end">{{ $feature['value'] }}</span>
+                                            @if($name)
+                                                <span class="feature-name fw-semibold text-muted">{{ $name }}:</span>
+                                            @endif
+                                            <span class="feature-value text-end">{{ $value }}</span>
                                         </li>
                                     @endif
                                 @endforeach
                             </ul>
                         </div>
                     @endif
+                    {{-- /მობილურის მახასიათებლების ბლოკის დასასრული --}}
 
-                    {{-- გაზიარების ღილაკები (მობილურზე ბოლოში) --}}
+                    {{-- გაზიარების ღილაკები --}}
                     <div class="social-share-buttons card p-3 shadow-sm mb-4">
                         <p class="share-title mb-2 fw-semibold">გააზიარე პროდუქტი:</p>
                         <div class="share-buttons-container">
                             <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}"
-                            target="_blank"
-                            class="share-button facebook-share" title="გააზიარეთ Facebook-ზე">
-                            <i class="fab fa-facebook-f"></i>
+                               target="_blank"
+                               class="share-button facebook-share" title="გააზიარეთ Facebook-ზე">
+                                <i class="fab fa-facebook-f"></i>
                             </a>
-
                             <a href="https://wa.me/?text={{ urlencode($product->name . ' - ' . request()->url()) }}"
-                            target="_blank"
-                            class="share-button whatsapp-share" title="გააზიარეთ WhatsApp-ზე">
+                               target="_blank"
+                               class="share-button whatsapp-share" title="გააზიარეთ WhatsApp-ზე">
                                 <i class="fab fa-whatsapp"></i>
                             </a>
-
                             <a href="https://t.me/share/url?url={{ urlencode(request()->url()) }}&text={{ urlencode($product->name) }}"
-                            target="_blank"
-                            class="share-button telegram-share" title="გააზიარეთ Telegram-ზე">
+                               target="_blank"
+                               class="share-button telegram-share" title="გააზიარეთ Telegram-ზე">
                                 <i class="fab fa-telegram-plane"></i>
                             </a>
-
                             <button class="share-button copy-link" data-url="{{ request()->url() }}" title="ბმულის კოპირება">
                                 <i class="fas fa-link"></i>
                             </button>
                         </div>
                     </div>
 
-                    {{-- პროდუქტის ვიდეო (მობილურზე ბოლოში) --}}
+                    {{-- პროდუქტის ვიდეო --}}
                     @if($product->video_link)
                         <div class="product-video text-center mb-4">
                             <a href="{{ $product->video_link }}" target="_blank" class="btn btn-primary product-video-link w-100 py-2">
