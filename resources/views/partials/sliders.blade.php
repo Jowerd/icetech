@@ -9,6 +9,7 @@
                     <div class="carousel-caption caption-custom">
                         <h1 class="slide-title">პროფესიონალური სამზარეულო</h1>
                         <p class="slide-description">კომერციული სამზარეულოს სრულყოფილი აღჭურვილობა მაღალი სტანდარტებით.</p>
+                        <a href="{{ route('products') }}" class="slide-cta-btn">პროდუქციის ნახვა <i class="bi bi-arrow-right"></i></a>
                     </div>
                 </div>
                 <div class="carousel-item position-relative">
@@ -17,6 +18,7 @@
                     <div class="carousel-caption caption-custom">
                         <h2 class="slide-title">მაქსიმალური სისუფთავე</h2>
                         <p class="slide-description">ყველა ჰიგიენური მოთხოვნის დაცვით მოწყობილი სივრცე პროფესიონალებისთვის.</p>
+                        <a href="{{ route('products') }}" class="slide-cta-btn">პროდუქციის ნახვა <i class="bi bi-arrow-right"></i></a>
                     </div>
                 </div>
                 <div class="carousel-item position-relative">
@@ -25,6 +27,7 @@
                     <div class="carousel-caption caption-custom">
                         <h2 class="slide-title">მაღალი ხარისხის ტექნიკა</h2>
                         <p class="slide-description">უსაფრთხო, გამძლე და ეფექტური ტექნიკა პროფესიონალური სამუშაოსთვის.</p>
+                        <a href="{{ route('contact') }}" class="slide-cta-btn">დაგვიკავშირდით <i class="bi bi-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -41,16 +44,18 @@
 </div>
 
 <!-- კატეგორიების სლაიდერი -->
-<div class="row mt-3 mb-2">
-    <div class="col-12 d-flex justify-content-between align-items-center">
-        <h2 class="text-uppercase mb-0">კატეგორიები</h2>
-        <div class="category-slider-controls">
-            <button class="btn btn-sm category-control-prev" type="button" aria-label="წინა კატეგორია">
-                <i class="bi bi-chevron-left"></i>
-            </button>
-            <button class="btn btn-sm category-control-next" type="button" aria-label="შემდეგი კატეგორია">
-                <i class="bi bi-chevron-right"></i>
-            </button>
+<div class="row mt-4 mb-2">
+    <div class="col-12 section-header">
+        <h2 class="section-title">კატეგორიები</h2>
+        <div class="section-controls">
+            <div class="category-slider-controls">
+                <button class="btn btn-sm slider-ctrl category-control-prev" type="button" aria-label="წინა კატეგორია">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button class="btn btn-sm slider-ctrl category-control-next" type="button" aria-label="შემდეგი კატეგორია">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -91,15 +96,18 @@
 
 <!-- პოპულარული პროდუქტები -->
 <div class="row mt-5">
-    <div class="col-12 d-flex justify-content-between align-items-center">
-        <h2 class="text-uppercase mb-0">პოპულარული</h2>
-        <div class="popular-slider-controls">
-            <button class="btn btn-sm popular-control-prev" type="button" aria-label="წინა პოპულარული პროდუქტი" disabled style="opacity: 0.5;">
-                <i class="bi bi-chevron-left"></i>
-            </button>
-            <button class="btn btn-sm popular-control-next" type="button" aria-label="შემდეგი პოპულარული პროდუქტი" style="opacity: 1;">
-                <i class="bi bi-chevron-right"></i>
-            </button>
+    <div class="col-12 section-header">
+        <h2 class="section-title">პოპულარული</h2>
+        <div class="section-controls">
+            <a href="{{ route('products') }}" class="btn btn-sm btn-custom">ყველა</a>
+            <div class="popular-slider-controls">
+                <button class="btn btn-sm slider-ctrl popular-control-prev" type="button" aria-label="წინა პოპულარული პროდუქტი">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button class="btn btn-sm slider-ctrl popular-control-next" type="button" aria-label="შემდეგი პოპულარული პროდუქტი">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -159,15 +167,18 @@
 
 <!-- ბოლოს დამატებული პროდუქტები -->
 <div class="row mt-5">
-    <div class="col-12 d-flex justify-content-between align-items-center">
-        <h2 class="text-uppercase mb-0">ბოლოს დამატებული</h2>
-        <div class="newest-slider-controls">
-            <button class="btn btn-sm newest-control-prev" type="button" aria-label="წინა დამატებული პროდუქტი" disabled style="opacity: 0.5;">
-                <i class="bi bi-chevron-left"></i>
-            </button>
-            <button class="btn btn-sm newest-control-next" type="button" aria-label="შემდეგი დამატებული პროდუქტი" disabled style="opacity: 0.5;">
-                <i class="bi bi-chevron-right"></i>
-            </button>
+    <div class="col-12 section-header">
+        <h2 class="section-title">ბოლოს დამატებული</h2>
+        <div class="section-controls">
+            <a href="{{ route('products') }}" class="btn btn-sm btn-custom">ყველა</a>
+            <div class="newest-slider-controls">
+                <button class="btn btn-sm slider-ctrl newest-control-prev" type="button" aria-label="წინა დამატებული პროდუქტი">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button class="btn btn-sm slider-ctrl newest-control-next" type="button" aria-label="შემდეგი დამატებული პროდუქტი">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -226,8 +237,8 @@
 </div>
 
 <div class="row mt-5">
-    <div class="col-12 d-flex justify-content-between align-items-center">
-        <h2 class="text-uppercase mb-0">მომხმარებელთა შეფასებები</h2>
+    <div class="col-12 section-header">
+        <h2 class="section-title">მომხმარებელთა შეფასებები</h2>
     </div>
 </div>
 
@@ -274,8 +285,8 @@
 <!-- პროფესიონალური რჩევები -->
 <div class="blog-section container">
     <div class="row">
-        <div class="col-12 d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-uppercase">პროფესიონალური რჩევები</h2>
+        <div class="col-12 section-header mb-4">
+            <h2 class="section-title">პროფესიონალური რჩევები</h2>
             <a href="{{ route('blog.index') }}" class="btn btn-sm btn-custom">ყველა</a>
         </div>
     </div>
@@ -325,20 +336,20 @@
         <div class="brands-slider-container">
             <div class="brands-slider">
                 <div class="brands-track">
-                    <div class="brand-slide"><img src="/images/brands/images.jpg" alt="ბრენდი 1" class="brand-logo" loading="lazy"></div>
-                    <div class="brand-slide"><img src="/images/brands/oven.png" alt="ბრენდი 2" class="brand-logo" loading="lazy"></div>
-                    <div class="brand-slide"><img src="/images/brands/ciq.png" alt="ბრენდი 3" class="brand-logo" loading="lazy"></div>
-                    <div class="brand-slide"><img src="/images/brands/ai.png" alt="ბრენდი 4" class="brand-logo" loading="lazy"></div>
-                    <div class="brand-slide"><img src="/images/brands/no.webp" alt="ბრენდი 5" class="brand-logo" loading="lazy"></div>
-                    <div class="brand-slide"><img src="/images/brands/k.png" alt="ბრენდი 6" class="brand-logo" loading="lazy"></div>
-                    <div class="brand-slide"><img src="/images/brands/aht.png" alt="ბრენდი 7" class="brand-logo" loading="lazy"></div>
-                    <div class="brand-slide"><img src="/images/brands/images.jpg" alt="ბრენდი 1" class="brand-logo" loading="lazy"></div>
-                    <div class="brand-slide"><img src="/images/brands/oven.png" alt="ბრენდი 2" class="brand-logo" loading="lazy"></div>
-                    <div class="brand-slide"><img src="/images/brands/ciq.png" alt="ბრენდი 3" class="brand-logo" loading="lazy"></div>
-                    <div class="brand-slide"><img src="/images/brands/ai.png" alt="ბრენდი 4" class="brand-logo" loading="lazy"></div>
-                    <div class="brand-slide"><img src="/images/brands/no.webp" alt="ბრენდი 5" class="brand-logo" loading="lazy"></div>
-                    <div class="brand-slide"><img src="/images/brands/k.png" alt="ბრენდი 6" class="brand-logo" loading="lazy"></div>
-                    <div class="brand-slide"><img src="/images/brands/aht.png" alt="ბრენდი 7" class="brand-logo" loading="lazy"></div>
+                    <div class="brand-slide"><img src="/images/brands/images.jpg" alt="პარტნიორი ბრენდი" class="brand-logo" loading="lazy"></div>
+                    <div class="brand-slide"><img src="/images/brands/oven.png" alt="პარტნიორი ბრენდი" class="brand-logo" loading="lazy"></div>
+                    <div class="brand-slide"><img src="/images/brands/ciq.png" alt="CIQ" class="brand-logo" loading="lazy"></div>
+                    <div class="brand-slide"><img src="/images/brands/ai.png" alt="პარტნიორი ბრენდი" class="brand-logo" loading="lazy"></div>
+                    <div class="brand-slide"><img src="/images/brands/no.webp" alt="პარტნიორი ბრენდი" class="brand-logo" loading="lazy"></div>
+                    <div class="brand-slide"><img src="/images/brands/k.png" alt="პარტნიორი ბრენდი" class="brand-logo" loading="lazy"></div>
+                    <div class="brand-slide"><img src="/images/brands/aht.png" alt="AHT" class="brand-logo" loading="lazy"></div>
+                    <div class="brand-slide"><img src="/images/brands/images.jpg" alt="პარტნიორი ბრენდი" class="brand-logo" loading="lazy"></div>
+                    <div class="brand-slide"><img src="/images/brands/oven.png" alt="პარტნიორი ბრენდი" class="brand-logo" loading="lazy"></div>
+                    <div class="brand-slide"><img src="/images/brands/ciq.png" alt="CIQ" class="brand-logo" loading="lazy"></div>
+                    <div class="brand-slide"><img src="/images/brands/ai.png" alt="პარტნიორი ბრენდი" class="brand-logo" loading="lazy"></div>
+                    <div class="brand-slide"><img src="/images/brands/no.webp" alt="პარტნიორი ბრენდი" class="brand-logo" loading="lazy"></div>
+                    <div class="brand-slide"><img src="/images/brands/k.png" alt="პარტნიორი ბრენდი" class="brand-logo" loading="lazy"></div>
+                    <div class="brand-slide"><img src="/images/brands/aht.png" alt="AHT" class="brand-logo" loading="lazy"></div>
                 </div>
             </div>
         </div>

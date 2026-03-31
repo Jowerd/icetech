@@ -136,7 +136,8 @@ document.addEventListener('DOMContentLoaded', function () {
         function getSPV() {
             const w = window.innerWidth;
             if (w >= 1200) return 5;
-            if (w >= 992)  return 3;
+            if (w >= 992)  return 4;
+            if (w >= 768)  return 3;
             return 2;
         }
     }
@@ -387,10 +388,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         sliderContainer.addEventListener('mousedown',  dragStart);
         sliderContainer.addEventListener('touchstart', dragStart, { passive: true });
+        sliderContainer.addEventListener('touchmove',  dragMove, { passive: false });
+        sliderContainer.addEventListener('touchend',   dragEnd);
         document.addEventListener('mousemove',  dragMove);
-        document.addEventListener('touchmove',  dragMove, { passive: false });
         document.addEventListener('mouseup',    dragEnd);
-        document.addEventListener('touchend',   dragEnd);
         document.addEventListener('mouseleave', dragEnd);
         window.addEventListener('resize', update);
         update();

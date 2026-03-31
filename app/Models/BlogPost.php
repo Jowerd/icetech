@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\RegenerateSitemap;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Sitemap\Contracts\Sitemapable;
@@ -18,6 +19,19 @@ class BlogPost extends Model implements Sitemapable
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saved(function () {
+            RegenerateSitemap::dispatch();
+        });
+
+        static::deleted(function () {
+            RegenerateSitemap::dispatch();
+        });
     }
 
     // ✅ გასწორებული ფუნქცია საიტის რუკისთვის

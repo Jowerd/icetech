@@ -6,6 +6,41 @@
     max-width: 100%;
 }
 
+/* კატეგორიის header */
+.category-header {
+    padding: 24px 0 20px;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 24px;
+}
+
+.category-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1a365d;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 8px;
+}
+
+.category-header h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background: #00a4bd;
+    border-radius: 2px;
+}
+
+@media (max-width: 575px) {
+    .category-header       { padding: 16px 0 14px; margin-bottom: 16px; }
+    .category-header h1    { font-size: 1.25rem; }
+}
+
 .btn-custom {
     background-color: #00a4bd;
     border-color: #00a4bd;
@@ -13,7 +48,7 @@
     transition: all 0.3s ease;
 }
 
-.btn-custom:hover, 
+.btn-custom:hover,
 .btn-custom:focus {
     background-color: #008fa6;
     border-color: #008fa6;
@@ -23,6 +58,51 @@
 
 .text-custom {
     color: #00a4bd !important;
+}
+
+/* მობილური ფილტრის ღილაკი */
+.btn-filter-mobile {
+    background: #00a4bd;
+    border: none;
+    color: #fff;
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+
+.btn-filter-mobile:hover {
+    background: #008fa6;
+    color: #fff;
+}
+
+/* =========================================
+   ფილტრის ბარი
+========================================= */
+.filter-bar-desktop {
+    background: #fff;
+    border: 1px solid #edf2f7;
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04);
+}
+
+.filter-label {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #718096;
+    margin-bottom: 8px;
+}
+
+.filter-price-display {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #00a4bd;
 }
 
 /* =========================================
@@ -226,16 +306,20 @@
     color: #212529;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
     border: 1px solid #f0f0f0 !important;
-    transition: all 0.3s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, color 0.2s ease;
 }
 
-.product-card:hover {
-    color: #212529;
+@media (hover: hover) {
+    .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.11);
+        color: #212529;
+    }
 }
 
 /* სურათის კონტეინერი — კვადრატული aspect ratio */
@@ -389,38 +473,60 @@
 ========================================= */
 @media (max-width: 767.98px) {
     .product-image-box {
-        padding: 0.75rem;
+        padding: 0.65rem;
+    }
+
+    .product-card-info {
+        padding: 10px;
     }
 
     .product-card-title {
-        font-size: 0.85rem;
+        font-size: 0.82rem;
     }
 
     .product-card-price {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+    }
+
+    .product-card-arrow {
+        font-size: 1rem;
     }
 
     .product-image-box .condition-badge {
-        font-size: 0.65rem;
-        top: 8px;
-        left: 8px;
+        font-size: 0.62rem;
+        top: 6px;
+        left: 6px;
+        padding: 0.25em 0.5em;
     }
 
     .products-wrapper.view-list .product-col {
-        width: 50%;
-        flex: 0 0 50%;
-        max-width: 50%;
+        width: 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
     }
 
     .products-wrapper.view-list .product-card {
-        flex-direction: column;
+        flex-direction: row;
     }
 
     .products-wrapper.view-list .product-image-box {
-        width: 100%;
-        aspect-ratio: 1 / 1;
-        min-height: unset;
-        border-right: none;
-        border-bottom: 1px solid #f0f0f0;
+        width: 120px;
+        aspect-ratio: auto;
+        min-height: 120px;
+        flex-shrink: 0;
+        border-right: 1px solid #f0f0f0;
+        border-bottom: none;
     }
+
+    .products-wrapper.view-list .product-card-info {
+        padding: 12px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-card-info     { padding: 8px; }
+    .product-card-country  { margin-bottom: 4px; }
+    .product-card-title    { font-size: 0.78rem; margin-bottom: 5px; }
+    .product-card-price    { font-size: 0.85rem; }
+    .product-card-footer   { padding-top: 7px; }
 }

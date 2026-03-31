@@ -13,11 +13,11 @@
     @endphp
 
     {{-- 1. დესკტოპის ფილტრი --}}
-    <div class="filter-bar-desktop d-none d-lg-block bg-white p-4 rounded-4 mb-4 border" style="border-color: #f0f0f0 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+    <div class="filter-bar-desktop d-none d-lg-block">
         <form method="GET" action="{{ route('category.products', $category->slug) }}" class="row g-3 align-items-end">
             
             <div class="col-md-2">
-                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.7rem; letter-spacing: 0.5px;">ტიპი</label>
+                <label class="filter-label">ტიპი</label>
                 <select name="sub_type" class="form-select custom-select-styled">
                     <option value="">ყველა ტიპი</option>
                     @foreach ($subTypes as $slug => $subType)
@@ -28,8 +28,8 @@
 
             <div class="col-md-3">
                 <div class="d-flex justify-content-between align-items-end mb-2">
-                    <label class="form-label text-muted text-uppercase fw-bold mb-0" style="font-size: 0.7rem; letter-spacing: 0.5px;">ფასი</label>
-                    <span class="fw-bold text-custom" style="font-size: 0.85rem;" id="desktopPriceDisplay">{{ $currMin }} ₾ - {{ $currMax }} ₾</span>
+                    <label class="filter-label mb-0">ფასი</label>
+                    <span class="filter-price-display" id="desktopPriceDisplay">{{ $currMin }} ₾ - {{ $currMax }} ₾</span>
                 </div>
                 <div class="multi-range-slider pt-1">
                     <div class="slider-track" id="desktopSliderTrack"></div>
@@ -42,7 +42,7 @@
             </div>
 
             <div class="col-md-2">
-                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.7rem; letter-spacing: 0.5px;">მდგომარეობა</label>
+                <label class="filter-label">მდგომარეობა</label>
                 <select name="condition" class="form-select custom-select-styled">
                     <option value="">ყველა</option>
                     <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>ახალი</option>
@@ -52,7 +52,7 @@
             </div>
 
             <div class="col-md-2">
-                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.7rem; letter-spacing: 0.5px;">ქვეყანა</label>
+                <label class="filter-label">ქვეყანა</label>
                 <select name="country" class="form-select custom-select-styled">
                     <option value="">ყველა</option>
                     @foreach ($countries as $country)
@@ -62,7 +62,7 @@
             </div>
 
             <div class="col-md-2">
-                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.7rem; letter-spacing: 0.5px;">დალაგება</label>
+                <label class="filter-label">დალაგება</label>
                 <select name="sort" class="form-select custom-select-styled">
                     <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>ფასი: ზრდადი</option>
                     <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>ფასი: კლებადი</option>
@@ -84,8 +84,8 @@
 
     {{-- 2. ინფორმაციის პანელი და ხედის შეცვლა --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <button class="btn btn-dark btn-sm fw-bold shadow-sm d-lg-none rounded-3 px-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas">
-            <i class="bi bi-sliders me-1"></i> ფილტრი
+        <button class="btn-filter-mobile d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas">
+            <i class="bi bi-sliders2 me-1"></i> ფილტრი
         </button>
         
         <div class="d-none d-lg-block">
@@ -177,7 +177,7 @@
         <form method="GET" action="{{ route('category.products', $category->slug) }}">
             
             <div class="mb-4">
-                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">ტიპი</label>
+                <label class="filter-label" >ტიპი</label>
                 <select name="sub_type" class="form-select custom-select-styled py-2">
                     <option value="">ყველა</option>
                     @foreach ($subTypes as $slug => $subType)
@@ -188,8 +188,8 @@
 
             <div class="mb-4">
                 <div class="d-flex justify-content-between align-items-end mb-2">
-                    <label class="form-label text-muted text-uppercase fw-bold mb-0" style="font-size: 0.75rem; letter-spacing: 0.5px;">ფასი</label>
-                    <span class="fw-bold text-custom" style="font-size: 0.9rem;" id="mobilePriceDisplay">{{ $currMin }} ₾ - {{ $currMax }} ₾</span>
+                    <label class="filter-label mb-0" >ფასი</label>
+                    <span class="filter-price-display" id="mobilePriceDisplay">{{ $currMin }} ₾ - {{ $currMax }} ₾</span>
                 </div>
                 <div class="multi-range-slider mt-2 mb-3">
                     <div class="slider-track" id="mobileSliderTrack"></div>
@@ -202,7 +202,7 @@
             </div>
 
             <div class="mb-4">
-                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">მდგომარეობა</label>
+                <label class="filter-label" >მდგომარეობა</label>
                 <select name="condition" class="form-select custom-select-styled py-2">
                     <option value="">ყველა</option>
                     <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>ახალი</option>
@@ -212,7 +212,7 @@
             </div>
 
             <div class="mb-4">
-                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">ქვეყანა</label>
+                <label class="filter-label" >ქვეყანა</label>
                 <select name="country" class="form-select custom-select-styled py-2">
                     <option value="">ყველა</option>
                     @foreach ($countries as $country)
@@ -222,7 +222,7 @@
             </div>
 
             <div class="mb-4">
-                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">დალაგება</label>
+                <label class="filter-label" >დალაგება</label>
                 <select name="sort" class="form-select custom-select-styled py-2">
                     <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>ფასი: ზრდადი</option>
                     <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>ფასი: კლებადი</option>

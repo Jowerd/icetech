@@ -1,3 +1,41 @@
+/* ===================================================================
+   გლობალური Scrollbar
+=================================================================== */
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00a4bd;
+    border-radius: 8px;
+    border: 2px solid #f0f0f0;
+    transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #1a365d;
+}
+
+::-webkit-scrollbar-corner {
+    background: #f0f0f0;
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #00a4bd #f0f0f0;
+}
+
+/* ===================================================================
+   Body
+=================================================================== */
 body {
     display: flex;
     flex-direction: column;
@@ -312,23 +350,18 @@ body {
     border-radius: 3px;
 }
 
-/* Scrollbar სტილები */
+/* search suggestions scrollbar — inherits global but narrower */
 .search-suggestions::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
 }
-
 .search-suggestions::-webkit-scrollbar-track {
-    background: #f8f9fa;
-    border-radius: 3px;
+    background: #f0f8fa;
+    border-radius: 5px;
 }
-
 .search-suggestions::-webkit-scrollbar-thumb {
-    background: #ddd;
-    border-radius: 3px;
-}
-
-.search-suggestions::-webkit-scrollbar-thumb:hover {
-    background: #bbb;
+    background: #00a4bd;
+    border-radius: 5px;
+    border: none;
 }
 
 /* Loading state */

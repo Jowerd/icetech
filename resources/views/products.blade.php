@@ -11,9 +11,10 @@
 
 @section('content')
 <div class="container py-4">
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-12">
-            <h2 class="text-uppercase mb-4 fw-bold text-dark">კატეგორიები</h2>
+            <h1 class="products-page-title">კატეგორიები</h1>
+            <p class="products-page-sub">აირჩიეთ კატეგორია სასურველი პროდუქციის სანახავად</p>
         </div>
     </div>
     

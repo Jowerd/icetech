@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Jobs\RegenerateSitemap;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-// ✅ დამატებული use ბრძანებები
 use Spatie\Sitemap\Contracts\Sitemapable;
 use Spatie\Sitemap\Tags\Url;
 
@@ -34,6 +34,14 @@ class Product extends Model implements Sitemapable
             if ($product->sub_type) {
                 $product->sub_type_slug = Str::slug($product->sub_type);
             }
+        });
+
+        static::saved(function () {
+            RegenerateSitemap::dispatch();
+        });
+
+        static::deleted(function () {
+            RegenerateSitemap::dispatch();
         });
     }
 

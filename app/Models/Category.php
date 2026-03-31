@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Jobs\RegenerateSitemap;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-// ✅ დამატებული use ბრძანებები
 use Spatie\Sitemap\Contracts\Sitemapable;
 use Spatie\Sitemap\Tags\Url;
 
@@ -19,6 +19,14 @@ class Category extends Model implements Sitemapable
 
         static::saving(function ($category) {
             $category->slug = Str::slug($category->name);
+        });
+
+        static::saved(function () {
+            RegenerateSitemap::dispatch();
+        });
+
+        static::deleted(function () {
+            RegenerateSitemap::dispatch();
         });
     }
 
