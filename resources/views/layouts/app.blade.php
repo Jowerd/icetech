@@ -176,11 +176,15 @@
     </div>
 
     <!-- კონტენტის ნაწილი -->
-    <main class="content-wrapper">
+<main class="content-wrapper @hasSection('full_width') full-width-page @endif">
+    @hasSection('full_width')
+        @yield('content')
+    @else
         <div class="container">
             @yield('content')
         </div>
-    </main>
+    @endif
+</main>
 
     
 <!-- ფუთერი -->

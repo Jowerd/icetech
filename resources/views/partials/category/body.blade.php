@@ -1,18 +1,24 @@
-<!-- ფილტრის სვეტი -->
-<div class="col-md-3 col-lg-2">
-    <button class="btn btn-primary d-md-none w-100 mb-3 shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas">
-        <i class="bi bi-funnel-fill me-1"></i> ფილტრის ჩვენება
-    </button>
+<div class="col-12">
+    
+    @php
+        $absMin = 0; 
+        
+        // ვიღებთ კონკრეტულ კატეგორიაში არსებული პროდუქტების მაქსიმალურ ფასს.
+        // თუ კატეგორია ცარიელია, სტანდარტულად 10000-ს დააყენებს.
+        $absMax = $category->products()->max('price') ?? 10000; 
+        
+        // არჩეული ფასები URL-დან (თუ არ აურჩევია, დეფოლტად მინიმალური და მაქსიმალური დაჯდება)
+        $currMin = request('min_price', $absMin);
+        $currMax = request('max_price', $absMax);
+    @endphp
 
-    <div class="d-none d-md-block bg-white p-3 rounded shadow-sm sticky-top" style="top: 20px;">
-        <h5 class="text-center mb-3 fw-bold border-bottom pb-2">
-            <i class="bi bi-sliders me-1"></i> ფილტრი
-        </h5>
-        <form method="GET" action="{{ route('category.products', $category->slug) }}">
-            {{-- ტიპი --}}
-            <div class="mb-3">
-                <label class="form-label fw-medium">ტიპი</label>
-                <select name="sub_type" class="form-select form-select-sm">
+    {{-- 1. დესკტოპის ფილტრი --}}
+    <div class="filter-bar-desktop d-none d-lg-block bg-white p-4 rounded-4 mb-4 border" style="border-color: #f0f0f0 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+        <form method="GET" action="{{ route('category.products', $category->slug) }}" class="row g-3 align-items-end">
+            
+            <div class="col-md-2">
+                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.7rem; letter-spacing: 0.5px;">ტიპი</label>
+                <select name="sub_type" class="form-select custom-select-styled">
                     <option value="">ყველა ტიპი</option>
                     @foreach ($subTypes as $slug => $subType)
                         <option value="{{ $slug }}" {{ request('sub_type') == $slug ? 'selected' : '' }}>{{ $subType }}</option>
@@ -20,214 +26,215 @@
                 </select>
             </div>
 
-            {{-- ფასი --}}
-            <div class="mb-3">
-                <label class="form-label fw-medium">ფასი</label>
-                <div class="input-group input-group-sm mb-2">
-                    <span class="input-group-text bg-light">მინ ₾</span>
-                    <input type="number" name="min_price" class="form-control" value="{{ request('min_price') }}">
+            <div class="col-md-3">
+                <div class="d-flex justify-content-between align-items-end mb-2">
+                    <label class="form-label text-muted text-uppercase fw-bold mb-0" style="font-size: 0.7rem; letter-spacing: 0.5px;">ფასი</label>
+                    <span class="fw-bold text-custom" style="font-size: 0.85rem;" id="desktopPriceDisplay">{{ $currMin }} ₾ - {{ $currMax }} ₾</span>
                 </div>
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light">მაქს ₾</span>
-                    <input type="number" name="max_price" class="form-control" value="{{ request('max_price') }}">
+                <div class="multi-range-slider pt-1">
+                    <div class="slider-track" id="desktopSliderTrack"></div>
+                    <input type="range" id="desktopMinRange" min="{{ $absMin }}" max="{{ $absMax }}" value="{{ $currMin }}" step="10">
+                    <input type="range" id="desktopMaxRange" min="{{ $absMin }}" max="{{ $absMax }}" value="{{ $currMax }}" step="10">
+                    
+                    <input type="hidden" name="min_price" id="desktopMinPriceHidden" value="{{ $currMin }}">
+                    <input type="hidden" name="max_price" id="desktopMaxPriceHidden" value="{{ $currMax }}">
                 </div>
             </div>
 
-            {{-- დალაგება --}}
-            <div class="mb-3">
-                <label class="form-label fw-medium">დალაგება</label>
-                <select name="sort" class="form-select form-select-sm">
-                    <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>ფასი: დაბალი → მაღალი</option>
-                    <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>ფასი: მაღალი → დაბალი</option>
+            <div class="col-md-2">
+                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.7rem; letter-spacing: 0.5px;">მდგომარეობა</label>
+                <select name="condition" class="form-select custom-select-styled">
+                    <option value="">ყველა</option>
+                    <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>ახალი</option>
+                    <option value="like_new" {{ request('condition') == 'like_new' ? 'selected' : '' }}>ახალივით</option>
+                    <option value="used" {{ request('condition') == 'used' ? 'selected' : '' }}>მეორადი</option>
                 </select>
             </div>
 
-            {{-- მდგომარეობა --}}
-            <div class="mb-3">
-                <label class="form-label fw-medium">მდგომარეობა</label>
-                <div class="d-flex flex-column gap-2">
-                    @foreach ([
-                        '' => 'ყველა',
-                        'new' => 'ახალი',
-                        'like_new' => 'ახალივით',
-                        'used' => 'მეორადი'
-                    ] as $value => $label)
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="condition" id="condition_{{ $value ?: 'all' }}" value="{{ $value }}" {{ request('condition') == $value ? 'checked' : '' }}>
-                            <label class="form-check-label" for="condition_{{ $value ?: 'all' }}">{{ $label }}</label>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-
-            {{-- ქვეყანა --}}
-            <div class="mb-3">
-                <label class="form-label fw-medium">ქვეყანა</label>
-                <select name="country" class="form-select form-select-sm">
-                    <option value="">ყველა ქვეყანა</option>
+            <div class="col-md-2">
+                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.7rem; letter-spacing: 0.5px;">ქვეყანა</label>
+                <select name="country" class="form-select custom-select-styled">
+                    <option value="">ყველა</option>
                     @foreach ($countries as $country)
-                        <option value="{{ $country }}" {{ request('country') == $country ? 'selected' : '' }}>
-                            {{ strtoupper($country) }}
-                        </option>
+                        <option value="{{ $country }}" {{ request('country') == $country ? 'selected' : '' }}>{{ strtoupper($country) }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 mt-3">
-                <i class="bi bi-search me-1"></i> ძიება
-            </button>
+            <div class="col-md-2">
+                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.7rem; letter-spacing: 0.5px;">დალაგება</label>
+                <select name="sort" class="form-select custom-select-styled">
+                    <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>ფასი: ზრდადი</option>
+                    <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>ფასი: კლებადი</option>
+                </select>
+            </div>
 
-            @if(request()->hasAny(['min_price', 'max_price', 'condition', 'country', 'sub_type']))
-                <a href="{{ route('category.products', $category->slug) }}" class="btn btn-outline-secondary w-100 mt-2 btn-sm">
-                    <i class="bi bi-x-circle me-1"></i> გასუფთავება
-                </a>
-            @endif
+            <div class="col-md-1 d-flex gap-2 pb-1">
+                <button type="submit" class="btn btn-custom w-100 fw-bold rounded-3" title="ძიება">
+                    <i class="bi bi-search"></i>
+                </button>
+                @if(request()->hasAny(['min_price', 'max_price', 'condition', 'country', 'sub_type']))
+                    <a href="{{ route('category.products', $category->slug) }}" class="btn btn-light text-danger w-100 fw-bold rounded-3 border" title="გასუფთავება">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                @endif
+            </div>
         </form>
     </div>
-</div>
 
-<!-- პროდუქტის სვეტი -->
-<div class="col-md-9 col-lg-10">
+    {{-- 2. ინფორმაციის პანელი და ხედის შეცვლა --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <button class="btn btn-dark btn-sm fw-bold shadow-sm d-lg-none rounded-3 px-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas">
+            <i class="bi bi-sliders me-1"></i> ფილტრი
+        </button>
+        
+        <div class="d-none d-lg-block">
+            <p class="text-muted m-0"><small>ნაპოვნია <strong>{{ $products->count() }}</strong> პროდუქტი</small></p>
+        </div>
+
+        <div class="d-none d-md-flex gap-2">
+            <button class="btn btn-sm btn-view-mode active rounded-3" data-view="grid" title="ბადე"><i class="bi bi-grid-fill"></i></button>
+            <button class="btn btn-sm btn-view-mode rounded-3" data-view="list" title="სია"><i class="bi bi-list-ul"></i></button>
+        </div>
+        
+        <div class="d-lg-none">
+            <p class="text-muted m-0 small">ნაპოვნია <strong>{{ $products->count() }}</strong></p>
+        </div>
+    </div>
+
+    {{-- 3. პროდუქტების ლისტინგი --}}
     @if($products->isEmpty())
-        <div class="alert alert-info text-center p-4">
-            <i class="bi bi-info-circle fs-2 mb-3 d-block"></i>
-            <h5>პროდუქტები ვერ მოიძებნა</h5>
-            <p class="mb-0">გთხოვთ, შეცვალოთ ფილტრები და სცადოთ თავიდან.</p>
+        <div class="alert alert-light text-center p-5 border rounded-4 shadow-sm mt-3">
+            <i class="bi bi-search text-muted" style="font-size: 3rem;"></i>
+            <h4 class="mt-3 text-dark fw-bold">პროდუქტები ვერ მოიძებნა</h4>
+            <p class="text-muted">შეცვალეთ ფილტრის პარამეტრები და სცადეთ თავიდან.</p>
+            <a href="{{ route('category.products', $category->slug) }}" class="btn btn-custom mt-2 rounded-3 px-4">ფილტრის გასუფთავება</a>
         </div>
     @else
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <p class="m-0 text-muted"><small>ნაპოვნია {{ $products->count() }} პროდუქტი</small></p>
-            <div class="d-flex gap-2">
-                <button class="btn btn-sm btn-outline-secondary view-mode" data-view="grid" title="ბადისებური ხედი"><i class="bi bi-grid"></i></button>
-                <button class="btn btn-sm btn-outline-secondary view-mode" data-view="list" title="სიის ხედი"><i class="bi bi-list-ul"></i></button>
-            </div>
-        </div>
-        <div class="row g-3 products-grid">
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3 products-wrapper view-grid" id="productsContainer">
             @foreach($products as $product)
                 @php
                     $countryCode = strtolower($product->supplier_country);
-                    $flagPath = "https://flagcdn.com/w40/" . $countryCode . ".png";
                     $conditionMap = [
-                        'new' => ['bg-success', 'ახალი', 'bi-star-fill'],
-                        'like_new' => ['bg-primary', 'ახალივით', 'bi-star-half'],
-                        'used' => ['bg-warning', 'მეორადი', 'bi-tag'],
+                        'new'      => ['bg-success',        'ახალი',    'bi-star-fill'],
+                        'like_new' => ['bg-info text-dark', 'ახალივით', 'bi-star-half'],
+                        'used'     => ['bg-secondary',      'მეორადი',  'bi-tag-fill'],
                     ];
-                    [$conditionClass, $conditionText, $conditionIcon] = $conditionMap[$product->condition] ?? ['bg-warning', 'მეორადი', 'bi-tag'];
+                    [$conditionClass, $conditionText, $conditionIcon] =
+                        $conditionMap[$product->condition] ?? ['bg-secondary', 'მეორადი', 'bi-tag-fill'];
                 @endphp
-                <div class="col-6 col-md-6 col-lg-3 product-item">
-                    <div class="popular-card h-100 position-relative">
-                        <span class="condition-badge {{ $conditionClass }} text-white">
-                            <i class="bi {{ $conditionIcon }}"></i> {{ $conditionText }}
-                        </span>
-                        <a href="{{ route('products.show', $product->slug) }}" class="text-decoration-none">
-                            <div class="product-image-wrapper">
-                                <div class="product-image-container">
-                                    <img src="{{ $product->image ? asset('storage/'.$product->image) : asset('default-product.png') }}"
-                                        alt="{{ $product->name }}" class="product-image" loading="lazy">
-                                </div>
+
+                <div class="col product-col">
+                    <a href="{{ route('products.show', $product->slug) }}"
+                       class="product-card card h-100 shadow-sm">
+
+                        {{-- სურათი + badge --}}
+                        <div class="product-image-box">
+                            <span class="badge {{ $conditionClass }} condition-badge shadow-sm">
+                                <i class="bi {{ $conditionIcon }} me-1"></i>{{ $conditionText }}
+                            </span>
+                            <img
+                                src="{{ $product->image ? asset('storage/' . $product->image) : asset('default-product.png') }}"
+                                alt="{{ $product->name }}"
+                                class="product-card-image"
+                                loading="lazy"
+                            >
+                        </div>
+
+                        {{-- ინფო --}}
+                        <div class="product-card-info">
+
+                            {{-- ქვეყნის დროშა --}}
+                            <div class="product-card-country">
+                                <img src="https://flagcdn.com/w40/{{ $countryCode }}.png" alt="{{ $countryCode }}">
+                                <span>{{ strtoupper($product->supplier_country) }}</span>
                             </div>
-                            <div class="product-content">
-                                <div class="country-flag">
-                                    <img src="{{ $flagPath }}" alt="{{ strtoupper($product->supplier_country) }} flag" width="20" height="15">
-                                    <span class="country-code">{{ strtoupper($product->supplier_country) }}</span>
-                                </div>
-                                <h5 class="product-title">{{ $product->name }}</h5>
-                                <p class="price">{{ number_format($product->price, 2) }} ₾</p>
-                                <div class="view-more">
-                                    <span>დეტალები</span>
-                                    <i class="bi bi-arrow-right"></i>
-                                </div>
+
+                            {{-- სათაური --}}
+                            <h5 class="product-card-title">{{ $product->name }}</h5>
+
+                            {{-- ფასი + ისარი --}}
+                            <div class="product-card-footer">
+                                <p class="product-card-price">₾ {{ number_format($product->price, 2) }}</p>
+                                <i class="bi bi-arrow-right-circle-fill product-card-arrow"></i>
                             </div>
-                        </a>
-                    </div>
+
+                        </div>
+                    </a>
                 </div>
             @endforeach
         </div>
     @endif
 </div>
 
-<!-- Offcanvas მობილური ფილტრი -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="filterOffcanvas">
-    <div class="offcanvas-header border-bottom">
-        <h5 class="fw-bold"><i class="bi bi-sliders me-2"></i> პროდუქტის ფილტრი</h5>
-        <button class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+{{-- 4. მობილურის ფილტრი (Offcanvas) --}}
+<div class="offcanvas offcanvas-start border-0 shadow" tabindex="-1" id="filterOffcanvas">
+    <div class="offcanvas-header border-bottom border-light bg-white">
+        <h5 class="fw-bold m-0"><i class="bi bi-sliders me-2 text-custom"></i> ფილტრი</h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body">
-        {{-- იგივე ფორმა მობილურისთვის --}}
+    <div class="offcanvas-body p-4 bg-white">
         <form method="GET" action="{{ route('category.products', $category->slug) }}">
-            {{-- ტიპი --}}
-            <div class="mb-3">
-                <label class="form-label fw-medium">ტიპი</label>
-                <select name="sub_type" class="form-select form-select-sm">
-                    <option value="">ყველა ტიპი</option>
+            
+            <div class="mb-4">
+                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">ტიპი</label>
+                <select name="sub_type" class="form-select custom-select-styled py-2">
+                    <option value="">ყველა</option>
                     @foreach ($subTypes as $slug => $subType)
                         <option value="{{ $slug }}" {{ request('sub_type') == $slug ? 'selected' : '' }}>{{ $subType }}</option>
                     @endforeach
                 </select>
             </div>
 
-            {{-- ფასი --}}
-            <div class="mb-3">
-                <label class="form-label fw-medium">ფასი</label>
-                <div class="input-group input-group-sm mb-2">
-                    <span class="input-group-text bg-light">მინ ₾</span>
-                    <input type="number" name="min_price" class="form-control" value="{{ request('min_price') }}">
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-end mb-2">
+                    <label class="form-label text-muted text-uppercase fw-bold mb-0" style="font-size: 0.75rem; letter-spacing: 0.5px;">ფასი</label>
+                    <span class="fw-bold text-custom" style="font-size: 0.9rem;" id="mobilePriceDisplay">{{ $currMin }} ₾ - {{ $currMax }} ₾</span>
                 </div>
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light">მაქს ₾</span>
-                    <input type="number" name="max_price" class="form-control" value="{{ request('max_price') }}">
+                <div class="multi-range-slider mt-2 mb-3">
+                    <div class="slider-track" id="mobileSliderTrack"></div>
+                    <input type="range" id="mobileMinRange" min="{{ $absMin }}" max="{{ $absMax }}" value="{{ $currMin }}" step="10">
+                    <input type="range" id="mobileMaxRange" min="{{ $absMin }}" max="{{ $absMax }}" value="{{ $currMax }}" step="10">
+                    
+                    <input type="hidden" name="min_price" id="mobileMinPriceHidden" value="{{ $currMin }}">
+                    <input type="hidden" name="max_price" id="mobileMaxPriceHidden" value="{{ $currMax }}">
                 </div>
             </div>
 
-            {{-- დალაგება --}}
-            <div class="mb-3">
-                <label class="form-label fw-medium">დალაგება</label>
-                <select name="sort" class="form-select form-select-sm">
-                    <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>ფასი: დაბალი → მაღალი</option>
-                    <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>ფასი: მაღალი → დაბალი</option>
+            <div class="mb-4">
+                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">მდგომარეობა</label>
+                <select name="condition" class="form-select custom-select-styled py-2">
+                    <option value="">ყველა</option>
+                    <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>ახალი</option>
+                    <option value="like_new" {{ request('condition') == 'like_new' ? 'selected' : '' }}>ახალივით</option>
+                    <option value="used" {{ request('condition') == 'used' ? 'selected' : '' }}>მეორადი</option>
                 </select>
             </div>
 
-            {{-- მდგომარეობა --}}
-            <div class="mb-3">
-                <label class="form-label fw-medium">მდგომარეობა</label>
-                <div class="d-flex flex-column gap-2">
-                    @foreach ([
-                        '' => 'ყველა',
-                        'new' => 'ახალი',
-                        'like_new' => 'ახალივით',
-                        'used' => 'მეორადი'
-                    ] as $value => $label)
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="condition" id="condition_{{ $value ?: 'all' }}" value="{{ $value }}" {{ request('condition') == $value ? 'checked' : '' }}>
-                            <label class="form-check-label" for="condition_{{ $value ?: 'all' }}">{{ $label }}</label>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-
-            {{-- ქვეყანა --}}
-            <div class="mb-3">
-                <label class="form-label fw-medium">ქვეყანა</label>
-                <select name="country" class="form-select form-select-sm">
-                    <option value="">ყველა ქვეყანა</option>
+            <div class="mb-4">
+                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">ქვეყანა</label>
+                <select name="country" class="form-select custom-select-styled py-2">
+                    <option value="">ყველა</option>
                     @foreach ($countries as $country)
-                        <option value="{{ $country }}" {{ request('country') == $country ? 'selected' : '' }}>
-                            {{ strtoupper($country) }}
-                        </option>
+                        <option value="{{ $country }}" {{ request('country') == $country ? 'selected' : '' }}>{{ strtoupper($country) }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 mt-3">
-                <i class="bi bi-search me-1"></i> ძიება
-            </button>
+            <div class="mb-4">
+                <label class="form-label text-muted text-uppercase fw-bold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">დალაგება</label>
+                <select name="sort" class="form-select custom-select-styled py-2">
+                    <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>ფასი: ზრდადი</option>
+                    <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>ფასი: კლებადი</option>
+                </select>
+            </div>
 
-            @if(request()->hasAny(['min_price', 'max_price', 'condition', 'country', 'sub_type']))
-                <a href="{{ route('category.products', $category->slug) }}" class="btn btn-outline-secondary w-100 mt-2 btn-sm">
-                    <i class="bi bi-x-circle me-1"></i> გასუფთავება
-                </a>
-            @endif
+            <div class="d-grid gap-2 mt-5">
+                <button type="submit" class="btn btn-custom fw-bold py-2 rounded-3">ძიება</button>
+                @if(request()->hasAny(['min_price', 'max_price', 'condition', 'country', 'sub_type']))
+                    <a href="{{ route('category.products', $category->slug) }}" class="btn btn-light text-danger py-2 rounded-3 fw-bold border">გასუფთავება</a>
+                @endif
+            </div>
         </form>
     </div>
 </div>

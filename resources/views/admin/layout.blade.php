@@ -3,266 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'ადმინ პანელი • ICETECH')</title>
+    <title>@yield('title', 'Admin Dashboard • ICETECH')</title>
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
 
     <style>
-        /* --- ძირითადი სტრუქტურის სტილები --- */
+        :root {
+            --sidebar-bg: #0f172a; /* Deep Navy - უფრო სოლიდური ვიდრე შავი */
+            --accent-color: #3b82f6; /* Modern Blue */
+            --text-muted: #94a3b8;
+            --bg-light: #f1f5f9;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        html, body {
-            overflow-x: hidden !important;
-            width: 100%;
-            max-width: 100%;
-            background-color: #f8f9fa;
-        }
-        
-        /* !!! შესწორებულია !!! .content სტილი დაბრუნდა პირვანდელ ვერსიაზე */
-        .content {
-            margin-left: 250px;
-            padding: 20px; /* დაბრუნდა 20px-ზე */
-            transition: margin-left 0.3s ease-in-out;
-            width: calc(100vw - 250px);
-            max-width: 100%;
+
+        body {
+            font-family: 'Inter', 'Manrope', sans-serif;
+            background-color: var(--bg-light);
+            color: #1e293b;
+            overflow-x: hidden;
         }
 
-        /* ================================================================ */
-        /* იზოლირებული სტილები მხოლოდ საიდბარისთვის                       */
-        /* ================================================================ */
+        /* --- Sidebar Modern Style --- */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
-            width: 250px;
-            background-color: #1C1D21;
+            width: 280px;
+            background-color: var(--sidebar-bg);
             display: flex;
             flex-direction: column;
-            padding: 20px 15px;
-            overflow-y: hidden;
-            border-right: 1px solid #2a2c31;
+            padding: 24px 16px;
+            z-index: 1050;
+            transition: var(--transition);
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-header {
+            padding: 0 12px 30px 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-header .logo-box {
+            background: linear-gradient(135deg, var(--accent-color), #2563eb);
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .sidebar-header h4 {
             font-family: 'Manrope', sans-serif;
-            transition: transform 0.3s ease-in-out;
-            z-index: 1000;
-        }
-        
-        .sidebar .sidebar-header {
-            padding-bottom: 20px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-        }
-        .sidebar .sidebar-header h4 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #ffffff;
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #f8fafc;
             margin: 0;
         }
-        .sidebar .sidebar-header i {
-            color: #4dabf7;
-            margin-right: 12px;
-        }
-        
+
+        /* Nav Links */
         .sidebar .nav {
-            height: 100%;
-            overflow-y: auto;
+            flex-grow: 1;
         }
-        .sidebar .nav::-webkit-scrollbar { width: 5px; }
-        .sidebar .nav::-webkit-scrollbar-thumb { background: #495057; border-radius: 10px; }
+
+        .nav-label {
+            color: #475569;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 12px;
+        }
 
         .sidebar .nav-link {
-            color: #a8a9ae;
+            color: var(--text-muted);
             font-weight: 500;
-            padding: 13px 18px;
-            margin-bottom: 5px;
-            border-radius: 9px;
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
-            transition: color 0.3s ease;
-        }
-        .sidebar .nav-link::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 9px;
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s ease;
-            z-index: -1;
-        }
-        .sidebar .nav-link:hover::before {
-            transform: scaleX(1);
-        }
-        .sidebar .nav-link:hover {
-            color: #ffffff;
-        }
-        
-        .sidebar .nav-link.active {
-            color: #ffffff;
-            font-weight: 600;
-        }
-        .sidebar .nav-link.active::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 50%;
-            background: #4dabf7;
-            border-radius: 0 4px 4px 0;
-        }
-        
-        .sidebar .logout-item {
-            margin-top: auto;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.07);
-        }
-        .sidebar .logout-item .btn-danger {
-            background-color: rgba(220, 53, 69, 0.15);
-            border: 1px solid rgba(220, 53, 69, 0.3);
-            color: #ff8a96;
-            transition: all 0.3s ease;
-        }
-        .sidebar .logout-item .btn-danger:hover {
-            background-color: #dc3545;
-            color: #ffffff;
-            border-color: #dc3545;
+            font-size: 0.95rem;
+            padding: 12px 16px;
+            margin-bottom: 4px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
         }
 
-        /* --- მობილურის სტილები --- */
+        .sidebar .nav-link i {
+            font-size: 1.2rem;
+            margin-right: 12px;
+            transition: var(--transition);
+        }
+
+        .sidebar .nav-link:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
+        }
+
+        .sidebar .nav-link.active {
+            color: #ffffff;
+            background-color: var(--accent-color);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+        }
+
+        .sidebar .nav-link.active i {
+            color: white;
+        }
+
+        /* Logout Section */
+        .logout-item {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid transparent;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .btn-logout:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        /* --- Main Content Area --- */
+        .content {
+            margin-left: 280px;
+            padding: 40px;
+            min-height: 100vh;
+            transition: var(--transition);
+        }
+
+        /* Top Bar for Mobile */
+        .mobile-header {
+            display: none;
+            background: white;
+            padding: 15px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1040;
+        }
+
+        /* --- Responsiveness --- */
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
-                width: 280px;
             }
             .sidebar.active {
                 transform: translateX(0);
             }
-            /* !!! შესწორებულია !!! .content სტილი მობილურისთვის დაბრუნდა პირვანდელ ვერსიაზე */
             .content {
                 margin-left: 0;
-                padding: 10px; /* დაბრუნდა 10px-ზე */
-                width: 100%;
+                padding: 20px;
             }
-            .overlay {
-                display: none;
-                position: fixed;
-                top: 0; left: 0;
-                width: 100%; height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 999;
+            .mobile-header {
+                display: flex;
             }
             .overlay.active {
                 display: block;
             }
         }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
     
     @yield('styles')
 </head>
 <body>
 
-<nav class="navbar navbar-dark bg-dark d-lg-none">
-    <div class="container-fluid">
-        <button class="navbar-toggler" type="button" id="sidebarToggle">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <span class="navbar-brand">ICETECH</span>
-    </div>
-</nav>
+<div class="overlay" id="overlay"></div>
 
-<div class="sidebar" id="sidebar">
+<header class="mobile-header">
+    <div class="d-flex align-items-center">
+        <div class="bg-primary text-white p-2 rounded me-2" style="line-height: 0;">
+            <i class="bi bi-cpu-fill"></i>
+        </div>
+        <span class="fw-bold">ICETECH</span>
+    </div>
+    <button class="btn btn-light border" id="sidebarToggle">
+        <i class="bi bi-list fs-4"></i>
+    </button>
+</header>
+
+<aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-        <h4 class="mb-0"><i class="bi bi-shield-check"></i> ადმინ პანელი</h4>
+        <div class="logo-box">
+            <i class="bi bi-shield-lock-fill"></i>
+        </div>
+        <h4>ICETECH ADMIN</h4>
     </div>
 
-    <ul class="nav flex-column h-100">
+    <div class="nav-label">Menu</div>
+    <ul class="nav flex-column">
         <li class="nav-item">
             <a href="{{ route('admin.dashboard') }}" class="nav-link">
-                <i class="bi bi-speedometer2 me-2"></i> მთავარი
+                <i class="bi bi-grid-1x2-fill"></i> მთავარი
             </a>
         </li>
         <li class="nav-item">
             <a href="{{ route('admin.categories.index') }}" class="nav-link">
-                <i class="bi bi-folder-fill me-2"></i> კატეგორიები
+                <i class="bi bi-tags-fill"></i> კატეგორიები
             </a>
         </li>
         <li class="nav-item">
             <a href="{{ route('admin.products.index') }}" class="nav-link">
-                <i class="bi bi-box-seam me-2"></i> პროდუქტები
+                <i class="bi bi-bag-check-fill"></i> პროდუქტები
             </a>
         </li>
+        
+        <div class="nav-label">Content & Community</div>
         <li class="nav-item">
             <a href="{{ route('admin.reviews.index') }}" class="nav-link">
-                <i class="bi bi-chat-left-dots-fill me-2"></i> მიმოხილვები
+                <i class="bi bi-chat-square-text-fill"></i> მიმოხილვები
             </a>
         </li>
         <li class="nav-item">
             <a href="{{ route('admin.blog.index') }}" class="nav-link">
-                <i class="bi bi-journal-text me-2"></i> რჩევების ბლოგი
+                <i class="bi bi-journal-bookmark-fill"></i> რჩევების ბლოგი
             </a>
         </li>
-
-        <li class="nav-item logout-item">
-            <form method="POST" action="{{ route('admin.logout') }}">
-                @csrf
-                <button type="submit" class="btn btn-danger w-100">
-                    <i class="bi bi-box-arrow-right me-2"></i> გასვლა
-                </button>
-            </form>
-        </li>
     </ul>
-</div>
 
-<div class="overlay" id="overlay"></div>
+    <div class="logout-item">
+        <form method="POST" action="{{ route('admin.logout') }}">
+            @csrf
+            <button type="submit" class="btn-logout">
+                <i class="bi bi-box-arrow-left me-2"></i> სისტემიდან გასვლა
+            </button>
+        </form>
+    </div>
+</aside>
 
 <main class="content">
-    @yield('content')
+    <div class="container-fluid p-0">
+        @yield('content')
+    </div>
 </main>
 
 @yield('scripts')
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        let sidebar = document.getElementById("sidebar");
-        let overlay = document.getElementById("overlay");
-        let sidebarToggle = document.getElementById("sidebarToggle");
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const sidebarToggle = document.getElementById("sidebarToggle");
         const currentUrl = window.location.href;
 
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener("click", function () {
-                sidebar.classList.toggle("active");
-                overlay.classList.toggle("active");
-            });
+        // Toggle Sidebar
+        function toggleSidebar() {
+            sidebar.classList.toggle("active");
+            overlay.classList.toggle("active");
         }
 
-        if (overlay) {
-            overlay.addEventListener("click", function () {
-                sidebar.classList.remove("active");
-                overlay.classList.remove("active");
-            });
-        }
+        if (sidebarToggle) sidebarToggle.addEventListener("click", toggleSidebar);
+        if (overlay) overlay.addEventListener("click", toggleSidebar);
 
-        document.querySelectorAll('.sidebar .nav-link').forEach(function (link) {
+        // Active Link Logic
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
             if (link.href === currentUrl) {
                 link.classList.add('active');
             }
-            link.addEventListener("click", function () {
-                if (window.innerWidth <= 992) {
-                    sidebar.classList.remove("active");
-                    overlay.classList.remove("active");
-                }
-            });
         });
     });
 </script>

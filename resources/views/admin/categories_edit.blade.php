@@ -1,154 +1,131 @@
 @extends('admin.layout')
-@section('title', 'კატეგორიის რედაქტირება • ICETECH')
+@section('title', 'რედაქტირება • ICETECH')
 
 @section('content')
-<form action="{{ route('admin.categories.update', $category->id) }}" method="POST" enctype="multipart/form-data">
-    @csrf
-    @method('PUT')
+<div class="container-fluid px-0 px-md-2">
+    <form action="{{ route('admin.categories.update', $category->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0 text-dark-emphasis"><i class="bi bi-pencil-square me-2"></i> კატეგორიის რედაქტირება</h1>
-    </div>
-
-    <div class="row g-4">
-        <div class="col-lg-8">
-            <div class="card card-custom">
-                <div class="card-body p-4">
-                    <div class="mb-4">
-                        <label for="name" class="form-label fs-5">კატეგორიის სახელი</label>
-                        <input type="text" name="name" value="{{ old('name', $category->name) }}" class="form-control form-control-lg" required>
-                    </div>
-                    <div class="mb-4">
-                        <label for="description" class="form-label">აღწერა</label>
-                        <textarea name="description" class="form-control" rows="8">{{ old('description', $category->description) }}</textarea>
-                    </div>
-                    <div>
-                        <label for="keywords" class="form-label">საკვანძო სიტყვები (გამოყავით მძიმით)</label>
-                        <textarea name="keywords" class="form-control" rows="4">{{ old('keywords', $category->keywords) }}</textarea>
-                    </div>
-                </div>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 pb-3 border-bottom gap-3">
+            <div>
+                <h4 class="fw-bold text-dark mb-1">კატეგორიის რედაქტირება</h4>
+                <div class="text-muted small">ID: #{{ $category->id }} • <span class="d-none d-sm-inline">ბოლო ცვლილება:</span> {{ $category->updated_at->diffForHumans() }}</div>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ route('admin.categories.index') }}" class="btn btn-light border rounded-1 fw-bold px-3 flex-grow-1 flex-md-grow-0 text-center small">გაუქმება</a>
+                <button type="submit" class="btn btn-primary rounded-1 fw-bold px-4 flex-grow-1 flex-md-grow-0 shadow-sm small">
+                    <i class="bi bi-save me-2"></i>შენახვა
+                </button>
             </div>
         </div>
 
-        <div class="col-lg-4">
-            <div class="side-panel">
-                <div class="card card-custom mb-4">
-                    <div class="card-header">
-                        <h6 class="mb-0">მოქმედებები</h6>
+        <div class="row g-4">
+            <div class="col-12 col-lg-4 order-lg-2">
+                <div class="card border rounded-1 shadow-none bg-white mb-4">
+                    <div class="card-header bg-light py-2 border-bottom">
+                        <h6 class="mb-0 fw-bold text-uppercase x-small-text text-secondary">კატეგორიის ფოტო</h6>
                     </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                             <a href="{{ route('admin.categories.index') }}" class="btn btn-light">გაუქმება</a>
-                            <button type="submit" class="btn btn-success">
-                                <i class="bi bi-check-circle me-2"></i> განახლება
-                            </button>
+                    <div class="card-body p-3 text-center">
+                        <div class="image-edit-wrapper border rounded mb-3 mx-auto">
+                            <img id="imagePreview" src="{{ $category->image ? asset('storage/' . $category->image) : 'https://via.placeholder.com/400x300.png?text=No+Image' }}" class="img-fluid rounded-1">
                         </div>
-                        <hr>
-                        <small class="text-muted d-block">
-                            <i class="bi bi-clock me-1"></i> ბოლოს განახლდა: {{ $category->updated_at->diffForHumans() }}
-                        </small>
-                    </div>
-                </div>
-
-                <div class="card card-custom">
-                     <div class="card-header">
-                        <h6 class="mb-0">კატეგორიის ფოტო</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="image-uploader">
-                            <label for="imageInput" class="image-upload-label">
-                                <img id="imagePreview" src="{{ $category->image ? asset('storage/' . $category->image) : 'https://via.placeholder.com/400x300.png/f8f9fa/6c757d?text=No+Image' }}" alt="Image Preview">
-                                <div class="image-upload-overlay">
-                                    <i class="bi bi-camera fs-2"></i>
-                                    <span class="mt-2">ფოტოს შეცვლა</span>
-                                </div>
-                            </label>
-                            <input type="file" name="image" id="imageInput" class="d-none" onchange="previewImage(event)">
-                            
+                        
+                        <div class="row g-2">
+                            <div class="col-12">
+                                <label for="imageInput" class="btn btn-dark btn-sm fw-bold rounded-1 w-100 py-2">
+                                    <i class="bi bi-camera me-2"></i>ფოტოს შეცვლა
+                                </label>
+                                <input type="file" name="image" id="imageInput" class="d-none" onchange="previewImage(event)">
+                            </div>
                             @if($category->image)
-                                <button type="button" class="btn btn-sm btn-danger delete-image-btn" onclick="document.getElementById('delete_image_checkbox').checked = true; alert('ფოტო წაიშლება განახლების შემდეგ.');">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                                <input type="checkbox" name="delete_image" id="delete_image_checkbox" class="d-none">
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-outline-danger btn-sm fw-bold rounded-1 w-100" onclick="deleteImageAction()">
+                                        <i class="bi bi-trash me-2"></i>ფოტოს წაშლა
+                                    </button>
+                                    <input type="checkbox" name="delete_image" id="delete_image_checkbox" class="d-none">
+                                </div>
                             @endif
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="col-12 col-lg-8 order-lg-1">
+                <div class="card border rounded-1 shadow-none bg-white h-100">
+                    <div class="card-header bg-light py-2 border-bottom">
+                        <h6 class="mb-0 fw-bold text-uppercase x-small-text text-secondary">მონაცემები</h6>
+                    </div>
+                    <div class="card-body p-3 p-md-4">
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-dark">კატეგორიის დასახელება</label>
+                            <input type="text" name="name" value="{{ old('name', $category->name) }}" class="form-control admin-input-main shadow-none" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-dark">საკვანძო სიტყვები (SEO)</label>
+                            <textarea name="keywords" class="form-control admin-input shadow-none" rows="2" placeholder="კომპიუტერები, ტექნიკა...">{{ old('keywords', $category->keywords) }}</textarea>
+                        </div>
+
+                        <div class="mb-0">
+                            <label class="form-label small fw-bold text-dark">აღწერა (Description)</label>
+                            <textarea name="description" class="form-control admin-input shadow-none" rows="5">{{ old('description', $category->description) }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>
 
 <style>
-    .card-custom {
-        border: 1px solid #eef2f7;
-        border-radius: 0.75rem;
-        box-shadow: none;
-        background-color: #ffffff;
+    /* სრული სისუფთავე */
+    * { transition: none !important; }
+    body { background-color: #f8f9fa; }
+
+    /* მობილურზე ადაპტირებული ინპუტები */
+    .admin-input-main {
+        border: 2px solid #dee2e6;
+        border-radius: 4px;
+        padding: 0.75rem;
+        font-size: 1.1rem;
+        font-weight: 700;
     }
-    .card-header {
-        background-color: #f8f9fa;
-        padding: 0.75rem 1.25rem;
-        border-bottom: 1px solid #eef2f7;
+    .admin-input {
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 0.6rem;
+        font-size: 0.95rem;
     }
-    .form-control-lg {
-        font-size: 1.25rem;
-        padding: 0.75rem 1rem;
-    }
-    .form-control:focus {
-        box-shadow: none;
-        border-color: var(--bs-primary);
-    }
-    .side-panel {
-        position: sticky;
-        top: 20px;
+    .admin-input-main:focus, .admin-input:focus {
+        border-color: #0d6efd;
+        background-color: #fff;
     }
 
-    /* ფოტოს ამტვირთავი */
-    .image-uploader {
-        position: relative;
-        border-radius: 0.5rem;
-        overflow: hidden;
-    }
-    .image-upload-label {
-        display: block;
-        cursor: pointer;
-        margin: 0;
-    }
-    #imagePreview {
+    /* ფოტოს ზომები */
+    .image-edit-wrapper {
         width: 100%;
-        height: auto;
-        aspect-ratio: 4 / 3;
-        object-fit: cover;
-        transition: filter 0.2s ease;
-    }
-    .image-upload-overlay {
-        position: absolute;
-        inset: 0;
-        background-color: rgba(0,0,0,0.5);
-        color: white;
+        max-width: 300px;
+        aspect-ratio: 1/1;
+        background-color: #f1f3f5;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        opacity: 0;
-        transition: opacity 0.2s ease;
+        overflow: hidden;
     }
-    .image-uploader:hover .image-upload-overlay {
-        opacity: 1;
+    .image-edit-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
-    .image-uploader:hover #imagePreview {
-        filter: brightness(0.7);
-    }
-    .delete-image-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        z-index: 10;
-        border-radius: 50%;
-        width: 32px;
-        height: 32px;
-        padding: 0;
+
+    .x-small-text { font-size: 0.65rem; letter-spacing: 0.05rem; }
+
+    /* მობილურის პატარა კორექციები */
+    @media (max-width: 768px) {
+        h4 { font-size: 1.2rem; }
+        .card-body { padding: 1.25rem !important; }
+        .btn-sm { padding: 0.5rem; }
     }
 </style>
 @endsection
@@ -163,6 +140,16 @@
         };
         if (event.target.files && event.target.files[0]) {
             reader.readAsDataURL(event.target.files[0]);
+            if(document.getElementById('delete_image_checkbox')) {
+                document.getElementById('delete_image_checkbox').checked = false;
+            }
+        }
+    }
+
+    function deleteImageAction() {
+        if(confirm('წავშალოთ ფოტო?')) {
+            document.getElementById('delete_image_checkbox').checked = true;
+            document.getElementById('imagePreview').src = 'https://via.placeholder.com/400x300.png?text=Removed';
         }
     }
 </script>

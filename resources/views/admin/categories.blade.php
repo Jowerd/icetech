@@ -2,175 +2,153 @@
 @section('title', 'კატეგორიები • ICETECH')
 
 @section('content')
-    <h1 class="mb-4 text-dark-emphasis"><i class="bi bi-folder-fill me-2"></i> კატეგორიების მართვა</h1>
+<div class="container-fluid px-0 px-md-2">
     
-    <div class="card card-custom add-category-card mb-5">
+    {{-- Header --}}
+    <div class="mb-4">
+        <h4 class="fw-bold text-dark border-start border-primary border-4 ps-3">კატეგორიების მართვა</h4>
+    </div>
+
+    {{-- Main Action Card: დამატების ფორმა (უფრო მკაფიო და გამოკვეთილი) --}}
+    <div class="card border-0 shadow-sm rounded-3 mb-5">
+        <div class="card-header bg-white border-bottom p-3">
+            <span class="fw-bold text-uppercase small text-muted"><i class="bi bi-plus-circle me-2"></i>ახალი კატეგორიის რეგისტრაცია</span>
+        </div>
         <div class="card-body p-4">
-            <h5 class="card-title mb-4"><i class="bi bi-plus-circle me-2"></i> ახალი კატეგორიის დამატება</h5>
             <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label for="name" class="form-label">კატეგორიის სახელი</label>
-                        <input type="text" name="name" class="form-control form-control-lg" id="name" required>
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-4">
+                        <label class="form-label small fw-bold text-dark">კატეგორიის დასახელება</label>
+                        <input type="text" name="name" class="form-control border-2 shadow-none py-2" placeholder="მაგ: მაცივრები" required>
                     </div>
-                    <div class="col-md-6">
-                        <label for="keywords" class="form-label">საკვანძო სიტყვები (მძიმით გამოყოფა)</label>
-                        <input type="text" name="keywords" class="form-control form-control-lg" id="keywords">
+                    <div class="col-md-6 col-lg-4">
+                        <label class="form-label small fw-bold text-dark">საკვანძო სიტყვები (SEO)</label>
+                        <input type="text" name="keywords" class="form-control border-2 shadow-none py-2" placeholder="დახლები, თაროები, მაცივრები">
+                    </div>
+                    <div class="col-md-12 col-lg-4">
+                        <label class="form-label small fw-bold text-dark">კატეგორიის ფოტო</label>
+                        <input type="file" name="image" class="form-control border-2 shadow-none py-2">
                     </div>
                     <div class="col-12">
-                        <label for="description" class="form-label">კატეგორიის აღწერა</label>
-                        <textarea name="description" class="form-control" id="description" rows="3"></textarea>
+                        <label class="form-label small fw-bold text-dark">შიდა აღწერა (სისტემისთვის)</label>
+                        <textarea name="description" class="form-control border-2 shadow-none" rows="2" placeholder="ჩაწერეთ მოკლე ინფორმაცია..."></textarea>
                     </div>
-                    <div class="col-12">
-                        <label for="image" class="form-label">კატეგორიის ფოტო</label>
-                        <input type="file" name="image" class="form-control" id="image">
-                    </div>
-                    <div class="col-12 mt-4">
-                        <button type="submit" class="btn btn-primary btn-lg w-100"><i class="bi bi-check-circle me-2"></i> დამატება</button>
+                    <div class="col-12 text-end mt-4">
+                        <button type="submit" class="btn btn-primary px-5 fw-bold py-2 rounded-2 shadow-sm">
+                            <i class="bi bi-check2-circle me-2"></i>კატეგორიის დამატება
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-    
-    <h2 class="mb-4 text-dark-emphasis"><i class="bi bi-boxes me-2"></i> არსებული კატეგორიები</h2>
-    <div class="row g-4">
-        @forelse ($categories as $category)
-            <div class="col-md-6 col-lg-4">
-                <div class="card card-custom category-item-card h-100">
-                    <div class="card-body d-flex align-items-center">
-                        
-                        <div class="image-wrapper flex-shrink-0">
-                            @if($category->image)
-                                <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}">
-                            @else
-                                <div class="placeholder-icon">
-                                    <i class="bi bi-folder-fill"></i>
-                                </div>
-                            @endif
-                        </div>
-                        
-                        <div class="ms-3 flex-grow-1">
-                            <h6 class="category-name mb-1">{{ $category->name }}</h6>
-                            @if($category->description)
-                                <p class="category-description text-muted small mb-2">{{ Str::limit($category->description, 50) }}</p>
-                            @endif
-                            
-                            <div class="actions-group">
-                                <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-sm btn-outline-secondary">
-                                    <i class="bi bi-pencil-square"></i>
-                                    <span>რედაქტირება</span>
-                                </a>
-                                
-                                <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('დარწმუნებული ხარ, რომ გსურს წაშლა?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                        <i class="bi bi-trash"></i>
-                                        <span>წაშლა</span>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @empty
-            <div class="col-12">
-                <div class="alert alert-info text-center">
-                    კატეგორიები ჯერ არ არის დამატებული.
-                </div>
-            </div>
-        @endforelse
+
+    {{-- List Section: არსებული კატეგორიები (მაქსიმალურად კომპაქტური) --}}
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h6 class="fw-bold text-secondary mb-0">აქტიური კატეგორიები</h6>
+        <span class="badge bg-light text-dark border fw-normal">{{ $categories->count() }} ჩანაწერი</span>
     </div>
 
-    <style>
-        /* ზოგადი სტილები */
-        .card-custom {
-            border: none;
-            border-radius: 1rem; /* 16px */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            background-color: #ffffff;
-            transition: all 0.2s ease-in-out;
-        }
+    <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light border-bottom">
+                    <tr>
+                        <th class="ps-4 py-3 text-muted small fw-bold text-uppercase" style="width: 80px;">ფოტო</th>
+                        <th class="py-3 text-muted small fw-bold text-uppercase">დასახელება</th>
+                        <th class="py-3 text-muted small fw-bold text-uppercase">SEO Tags</th>
+                        <th class="py-3 text-end pe-4 text-muted small fw-bold text-uppercase">მართვა</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($categories as $category)
+                        <tr class="border-bottom">
+                            <td class="ps-4 py-2">
+                                <div class="category-img-preview border shadow-sm">
+                                    @if($category->image)
+                                        <img src="{{ asset('storage/' . $category->image) }}" alt="">
+                                    @else
+                                        <i class="bi bi-folder text-muted opacity-50"></i>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="py-2">
+                                <span class="fw-bold text-dark d-block">{{ $category->name }}</span>
+                                <span class="text-muted x-small">ID: #{{ $category->id }}</span>
+                            </td>
+                            <td class="py-2">
+                                <code class="small text-primary bg-light px-2 py-1 rounded">{{ $category->keywords ?: '---' }}</code>
+                            </td>
+                            <td class="text-end pe-4 py-2">
+                                <div class="btn-group shadow-sm border rounded">
+                                    <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-white btn-sm px-3" title="რედაქტირება">
+                                        <i class="bi bi-pencil-square text-primary"></i>
+                                    </a>
+                                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="d-inline border-start">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="btn btn-white btn-sm px-3" onclick="return confirm('წავშალოთ?')">
+                                            <i class="bi bi-trash3 text-danger"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-muted small">კატეგორიები არ არის დამატებული</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-        /* ფორმის ბარათის სტილი */
-        .add-category-card {
-            border: 1px solid #eef2f7;
-        }
+<style>
+    /* სრული სტატიკა, არანაირი ანიმაცია */
+    * { transition: none !important; }
+    
+    body { background-color: #f8f9fc; }
 
-        .form-control, .form-select {
-            border-radius: 0.5rem; /* 8px */
-            border-color: #dee2e6;
-        }
-        .form-control:focus {
-            border-color: var(--bs-primary);
-            box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.15);
-        }
-        .form-control-lg {
-            font-size: 1rem;
-            padding: 0.75rem 1rem;
-        }
-        .btn-lg {
-             padding: 0.75rem 1rem;
-        }
+    /* Input Styling */
+    .form-control {
+        background-color: #ffffff;
+        border-color: #e3e6f0;
+        font-size: 0.9rem;
+        border-radius: 8px;
+    }
+    .form-control:focus {
+        border-color: #4e73df;
+        background-color: #fff;
+    }
 
-        /* კატეგორიის ბარათების სტილი */
-        .category-item-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-        }
+    /* Table & Previews */
+    .category-img-preview {
+        width: 45px;
+        height: 45px;
+        background: #fff;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+    .category-img-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
-        .image-wrapper {
-            width: 80px;
-            height: 80px;
-            border-radius: 0.75rem; /* 12px */
-            overflow: hidden;
-            background-color: #f8f9fa;
-        }
-        .image-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .image-wrapper .placeholder-icon {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            color: #ced4da;
-        }
+    .x-small { font-size: 0.7rem; }
+    
+    .btn-white { background: #fff; border: none; }
+    .btn-white:hover { background: #f8f9fc; }
 
-        .category-name {
-            font-weight: 600;
-            color: #212529;
-            font-size: 1.05rem;
-        }
-
-        .category-description {
-            line-height: 1.4;
-        }
-        
-        .actions-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem; /* 8px */
-            margin-top: 0.5rem;
-        }
-        .actions-group .btn {
-            display: flex;
-            align-items: center;
-            gap: 0.35rem; /* 6px */
-        }
-
-        /* მობილურისთვის ღილაკებზე ტექსტის დამალვა */
-        @media (max-width: 576px) {
-            .actions-group .btn span {
-                display: none;
-            }
-        }
-    </style>
+    .table thead th {
+        font-size: 11px;
+        letter-spacing: 0.8px;
+        color: #858796;
+    }
+</style>
 @endsection

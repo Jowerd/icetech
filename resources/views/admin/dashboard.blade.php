@@ -1,220 +1,228 @@
 @extends('admin.layout')
-@section('title', 'დეშბორდი • ICETECH')
+@section('title', 'ადმინ პანელი • ICETECH')
 
 @section('content')
-    {{-- მისასალმებელი ტექსტი --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0 text-dark-emphasis">👋 მოგესალმებით, <strong>{{ auth()->guard('admin')->user()->name }}</strong>!</h1>
-    </div>
-
-    {{-- სტატისტიკური ბარათები --}}
-    <div class="row g-4">
+<div class="container-fluid px-0 px-md-2">
+    
+    {{-- სტატისტიკის სექცია - პირდაპირ ზემოდან --}}
+    <div class="row g-3 g-md-4 mb-4">
         {{-- კატეგორიები --}}
-        <div class="col-md-6 col-xl-3">
-            <div class="card h-100 stat-card">
-                <div class="card-body d-flex align-items-center">
-                    <div class="icon-circle bg-primary-subtle me-4">
-                        <i class="bi bi-folder-fill fs-3 text-primary"></i>
-                    </div>
-                    <div>
-                        <p class="text-secondary mb-1">კატეგორიები</p>
-                        <h2 class="card-title mb-0 text-dark">{{ \App\Models\Category::count() }}</h2>
+        <div class="col-6 col-xl-3">
+            <div class="card border-0 shadow-sm dashboard-stat-card">
+                <div class="card-body p-3 p-md-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-primary-soft me-3">
+                            <i class="bi bi-folder2-open"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted x-small fw-bold text-uppercase ls-1">კატეგორია</span>
+                            <h3 class="fw-800 mb-0 mt-0">{{ \App\Models\Category::count() }}</h3>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         {{-- პროდუქტები --}}
-        <div class="col-md-6 col-xl-3">
-            <div class="card h-100 stat-card">
-                <div class="card-body d-flex align-items-center">
-                    <div class="icon-circle bg-success-subtle me-4">
-                        <i class="bi bi-box-seam fs-3 text-success"></i>
-                    </div>
-                    <div>
-                        <p class="text-secondary mb-1">პროდუქტები</p>
-                        <h2 class="card-title mb-0 text-dark">{{ \App\Models\Product::count() }}</h2>
+        <div class="col-6 col-xl-3">
+            <div class="card border-0 shadow-sm dashboard-stat-card">
+                <div class="card-body p-3 p-md-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-success-soft me-3">
+                            <i class="bi bi-box-seam"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted x-small fw-bold text-uppercase ls-1">პროდუქტი</span>
+                            <h3 class="fw-800 mb-0 mt-0">{{ \App\Models\Product::count() }}</h3>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         {{-- მიმოხილვები --}}
-        <div class="col-md-6 col-xl-3">
-            <div class="card h-100 stat-card">
-                <div class="card-body d-flex align-items-center">
-                    <div class="icon-circle bg-warning-subtle me-4">
-                        <i class="bi bi-chat-left-dots-fill fs-3 text-warning"></i>
-                    </div>
-                    <div>
-                        <p class="text-secondary mb-1">მიმოხილვები</p>
-                        <h2 class="card-title mb-0 text-dark">{{ \App\Models\Review::count() }}</h2>
+        <div class="col-6 col-xl-3">
+            <div class="card border-0 shadow-sm dashboard-stat-card">
+                <div class="card-body p-3 p-md-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-warning-soft me-3">
+                            <i class="bi bi-chat-square-heart"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted x-small fw-bold text-uppercase ls-1">მიმოხილვა</span>
+                            <h3 class="fw-800 mb-0 mt-0">{{ \App\Models\Review::count() }}</h3>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         {{-- ბლოგი --}}
-        <div class="col-md-6 col-xl-3">
-            <div class="card h-100 stat-card">
-                <div class="card-body d-flex align-items-center">
-                    <div class="icon-circle bg-danger-subtle me-4">
-                        <i class="bi bi-journal-text fs-3 text-danger"></i>
-                    </div>
-                    <div>
-                        <p class="text-secondary mb-1">ბლოგი</p>
-                        <h2 class="card-title mb-0 text-dark">{{ \App\Models\BlogPost::count() }}</h2>
+        <div class="col-6 col-xl-3">
+            <div class="card border-0 shadow-sm dashboard-stat-card">
+                <div class="card-body p-3 p-md-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-info-soft me-3">
+                            <i class="bi bi-newspaper"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted x-small fw-bold text-uppercase ls-1">სტატია</span>
+                            <h3 class="fw-800 mb-0 mt-0">{{ \App\Models\BlogPost::count() }}</h3>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- ბოლო აქტივობების სექცია --}}
-    <div class="row g-4 mt-4">
+    {{-- ძირითადი კონტენტის ზონა --}}
+    <div class="row g-4">
         {{-- ბოლო პროდუქტები --}}
-        <div class="col-lg-6">
-            <div class="card h-100 recent-activity-card">
-                <div class="card-header">
-                    <h5 class="mb-0 text-dark-emphasis"><i class="bi bi-hourglass-split me-2 text-primary"></i> ბოლო პროდუქტები</h5>
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white border-0 p-4 pb-0 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-lightning-charge-fill text-warning me-2"></i>ბოლო დამატებული</h5>
+                    <a href="{{ route('admin.products.index') }}" class="btn btn-light btn-sm rounded-pill px-3 fw-600">ყველა</a>
                 </div>
-                <div class="card-body p-0">
-                    <ul class="list-group list-group-flush">
-                        @forelse(\App\Models\Product::latest()->take(5)->get() as $product)
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <a href="{{ route('admin.products.edit', $product->id) }}" class="text-decoration-none item-link">
-                                    {{ $product->name }}
-                                </a>
-                                <small class="text-muted">{{ $product->created_at->diffForHumans() }}</small>
-                            </li>
-                        @empty
-                            <li class="list-group-item text-center text-muted py-4">პროდუქტები არ მოიძებნა.</li>
-                        @endforelse
-                    </ul>
+                <div class="card-body p-0 p-md-4 mt-2">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle custom-table mb-0">
+                            <thead>
+                                <tr class="text-muted x-small text-uppercase">
+                                    <th class="ps-4 border-0">პროდუქტი</th>
+                                    <th class="border-0">სტატუსი</th>
+                                    <th class="border-0">თარიღი</th>
+                                    <th class="text-end pe-4 border-0">მართვა</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse(\App\Models\Product::latest()->take(6)->get() as $product)
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-light rounded-3 p-2 me-3 d-none d-md-block">
+                                                    <i class="bi bi-image text-muted"></i>
+                                                </div>
+                                                <div class="fw-bold text-dark text-truncate" style="max-width: 220px;">{{ $product->name }}</div>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge bg-success-subtle text-success rounded-pill px-2">აქტიური</span></td>
+                                        <td><span class="text-muted small">{{ $product->created_at->format('d.m.Y') }}</span></td>
+                                        <td class="text-end pe-4">
+                                            <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-action-pill">
+                                                რედაქტირება
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr><td colspan="4" class="text-center py-5 text-muted">პროდუქტები არ არის</td></tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
 
-        {{-- ბოლო მიმოხილვები --}}
-        <div class="col-lg-6">
-            <div class="card h-100 recent-activity-card">
-                <div class="card-header">
-                    <h5 class="mb-0 text-dark-emphasis"><i class="bi bi-chat-dots-fill me-2 text-success"></i> ბოლო მიმოხილვები</h5>
+        {{-- აქტივობა (Timeline) --}}
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white border-0 p-4 pb-0">
+                    <h5 class="fw-bold text-dark mb-0">ბოლო მიმოხილვები</h5>
                 </div>
-                <div class="card-body p-0">
-                    <ul class="list-group list-group-flush">
-                        @forelse(\App\Models\Review::latest()->take(5)->get() as $review)
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span class="item-text">{{ Str::limit($review->comment, 45) }}</span>
-                                <small class="text-muted">{{ $review->created_at->diffForHumans() }}</small>
-                            </li>
+                <div class="card-body p-4">
+                    <div class="modern-timeline">
+                        @forelse(\App\Models\Review::latest()->take(6)->get() as $review)
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-primary"></div>
+                                <div class="timeline-info">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="fw-bold small text-dark">მომხმარებელი</span>
+                                        <span class="x-small text-muted">{{ $review->created_at->diffForHumans() }}</span>
+                                    </div>
+                                    <p class="mb-0 text-muted small mt-1 italic">"{{ Str::limit($review->comment, 60) }}"</p>
+                                </div>
+                            </div>
                         @empty
-                            <li class="list-group-item text-center text-muted py-4">მიმოხილვები არ მოიძებნა.</li>
+                            <p class="text-center py-5 text-muted small">აქტივობა არ არის</p>
                         @endforelse
-                    </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    {{-- CSS სტილები --}}
-    <style>
-        /* ზოგადი სტილები */
-        body {
-            background-color: #f4f7fc;
-            color: #343a40;
-        }
+<style>
+    /* Global Tweaks */
+    .fw-800 { font-weight: 800; }
+    .fw-600 { font-weight: 600; }
+    .ls-1 { letter-spacing: 0.5px; }
+    .x-small { font-size: 0.7rem; }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 600;
-        }
+    /* Stat Cards - Horizontal Layout */
+    .dashboard-stat-card {
+        border-radius: 16px;
+        transition: all 0.2s ease-in-out;
+    }
+    .dashboard-stat-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.04) !important;
+    }
 
-        /* ბარათის ზოგადი სტილი */
-        .card {
-            border: none;
-            border-radius: 1rem; /* მომრგვალებული კუთხეები */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            background-color: #ffffff;
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-            overflow: hidden; /* შიგთავსის ჩარჩოში მოსათავსებლად */
-        }
+    .stat-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-        }
+    /* Table & Action Pills */
+    .custom-table tbody td {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+    .btn-action-pill {
+        background-color: #f1f5f9;
+        color: #475569;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 5px 15px;
+        border-radius: 50px;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .btn-action-pill:hover {
+        background-color: #e2e8f0;
+        color: #1e293b;
+    }
 
-        /* სტატისტიკის ბარათები */
-        .stat-card .card-body {
-            padding: 1.5rem;
-        }
-        
-        .stat-card .icon-circle {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
+    /* Compact Timeline */
+    .modern-timeline { position: relative; padding-left: 15px; }
+    .timeline-item { position: relative; padding-bottom: 20px; }
+    .timeline-marker {
+        position: absolute; left: -15px; top: 6px;
+        width: 8px; height: 8px; border-radius: 50%;
+    }
+    .timeline-item::before {
+        content: ''; position: absolute; left: -11.5px; top: 12px;
+        width: 1px; height: 100%; background: #f1f5f9;
+    }
+    .timeline-item:last-child::before { display: none; }
 
-        .stat-card .card-title {
-            font-size: 2.1rem;
-            font-weight: 700;
-        }
+    /* Colors */
+    .bg-primary-soft { background: #e0e7ff; color: #4338ca; }
+    .bg-success-soft { background: #dcfce7; color: #15803d; }
+    .bg-warning-soft { background: #fef9c3; color: #a16207; }
+    .bg-info-soft { background: #e0f2fe; color: #0369a1; }
 
-        .stat-card p {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 500;
-        }
-
-        /* ბოლო აქტივობების ბარათები */
-        .recent-activity-card .card-header {
-            background-color: #ffffff;
-            border-bottom: 1px solid #eef2f7;
-            padding: 1.25rem;
-            font-size: 1.1rem;
-        }
-
-        .recent-activity-card .card-header i {
-            font-size: 1.3rem; /* ხატულების ზომა */
-        }
-
-        .recent-activity-card .list-group-item {
-            padding: 1rem 1.25rem;
-            border-color: #eef2f7;
-            transition: background-color 0.2s ease;
-        }
-        
-        .recent-activity-card .list-group-item:last-child {
-            border-bottom: none;
-        }
-
-        .recent-activity-card .list-group-item:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .recent-activity-card .item-link,
-        .recent-activity-card .item-text {
-            color: #212529;
-            font-weight: 500;
-        }
-
-        .recent-activity-card .item-link:hover {
-            color: #0d6efd; /* ბმულის ფერი hover-ზე */
-        }
-
-        /* რესპონსიულობა */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.75rem;
-            }
-
-            .stat-card .card-title {
-                font-size: 1.8rem;
-            }
-        }
-    </style>
+    @media (max-width: 768px) {
+        .dashboard-stat-card h3 { font-size: 1.1rem !important; }
+        .dashboard-stat-card { border-radius: 12px; }
+    }
+</style>
 @endsection

@@ -24,3 +24,4 @@ yarn-error.log
 
 .vercel
 /public/sitemap.xml
+*.sql

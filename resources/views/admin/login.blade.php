@@ -3,221 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ადმინისტრატორის შესვლა</title>
+    <title>ავტორიზაცია • ICETECH ADMIN</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        :root {
+            --primary-blue: #0d6efd;
+            --dark-navy: #1e293b;
+            --soft-bg: #f8fafc;
+        }
 
         body {
-            /* გაუმჯობესებული ფონი - შეგიძლიათ შეცვალოთ სურათი */
-            background: url('https://source.unsplash.com/random/1920x1080/?abstract,geometric') no-repeat center center fixed;
-            background-size: cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-color: var(--soft-bg);
+            /* მსუბუქი გეომეტრიული პატერნი ფონისთვის */
+            background-image: radial-gradient(#cbd5e1 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
             height: 100vh;
-            font-family: 'Poppins', sans-serif; /* შრიფტის შეცვლა */
-            margin: 0;
-            overflow: hidden; /* რათა სურათი არ გაცდეს */
-            position: relative;
-        }
-
-        body::before { /* მინისმორფული ფონის დაბურვა */
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.1); /* ოდნავ თეთრი გამჭვირვალობა */
-            backdrop-filter: blur(10px); /* დაბურვის ეფექტი */
-            z-index: 1;
-        }
-
-        .login-container {
-            position: relative; /* z-index-ისთვის */
-            z-index: 2;
-            background: rgba(255, 255, 255, 0.9); /* ოდნავ გამჭვირვალე ფონი */
-            padding: 40px; /* მეტი სივრცე */
-            border-radius: 20px; /* უფრო მომრგვალებული კუთხეები */
-            /* ნეომორფული ჩრდილები */
-            box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.1), -10px -10px 30px rgba(255, 255, 255, 0.8);
-            width: 100%;
-            max-width: 420px; /* ოდნავ ფართო */
-            text-align: center;
-            border: none;
-            transition: all 0.3s ease;
-            transform-style: preserve-3d; /* 3D ეფექტისთვის */
-        }
-
-        .login-container:hover {
-            transform: translateY(-5px) scale(1.01); /* ოდნავ აწევა და გადიდება */
-            box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.15), -15px -15px 40px rgba(255, 255, 255, 0.9);
-        }
-
-        .login-container h2 {
-            font-size: 28px; /* უფრო დიდი სათაური */
-            font-weight: 700; /* უფრო თამამი */
-            color: #2c3e50; /* მუქი ფერი */
-            margin-bottom: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
         }
 
-        .login-container h2 i {
-            color: #3498db; /* ლურჯი */
-            margin-right: 10px;
-            font-size: 32px;
+        .login-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 400px;
+            padding: 2.5rem;
+            border-radius: 4px; /* უფრო მკაცრი კუთხეები */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-top: 4px solid var(--primary-blue);
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--dark-navy);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .brand-logo span {
+            color: var(--primary-blue);
+        }
+
+        .login-header h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 2rem;
         }
 
         .form-label {
-            text-align: left;
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600; /* უფრო თამამი ლეიბლი */
-            font-size: 15px;
-            color: #34495e;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            color: #475569;
         }
 
         .input-group {
-            margin-bottom: 20px; /* მეტი სივრცე ველებს შორის */
-            border-radius: 12px; /* უფრო მომრგვალებული */
-            overflow: hidden;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05), inset -2px -2px 5px rgba(255,255,255,0.7); /* შიდა ჩრდილი */
-            border: 1px solid #e0e0e0; /* რბილი საზღვარი */
+            border: 2px solid #e2e8f0;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .input-group:focus-within {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
         }
 
         .input-group-text {
-            background: #ecf0f1; /* ღია ნაცრისფერი */
-            border: none; /* საზღვრის მოხსნა */
-            color: #3498db;
-            padding: 15px; /* მეტი პედინგი */
-            transition: all 0.3s ease;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding-left: 1rem;
         }
 
         .form-control {
-            border: none; /* საზღვრის მოხსნა */
-            font-size: 16px; /* უფრო დიდი შრიფტი */
-            padding: 15px; /* მეტი პედინგი */
-            background-color: #f9f9f9;
-            color: #333;
-            transition: all 0.3s ease;
+            border: none;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            color: var(--dark-navy);
         }
 
         .form-control:focus {
             box-shadow: none;
-            background-color: #fff;
-            outline: none;
-            border: none;
+            background-color: transparent;
         }
 
-        .input-group:focus-within .input-group-text {
-            background: #3498db; /* ფოკუსის დროს ფერის შეცვლა */
-            color: #fff;
-        }
-        
-        .input-group:focus-within {
-            border-color: #3498db;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1), inset -2px -2px 5px rgba(255,255,255,0.9), 0 0 0 3px rgba(52, 152, 219, 0.3); /* გარე ფოკუსის ეფექტი */
-        }
-
-        .btn-primary {
-            background: linear-gradient(45deg, #3498db, #2980b9); /* უფრო ცოცხალი გრადიენტი */
-            border: none;
-            border-radius: 12px; /* უფრო მომრგვალებული */
-            font-size: 18px; /* უფრო დიდი შრიფტი */
-            font-weight: 600;
-            padding: 14px;
-            width: 100%;
-            margin-top: 25px;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 15px rgba(52, 152, 219, 0.3); /* უფრო გამოკვეთილი ჩრდილი */
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(45deg, #2980b9, #3498db);
-            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.4);
-            transform: translateY(-3px) scale(1.02); /* ოდნავ აწევა და გადიდება */
-        }
-
-        .btn-secondary {
-            background: #f0f0f0; /* რბილი ნაცრისფერი */
-            color: #555;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            font-size: 17px;
-            font-weight: 500;
-            padding: 14px;
-            width: 100%;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-        }
-
-        .btn-secondary:hover {
-            background: #e0e0e0;
-            color: #333;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.12);
-        }
-
-        .alert-danger {
-            background: #fef2f2; /* უფრო ღია წითელი ფონი */
-            color: #cc0000; /* მუქი წითელი ტექსტი */
-            border-left: 5px solid #e74c3c; /* უფრო სქელი საზღვარი */
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 15px;
-            text-align: left;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 10px rgba(231, 76, 60, 0.1);
-            animation: fadeInDown 0.5s ease-out; /* ანიმაცია გამოჩენისას */
-        }
-
-        .alert-danger i {
-            color: #e74c3c;
-            margin-right: 10px;
-            font-size: 20px;
-        }
-
-        /* Password toggle icon style */
         #togglePassword {
             cursor: pointer;
-            background: #ecf0f1;
             border: none;
-            color: #3498db;
-            padding: 15px;
-            transition: all 0.3s ease;
+            background: transparent;
+            color: #94a3b8;
+            padding-right: 1rem;
         }
 
         #togglePassword:hover {
-            background: #3498db;
-            color: #fff;
+            color: var(--primary-blue);
         }
 
-        /* Animations */
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .btn-primary {
+            background-color: var(--dark-navy);
+            border: none;
+            border-radius: 4px;
+            padding: 0.8rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            margin-top: 1rem;
+        }
+
+        .btn-primary:hover {
+            background-color: #0f172a;
+            transform: translateY(-1px);
+        }
+
+        .btn-link {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .btn-link:hover {
+            color: var(--primary-blue);
+        }
+
+        .alert-danger {
+            background-color: #fef2f2;
+            border: 1px solid #fee2e2;
+            color: #b91c1c;
+            font-size: 0.85rem;
+            border-radius: 4px;
+            padding: 0.75rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        /* პატარა დეტალი: ანიმაცია შემოსვლისას */
+        .login-card {
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <div class="login-container">
-        <h2><i class="bi bi-shield-lock-fill"></i> ადმინისტრატორის შესვლა</h2>
+    <div class="login-card">
+        <div class="text-center mb-2">
+            <div class="brand-logo">ICE<span>TECH</span></div>
+            <div class="login-header">
+                <h2>ადმინისტრატორის პანელი</h2>
+            </div>
+        </div>
 
         @if(session('error'))
             <div class="alert alert-danger">
-                <i class="bi bi-exclamation-circle-fill"></i> {{ session('error') }}
+                <i class="bi bi-exclamation-circle-fill me-2"></i> {{ session('error') }}
             </div>
         @endif
 
@@ -226,36 +179,45 @@
             <div class="mb-3">
                 <label class="form-label">ელფოსტა</label>
                 <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-                    <input type="email" name="email" class="form-control" required placeholder="შეიყვანეთ ელფოსტა">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input type="email" name="email" class="form-control" required placeholder="admin@icetech.ge" autofocus>
                 </div>
             </div>
-            <div class="mb-3">
-                <label class="form-label">პაროლი</label>
+
+            <div class="mb-4">
+                <div class="d-flex justify-content-between">
+                    <label class="form-label">პაროლი</label>
+                </div>
                 <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                    <input type="password" id="password" name="password" class="form-control" required placeholder="შეიყვანეთ პაროლი">
-                    <span class="input-group-text" id="togglePassword"><i class="bi bi-eye"></i></span>
+                    <span class="input-group-text"><i class="bi bi-key"></i></span>
+                    <input type="password" id="password" name="password" class="form-control" required placeholder="••••••••">
+                    <button type="button" id="togglePassword">
+                        <i class="bi bi-eye"></i>
+                    </button>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary"><i class="bi bi-box-arrow-in-right"></i> შესვლა</button>
-            <button type="button" class="btn btn-secondary" onclick="history.back();"><i class="bi bi-arrow-left"></i> უკან დაბრუნება</button>
+
+            <button type="submit" class="btn btn-primary w-100 mb-3">
+                შესვლა <i class="bi bi-chevron-right ms-1 small"></i>
+            </button>
+            
+            <div class="text-center">
+                <a href="/" class="btn-link"><i class="bi bi-house me-1"></i> მთავარზე დაბრუნება</a>
+            </div>
         </form>
     </div>
 
     <script>
         document.getElementById("togglePassword").addEventListener("click", function () {
-            let passwordField = document.getElementById("password");
-            let icon = this.querySelector("i");
+            const passwordField = document.getElementById("password");
+            const icon = this.querySelector("i");
 
             if (passwordField.type === "password") {
                 passwordField.type = "text";
-                icon.classList.remove("bi-eye");
-                icon.classList.add("bi-eye-slash");
+                icon.classList.replace("bi-eye", "bi-eye-slash");
             } else {
                 passwordField.type = "password";
-                icon.classList.remove("bi-eye-slash");
-                icon.classList.add("bi-eye");
+                icon.classList.replace("bi-eye-slash", "bi-eye");
             }
         });
     </script>

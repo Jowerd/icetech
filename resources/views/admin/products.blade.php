@@ -1,341 +1,215 @@
 @extends('admin.layout')
 @section('title', 'პროდუქტები • ICETECH')
+
 @section('content')
-<style>
-    .product-card {
-        height: 100%;
-        transition: transform 0.2s;
-        display: flex; /* Flexbox for full card height alignment */
-        flex-direction: column;
-        border-radius: 0.75rem; /* Slightly rounded corners */
-    }
-    .product-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important; /* Enhanced shadow on hover */
-    }
-    .product-card .card-body {
-        display: flex;
-        padding: 1rem;
-        flex-grow: 1; /* Allow card body to take available space */
-    }
-    .image-container {
-        width: 100px;
-        height: 100px;
-        flex-shrink: 0;
-        background: #f8f9fa;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden; /* Ensure image fits */
-        margin-right: 1rem; /* Space between image and info */
-        border: 1px solid #e9ecef; /* Light border for image container */
-    }
-    .product-info {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-    .product-info h6 {
-        font-size: 1.15rem; /* Slightly larger font for product name */
-        font-weight: 600; /* Bolder product name */
-        margin-bottom: 0.4rem; /* Adjust margin */
-        line-height: 1.3;
-    }
-    .product-info .text-muted.small {
-        font-size: 0.85rem;
-        margin-bottom: 0.3rem;
-    }
-    .price-country-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: space-between; /* Space out price and country */
-        width: 100%;
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
-    }
-    .price-country-wrapper .text-success {
-        font-size: 1.1rem; /* Larger price font */
-        font-weight: 700;
-    }
-    .product-actions {
-        margin-top: auto; /* Push actions to the bottom */
-        padding-top: 0.75rem; /* Slightly increased padding */
-        border-top: 1px solid #f1f1f1; /* Separator line */
-        display: flex; /* Align buttons horizontally */
-        gap: 0.6rem; /* Space between action buttons */
-        justify-content: flex-end; /* Align actions to the right */
-    }
-    .action-btn {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0; /* Prevent buttons from shrinking */
-        border-radius: 0.5rem; /* Rounded buttons */
-    }
-    /* ❌ ძველი სტილები დინამიური ველებისთვის წაშლილია */
-</style>
-
-<h1 class="mb-4"><i class="bi bi-box-seam"></i> პროდუქტის მართვა</h1>
-
-<div class="card shadow-sm border-0 mb-4">
-    <div class="card-body">
-        <h5 class="card-title"><i class="bi bi-plus-circle"></i> ახალი პროდუქტის დამატება</h5>
-        <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-
-            <div class="mb-3">
-                <label class="form-label"><i class="bi bi-folder-fill"></i> აირჩიე კატეგორია</label>
-                <select name="category_id" class="form-select" required>
-                    <option value="">-- აირჩიე კატეგორია --</option>
-                    @foreach (\App\Models\Category::all() as $category)
-                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">პროდუქტის ქვეკატეგორია (ტიპი)</label>
-                <input type="text" name="sub_type" value="{{ old('sub_type') }}" class="form-control" placeholder="მაგ. საყინულე მაც, შოკ-მაც, დახლ-მაც...">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label"><i class="bi bi-tag-fill"></i> პროდუქტის სახელი</label>
-                <input type="text" name="name" value="{{ old('name') }}" class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label"><i class="bi bi-file-text-fill"></i> აღწერა</label>
-                <textarea name="description" id="description" class="form-control">{{ old('description') }}</textarea>
-            </div>
-
-            {{-- ✅ ცვლილება: დამატებულია ტექსტური ველი მახასიათებლებისთვის --}}
-            <div class="mb-3">
-                <label class="form-label"><i class="bi bi-list-stars"></i> მახასიათებლები (ტექსტი)</label>
-                <textarea name="features_text" class="form-control" rows="6" placeholder="თითოეული მახასიათებელი ჩაწერეთ ახალ ხაზზე, მაგ:&#10;ზომა: 200x150x100&#10;ფერი: უჟანგავი მეტალი&#10;სიმძლავრე: 2kW">{{ old('features_text') }}</textarea>
-            </div>
-            
-            {{-- ❌ ძველი დინამიური მახასიათებლების ბლოკი წაშლილია --}}
-
-            <div class="mb-3">
-                <label class="form-label"><i class="bi bi-currency-exchange"></i> ფასი (₾)</label>
-                <input type="number" step="0.01" name="price" value="{{ old('price') }}" class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label"><i class="bi bi-flag-fill"></i> მწარმოებელი ქვეყანა</label>
-                <div class="dropdown">
-                    <button class="btn btn-light dropdown-toggle w-100 text-start" type="button" id="countryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        @php
-                            $selectedCountryCode = old('supplier_country', 'DE'); // Default to DE if not set
-                            $countriesList = ['DE' => 'გერმანია', 'IT' => 'იტალია', 'TR' => 'თურქეთი', 'CN' => 'ჩინეთი', 'AT' => 'ავსტრია'];
-                            $selectedCountryName = $countriesList[$selectedCountryCode] ?? 'გერმანია';
-                        @endphp
-                        <img id="selectedFlag" src="https://flagcdn.com/w40/{{ strtolower($selectedCountryCode) }}.png" width="20" class="me-1"> {{ $selectedCountryName }}
-                    </button>
-                    <ul class="dropdown-menu w-100" aria-labelledby="countryDropdown">
-                        @foreach ($countriesList as $code => $country)
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center country-option" href="#" data-value="{{ $code }}">
-                                    <img src="https://flagcdn.com/w40/{{ strtolower($code) }}.png" width="20" class="me-2">
-                                    {{ $country }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-                <input type="hidden" name="supplier_country" id="selectedCountry" value="{{ old('supplier_country', 'DE') }}">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label"><i class="bi bi-info-circle-fill"></i> პროდუქტის მდგომარეობა</label>
-                <select name="condition" class="form-select" required>
-                    <option value="new" {{ old('condition') == 'new' ? 'selected' : '' }}>ახალი</option>
-                    <option value="like_new" {{ old('condition') == 'like_new' ? 'selected' : '' }}>ახალივით</option>
-                    <option value="used" {{ old('condition') == 'used' ? 'selected' : '' }}>მეორადი</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label"><i class="bi bi-image-fill"></i> პროდუქტის ფოტო</label>
-                <input type="file" name="image" class="form-control">
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label"><i class="bi bi-camera-video-fill"></i> პროდუქტის ვიდეოს ლინკი</label>
-                <input type="url" name="video_link" value="{{ old('video_link') }}" class="form-control" placeholder="შეიყვანეთ ვიდეოს URL">
-            </div>
-
-            <button type="submit" class="btn btn-success w-100"><i class="bi bi-plus-circle"></i> დამატება</button>
-        </form>
-    </div>
-</div>
-
-<div class="mb-4">
-    <h5><i class="bi bi-funnel-fill"></i> ფილტრაცია კატეგორიის მიხედვით</h5>
-    <select id="categoryFilter" class="form-select">
-        <option value="all">ყველა კატეგორია</option>
-        @foreach (\App\Models\Category::all() as $category)
-            <option value="{{ $category->id }}">{{ $category->name }}</option>
-        @endforeach
-    </select>
-</div>
-<a href="{{ route('admin.resetViews') }}" onclick="return confirm('დარწმუნებული ხარ, რომ გინდა ნახვების განულება?')" class="btn btn-danger">
-    ნახვების განულება
-</a>
-
-
-<h2 class="mb-3"><i class="bi bi-boxes"></i> არსებული პროდუქტები</h2>
-<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="productList">
-    @foreach (\App\Models\Product::with('category')->get() as $product)
-    <div class="col product-item" data-category="{{ $product->category_id }}">
-        <div class="card shadow-sm h-100 product-card">
-            <div class="card-body">
-                <div class="image-container">
-                    @if($product->image)
-                        <img src="{{ asset('storage/' . $product->image) }}" 
-                             alt="{{ $product->name }}"
-                             class="img-fluid"
-                             style="max-height: 100%; object-fit: contain">
-                    @else
-                        <i class="bi bi-image fs-1 text-secondary"></i>
-                    @endif
-                </div>
-
-                <div class="product-info">
-                    <div>
-                        <h6 class="card-title">{{ $product->name }}</h6>
-                        @if ($product->sub_type)
-                            <p class="text-muted small mb-1">{{ $product->sub_type }}</p>
-                        @endif
-                        <p class="text-muted small mb-2">
-                            <i class="bi bi-folder"></i> {{ $product->category->name }}
-                        </p>
-                        
-                        <div class="price-country-wrapper">
-                            <span class="text-success fw-bold">
-                                {{ number_format($product->price, 2) }}₾
-                            </span>
-                            <img src="https://flagcdn.com/w40/{{ strtolower($product->supplier_country) }}.png" 
-                                 class="ms-2" 
-                                 width="24" 
-                                 alt="flag">
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="badge bg-{{ $product->condition == 'new' ? 'success' : ($product->condition == 'like_new' ? 'primary' : 'warning') }}">
-                                <i class="bi bi-tag"></i> 
-                                {{ $product->condition == 'new' ? 'ახალი' : ($product->condition == 'like_new' ? 'ახალივით' : 'მეორადი') }}
-                            </span>
-                            <small class="text-muted"><i class="bi bi-eye"></i> {{ $product->views_count ?? 0 }}</small>
-                        </div>
-                    </div>
-
-                    <div class="product-actions">
-                        <a href="{{ route('admin.products.edit', $product->id) }}" 
-                           class="btn btn-outline-warning btn-sm action-btn" title="რედაქტირება">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        
-                        <form action="{{ route('admin.products.destroy', $product->id) }}" 
-                              method="POST"
-                              class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" 
-                                    class="btn btn-outline-danger btn-sm action-btn"
-                                    onclick="return confirm('დარწმუნებული ხარ?')" title="წაშლა">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+<div class="container-fluid px-0 px-md-2">
+    
+    <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom">
+        <div>
+            <h4 class="fw-bold text-dark mb-0">პროდუქტების მართვა</h4>
+            <p class="text-muted small mb-0">ინვენტარის სრული კონტროლი</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ route('admin.resetViews') }}" onclick="return confirm('ნახვების განულება?')" class="btn btn-outline-danger btn-sm rounded-1 fw-bold">
+                <i class="bi bi-arrow-counterclockwise me-1"></i> ნახვების Reset
+            </a>
         </div>
     </div>
-    @endforeach
+
+    <div class="card border-0 shadow-sm rounded-1 mb-5">
+        <div class="card-header bg-white py-3 border-bottom">
+            <h6 class="mb-0 fw-bold text-uppercase small"><i class="bi bi-plus-lg me-2"></i>ახალი პროდუქტის დამატება</h6>
+        </div>
+        <div class="card-body p-4">
+            <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold">კატეგორია</label>
+                        <select name="category_id" class="form-select border-2 shadow-none" required>
+                            <option value="">-- აირჩიე --</option>
+                            @foreach (\App\Models\Category::all() as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold">ქვეკატეგორია / ტიპი</label>
+                        <input type="text" name="sub_type" class="form-control border-2 shadow-none" placeholder="მაგ: საყინულე">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold">დასახელება</label>
+                        <input type="text" name="name" class="form-control border-2 shadow-none" required>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold">ფასი (₾)</label>
+                        <input type="number" step="0.01" name="price" class="form-control border-2 shadow-none" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold">ქვეყანა</label>
+                        <select name="supplier_country" class="form-select border-2 shadow-none">
+                            <option value="DE">გერმანია</option>
+                            <option value="IT">იტალია</option>
+                            <option value="TR">თურქეთი</option>
+                            <option value="CN">ჩინეთი</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold">მდგომარეობა</label>
+                        <select name="condition" class="form-select border-2 shadow-none">
+                            <option value="new">ახალი</option>
+                            <option value="like_new">ახალივით</option>
+                            <option value="used">მეორადი</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold">ფოტო</label>
+                        <input type="file" name="image" class="form-control border-2 shadow-none">
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <label class="form-label small fw-bold">აღწერა (Description)</label>
+                        <textarea name="description" id="description" class="form-control"></textarea>
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <label class="form-label small fw-bold text-primary">მახასიათებლები (თითო ხაზზე თითო მახასიათებელი)</label>
+                        <textarea name="features_text" class="form-control border-2 shadow-none" rows="4" placeholder="ზომა: 200x100&#10;სიმძლავრე: 5kW"></textarea>
+                    </div>
+
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-primary px-5 fw-bold rounded-1 py-2 mt-3">დამატება</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3 gap-3">
+        <h5 class="fw-bold mb-0">არსებული ბაზა</h5>
+        <div class="col-md-3 col-12">
+            <select id="categoryFilter" class="form-select form-select-sm border-2 shadow-none">
+                <option value="all">ყველა კატეგორია</option>
+                @foreach (\App\Models\Category::all() as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-1 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light border-bottom text-uppercase small fw-bold text-secondary">
+                    <tr>
+                        <th class="ps-4 py-3" style="width: 70px;">IMG</th>
+                        <th class="py-3">პროდუქტი</th>
+                        <th class="py-3 d-none d-md-table-cell">კატეგორია</th>
+                        <th class="py-3">ფასი</th>
+                        <th class="py-3 text-end pe-4">მართვა</th>
+                    </tr>
+                </thead>
+                <tbody id="productList">
+                    @foreach (\App\Models\Product::with('category')->latest()->get() as $product)
+                    <tr class="product-item border-bottom" data-category="{{ $product->category_id }}">
+                        <td class="ps-4 py-2">
+                            <div class="p-thumb border">
+                                @if($product->image)
+                                    <img src="{{ asset('storage/' . $product->image) }}">
+                                @else
+                                    <i class="bi bi-box text-muted opacity-50"></i>
+                                @endif
+                            </div>
+                        </td>
+                        <td class="py-2">
+                            <div class="fw-bold text-dark mb-0">{{ $product->name }}</div>
+                            <div class="x-small-text text-muted">
+                                {{ $product->sub_type }} • <img src="https://flagcdn.com/w20/{{ strtolower($product->supplier_country) }}.png" width="14"> {{ strtoupper($product->supplier_country) }}
+                            </div>
+                        </td>
+                        <td class="py-2 d-none d-md-table-cell">
+                            <span class="badge bg-light text-dark border fw-normal">{{ $product->category->name }}</span>
+                        </td>
+                        <td class="py-2">
+                            <span class="fw-bold text-success">{{ number_format($product->price, 2) }}₾</span>
+                            <div class="x-small-text"><i class="bi bi-eye"></i> {{ $product->views_count ?? 0 }}</div>
+                        </td>
+                        <td class="text-end pe-4 py-2">
+                            <div class="btn-group border rounded bg-white shadow-sm">
+                                <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-white text-primary px-3">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="d-inline border-start">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-white text-danger px-3" onclick="return confirm('დარწმუნებული ხართ?')">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
+<style>
+    /* სრული სტატიკა */
+    * { transition: none !important; }
+    body { background-color: #f4f7f6; font-family: 'Inter', sans-serif; }
+
+    /* Inputs */
+    .form-control, .form-select { border-color: #e2e8f0; font-size: 0.9rem; }
+    .form-control:focus, .form-select:focus { border-color: #0d6efd; }
+
+    /* Thumbnails */
+    .p-thumb {
+        width: 48px;
+        height: 48px;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    .p-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Table Styles */
+    .table thead th { font-size: 11px; letter-spacing: 0.05rem; }
+    .x-small-text { font-size: 0.75rem; }
+    .btn-white { background: #fff; border: none; }
+    .btn-white:hover { background: #f8f9fa; }
+
+    /* მობილურზე კორექცია */
+    @media (max-width: 768px) {
+        .btn-group .btn { padding: 8px 12px; }
+        .p-thumb { width: 40px; height: 40px; }
+    }
+</style>
 @endsection
 
 @section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-{{-- TinyMCE Library --}}
+{{-- TinyMCE და ფილტრი აქ რჩება იგივე ლოგიკით --}}
 <script src="https://cdn.jsdelivr.net/npm/tinymce@6.8.2/tinymce.min.js"></script>
 <script>
     tinymce.init({
         selector: '#description',
-        height: 300,
-        plugins: 'lists link image preview code',
-        toolbar: 'undo redo | bold italic underline | bullist numlist | alignleft aligncenter alignright alignjustify | outdent indent | link image | preview | code',
-        promotion: false,
-        content_css: false,
-        content_style: `
-            body { 
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; 
-                line-height: 1.6; 
-                margin: 15px; 
-            }
-            p { 
-                margin-top: 0; 
-                margin-bottom: 0.5em; 
-            }
-            p:last-child {
-                margin-bottom: 0;
-            }
-            h1, h2, h3, h4, h5, h6 { 
-                margin-top: 1em; 
-                margin-bottom: 0.5em; 
-            }
-            ul, ol {
-                margin-top: 0.5em;
-                margin-bottom: 0.5em;
-                padding-left: 1.5em;
-            }
-            li {
-                margin-bottom: 0.2em;
-            }
-        `
+        height: 250,
+        menubar: false,
+        plugins: 'lists link code',
+        toolbar: 'undo redo | bold italic | bullist numlist | link code',
+        promotion: false
     });
-</script>
 
-{{-- Custom Scripts --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Category Filter Script
-        document.getElementById('categoryFilter').addEventListener('change', function() {
-            const categoryId = this.value;
-            document.querySelectorAll('.product-item').forEach(item => {
-                item.style.display = (categoryId === 'all' || item.dataset.category === categoryId) 
-                                       ? 'block' 
-                                       : 'none';
-            });
+    document.getElementById('categoryFilter').addEventListener('change', function() {
+        const catId = this.value;
+        document.querySelectorAll('.product-item').forEach(tr => {
+            tr.style.display = (catId === 'all' || tr.dataset.category === catId) ? '' : 'none';
         });
-
-        // Country Dropdown Script
-        let countryDropdown = document.querySelector('#countryDropdown');
-        let selectedCountryInput = document.querySelector('#selectedCountry');
-        let countryOptions = document.querySelectorAll('.country-option');
-
-        if (countryDropdown && selectedCountryInput && countryOptions.length > 0) {
-            countryOptions.forEach(option => {
-                option.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    let selectedCountryCode = this.getAttribute('data-value');
-                    let selectedCountryName = this.textContent.trim();
-                    let selectedFlagUrl = this.querySelector('img').src;
-
-                    countryDropdown.innerHTML = `<img src="${selectedFlagUrl}" width="20" class="me-1"> ${selectedCountryName}`;
-                    selectedCountryInput.value = selectedCountryCode;
-                });
-            });
-        }
-
-        // ❌ დინამიური მახასიათებლების JavaScript ლოგიკა წაშლილია
     });
 </script>
 @endsection

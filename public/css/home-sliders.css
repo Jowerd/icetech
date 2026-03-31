@@ -3,13 +3,13 @@
    -------------------------------------------------------------------
    01. მთავარი სლაიდერი
    02. კატეგორიების სლაიდერი
-   03. პოპულარული პროდუქტების სლაიდერი
-   04. ბოლოს დამატებული პროდუქტების სლაიდერი
+   03. პოპულარული / ბოლოს დამატებული პროდუქტების სლაიდერი
+   04. პროდუქტის ქარდი (similar-product-card სტილი)
    05. შეფასების ფორმა
    06. შეფასებების სლაიდერი
    07. ბრენდების სლაიდერი
    08. ბლოგის სექცია
-   09. ზოგადი და დამხმარე სტილები (ანიმაციები და ა.შ.)
+   09. ზოგადი და დამხმარე სტილები
 ==================================================================== */
 
 /* ===================================================================
@@ -83,10 +83,10 @@
     text-align: left;
 }
 
-.slide-title, 
+.slide-title,
 .slide-description {
     opacity: 0;
-    filter: blur(5px); 
+    filter: blur(5px);
     transform: translateY(30px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out, filter 0.8s ease-out;
 }
@@ -106,7 +106,7 @@
 }
 
 .slide-title {
-    font-size: 2.8rem; 
+    font-size: 2.8rem;
     font-weight: normal;
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
@@ -152,49 +152,41 @@
 }
 
 @keyframes kenBurnsEffect {
-    0% { transform: scale(1.0) translate(0, 0); }
+    0%   { transform: scale(1.0) translate(0, 0); }
     100% { transform: scale(1.1) translate(-1%, 1%); }
 }
 
 /* მთავარი სლაიდერი - რესპონსიული */
 @media (max-width: 1200px) {
-    .carousel-item { height: 55vh; }
-    .slide-title { font-size: 2.2rem; }
+    .carousel-item   { height: 55vh; }
+    .slide-title     { font-size: 2.2rem; }
     .slide-description { font-size: 1.2rem; }
-    .caption-custom { width: 60%; }
+    .caption-custom  { width: 60%; }
 }
-
 @media (max-width: 992px) {
-    .carousel-item { height: 45vh; }
+    .carousel-item  { height: 45vh; }
     .caption-custom { width: 70%; }
 }
-
 @media (max-width: 768px) {
-    .carousel-item { height: 35vh; }
+    .carousel-item  { height: 35vh; }
     .caption-custom { width: 80%; bottom: 10%; }
-    .slide-title { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .slide-title    { font-size: 1.8rem; margin-bottom: 0.5rem; }
     .slide-description { font-size: 1rem; margin-bottom: 0.8rem; }
-    .overlay {
-        background: linear-gradient(rgba(0,0,0,0.1) 10%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0.7) 100%);
-    }
+    .overlay { background: linear-gradient(rgba(0,0,0,0.1) 10%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0.7) 100%); }
 }
-
 @media (max-width: 576px) {
-    .carousel-item { height: 30vh; }
-    .caption-custom { width: 85%; left: 7.5%; bottom: 8%; }
-    .slide-title { font-size: 1.5rem; }
+    .carousel-item   { height: 30vh; }
+    .caption-custom  { width: 85%; left: 7.5%; bottom: 8%; }
+    .slide-title     { font-size: 1.5rem; }
     .slide-description { font-size: 0.9rem; line-height: 1.3; }
     .carousel-control-prev, .carousel-control-next { width: 10%; }
 }
-
 @media (max-width: 480px) {
-    .carousel-item { height: 28vh; }
+    .carousel-item  { height: 28vh; }
     .caption-custom { bottom: 5%; }
-    .slide-title { font-size: 1.3rem; }
+    .slide-title    { font-size: 1.3rem; }
     .slide-description { font-size: 0.85rem; margin-bottom: 0.5rem; }
-    #mainCarousel {
-        border-radius: 8px;
-    }
+    #mainCarousel   { border-radius: 8px; }
 }
 
 /* ===================================================================
@@ -316,7 +308,7 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
-    line-clamp: 2; /* <-- Standard property added */
+    line-clamp: 2;
     line-height: 1.3;
     min-height: 42px;
     height: 42px;
@@ -341,285 +333,52 @@
 
 /* კატეგორიები - რესპონსიული */
 @media (max-width: 1200px) {
-    .category-slide { width: 25%; }
-    .category-title { font-size: 15px; height: 40px; min-height: 40px; }
+    .category-slide  { width: 25%; }
+    .category-title  { font-size: 15px; height: 40px; min-height: 40px; }
     .category-content { height: 85px; }
     .category-card .view-more { height: 22px; }
 }
 @media (max-width: 992px) {
-    .category-slide { width: 33.333%; }
+    .category-slide  { width: 33.333%; }
     .category-image-wrapper { padding-top: 75%; }
     .category-content { padding: 12px; height: 82px; }
-    .category-title { font-size: 14px; height: 38px; min-height: 38px; }
+    .category-title  { font-size: 14px; height: 38px; min-height: 38px; }
     .category-card .view-more { height: 20px; }
 }
 @media (max-width: 768px) {
-    .category-slide { width: 50%; }
+    .category-slide  { width: 50%; }
     .category-image-wrapper { padding-top: 70%; }
     .category-content { padding: 10px 8px; height: 78px; }
-    .category-title { font-size: 14px; height: 36px; min-height: 36px; }
+    .category-title  { font-size: 14px; height: 36px; min-height: 36px; }
     .category-card .view-more { padding-top: 8px; height: 20px; }
     .category-card .view-more span, .category-card .view-more i { font-size: 13px; }
 }
 @media (max-width: 576px) {
-    .category-slide { width: 50%; }
-    .category-card { border-radius: 10px; }
+    .category-slide  { width: 50%; }
+    .category-card   { border-radius: 10px; }
     .category-image-wrapper { padding-top: 65%; }
     .category-image-container { padding: 10px; }
     .category-content { padding: 8px 6px; height: 74px; }
-    .category-title { font-size: 13px; height: 34px; min-height: 34px; }
+    .category-title  { font-size: 13px; height: 34px; min-height: 34px; }
     .category-card .view-more { padding-top: 6px; height: 18px; }
     .category-card .view-more span, .category-card .view-more i { font-size: 12px; }
 }
 @media (max-width: 480px) {
     .category-slider { margin: 0 -5px; }
-    .category-slide { padding: 0 5px; }
+    .category-slide  { padding: 0 5px; }
     .category-content { height: 70px; }
 }
 @media (max-width: 359px) {
-    .category-title { font-size: 12px; height: 32px; min-height: 32px; }
+    .category-title  { font-size: 12px; height: 32px; min-height: 32px; }
     .category-content { padding: 6px 5px; height: 66px; }
     .category-card .view-more { height: 16px; }
     .category-card .view-more span, .category-card .view-more i { font-size: 11px; }
 }
 
 /* ===================================================================
-   03. პოპულარული პროდუქტების სლაიდერი
+   03. პოპულარული / ბოლოს დამატებული — სლაიდერის კონტეინერები
 ==================================================================== */
-.popular-slider-container {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    margin-top: 0.8rem;
-    transform: translate3d(0, 0, 0);
-}
-
-.popular-slider {
-    display: flex;
-    transition: transform 0.5s ease;
-    margin: 0 -10px;
-    backface-visibility: hidden;
-}
-
-.popular-slide {
-    flex: 0 0 auto;
-    width: 20%;
-    padding: 0 10px;
-    box-sizing: border-box;
-}
-
-.popular-slider-controls {
-    display: flex;
-    align-items: center;
-}
-
-.popular-control-prev,
-.popular-control-next {
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 50%;
-    margin: 0 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.popular-control-prev:hover,
-.popular-control-next:hover {
-    background-color: #00a4bd;
-    color: white;
-    border-color: #00a4bd;
-}
-
-.popular-link {
-    display: block;
-    color: inherit;
-}
-
-.popular-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    background: #ffffff;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-    height: 100%;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    transform: translateZ(0);
-}
-
-.product-image-wrapper {
-    position: relative;
-    width: 100%;
-    padding-top: 75%;
-    overflow: hidden;
-    background: #ffffff;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-}
-
-.product-image-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1px;
-}
-
-.product-image {
-    max-width: 90%;
-    max-height: 90%;
-    object-fit: contain;
-}
-
-.product-content {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    position: relative;
-}
-
-.product-title {
-    margin: 0 0 4px 0;
-    font-size: 17px;
-    font-weight: normal;
-    color: #2d3748;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2; /* <-- Standard property added */
-    line-height: 1.4;
-    min-height: 42px;
-}
-
-.country-flag {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.country-flag img {
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: 2px;
-}
-
-.country-code {
-    color: #718096;
-    font-size: 12px;
-    margin-left: 6px;
-}
-
-.price {
-    font-size: 17px;
-    font-weight: bold;
-    color: #38a169;
-    margin-top: 8px;
-    margin-bottom: 10px;
-}
-
-.popular-card .view-more {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: auto;
-    padding-top: 6px;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.popular-card .view-more span,
-.popular-card .view-more i {
-    color: #00a4bd;
-    font-size: 14px;
-    font-weight: normal;
-}
-
-.condition-badge {
-    position: relative;
-    top: auto;
-    left: auto;
-    z-index: 1;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: normal;
-    padding: 4px 8px;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    margin-bottom: 8px;
-    background-color: #f8f9fa;
-    color: #2d3748;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-/* პოპულარული - რესპონსიული */
-@media (max-width: 1200px) {
-    .popular-slide { width: 25%; }
-    .product-image-wrapper { padding-top: 80%; }
-    .product-content { padding: 14px; }
-}
-
-@media (max-width: 992px) {
-    .popular-slide { width: 33.333%; }
-    .product-image-wrapper { padding-top: 75%; }
-    .product-content { padding: 12px; }
-    .product-title { font-size: 14px; min-height: 38px; }
-    .price { font-size: 16px; }
-    .product-image-container { padding: 15px; }
-}
-
-@media (max-width: 768px) {
-    .popular-slide { width: 50%; }
-    .product-image-wrapper { padding-top: 75%; }
-    .product-image-container { padding: 8px; }
-    .product-title { font-size: 14px; min-height: 36px; }
-    .price { font-size: 15px; margin-top: 6px; margin-bottom: 8px; }
-    .country-flag { margin-bottom: 6px; }
-    .country-code { font-size: 11px; }
-}
-
-@media (max-width: 576px) {
-    .popular-slide { width: 50%; }
-    .popular-card { border-radius: 10px; }
-    .product-image-wrapper { padding-top: 75%; }
-    .product-image-container { padding: 5px; }
-    .product-content { padding: 8px; }
-    .product-title { font-size: 14px; min-height: 34px; }
-    .price { font-size: 14px; margin-top: 4px; margin-bottom: 6px; }
-    .country-flag img { width: 18px; height: 13px; }
-    .country-code { font-size: 10px; }
-    .condition-badge { font-size: 10px; padding: 2px 5px; }
-    .popular-card .view-more span, .popular-card .view-more i { font-size: 12px; }
-}
-
-@media (max-width: 480px) {
-    .popular-slider { margin: 0 -5px; }
-    .popular-slide { padding: 0 5px; }
-    .product-content { padding: 6px; }
-    .product-image-wrapper { padding-top: 95%; }
-    .product-image-container { padding: 3px; }
-    .condition-badge { font-size: 10px; padding: 3px 6px; }
-}
-
-@media (max-width: 359px) {
-    .product-title { font-size: 12px; min-height: 32px; }
-    .popular-card .view-more { padding-top: 4px; }
-    .popular-card .view-more span, .popular-card .view-more i { font-size: 11px; }
-    .price { font-size: 13px; }
-}
-
-/* ===================================================================
-   04. ბოლოს დამატებული პროდუქტების სლაიდერი
-==================================================================== */
+.popular-slider-container,
 .newest-slider-container {
     position: relative;
     width: 100%;
@@ -628,6 +387,7 @@
     transform: translate3d(0, 0, 0);
 }
 
+.popular-slider,
 .newest-slider {
     display: flex;
     transition: transform 0.5s ease;
@@ -635,6 +395,7 @@
     backface-visibility: hidden;
 }
 
+.popular-slide,
 .newest-slide {
     flex: 0 0 auto;
     width: 20%;
@@ -642,11 +403,14 @@
     box-sizing: border-box;
 }
 
+.popular-slider-controls,
 .newest-slider-controls {
     display: flex;
     align-items: center;
 }
 
+.popular-control-prev,
+.popular-control-next,
 .newest-control-prev,
 .newest-control-next {
     width: 44px;
@@ -662,6 +426,8 @@
     transition: all 0.3s ease;
 }
 
+.popular-control-prev:hover,
+.popular-control-next:hover,
 .newest-control-prev:hover,
 .newest-control-next:hover {
     background-color: #00a4bd;
@@ -669,19 +435,160 @@
     border-color: #00a4bd;
 }
 
-/* ბოლოს დამატებული - რესპონსიული */
+/* სლაიდერი - რესპონსიული */
 @media (max-width: 1200px) {
-    .newest-slide { width: 25%; }
+    .popular-slide, .newest-slide { width: 25%; }
 }
 @media (max-width: 992px) {
-    .newest-slide { width: 33.333%; }
+    .popular-slide, .newest-slide { width: 33.333%; }
 }
 @media (max-width: 768px) {
-    .newest-slide { width: 50%; }
+    .popular-slide, .newest-slide { width: 50%; }
 }
 @media (max-width: 480px) {
-    .newest-slider { margin: 0 -5px; }
-    .newest-slide { padding: 0 5px; }
+    .popular-slider, .newest-slider { margin: 0 -5px; }
+    .popular-slide,  .newest-slide  { padding: 0 5px; }
+}
+
+/* ===================================================================
+   04. პროდუქტის ქარდი — similar-product-card სტილი
+==================================================================== */
+
+/* ბარათის გარე wrapper — a tag */
+.home-product-card {
+    text-decoration: none;
+    color: #212529;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #f0f0f0 !important;
+    transition: color 0.3s ease;
+}
+
+.home-product-card:hover {
+    color: #212529;
+}
+
+/* სურათის კონტეინერი — კვადრატული aspect ratio */
+.home-product-image-wrapper {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    border-bottom: 1px solid #f0f0f0;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+}
+
+/* Condition badge */
+.home-condition-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    font-size: 0.7rem;
+    padding: 0.35em 0.65em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-radius: 6px;
+}
+
+/* სურათი */
+.home-product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ინფო სექცია */
+.home-product-info {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+/* ქვეყნის დროშა + კოდი */
+.home-product-country {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.home-product-country img {
+    width: 18px;
+    height: auto;
+    border-radius: 2px;
+    border: 1px solid #eee;
+}
+
+.home-product-country span {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6c757d;
+}
+
+/* სათაური */
+.home-product-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #2b3445;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    min-height: 2.8em;
+    line-height: 1.4;
+}
+
+/* ფასი + ისარი */
+.home-product-footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* ფასი */
+.home-product-price {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #28a745;
+    margin: 0;
+}
+
+/* ისარი */
+.home-product-arrow {
+    color: #00a4bd;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+}
+
+.home-product-card:hover .home-product-arrow {
+    opacity: 1;
+    transform: translateX(3px);
+}
+
+/* პროდუქტის ქარდი - რესპონსიული */
+@media (max-width: 768px) {
+    .home-product-image-wrapper { padding: 0.75rem; }
+    .home-product-title         { font-size: 0.85rem; }
+    .home-product-price         { font-size: 0.95rem; }
+    .home-condition-badge       { font-size: 0.65rem; top: 8px; left: 8px; }
 }
 
 /* ===================================================================
@@ -833,64 +740,6 @@
     color: #ffb700;
 }
 
-.custom-file-input-wrapper {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 42px;
-    margin-bottom: 10px;
-}
-
-.custom-file-input {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-    z-index: 2;
-}
-
-.custom-file-label {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    padding: 0.75rem;
-    background-color: #f8f9fa;
-    color: #495057;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    margin: 0;
-    z-index: 1;
-}
-
-.custom-file-label:hover {
-    background-color: #e9ecef;
-    border-color: #ced4da;
-}
-
-.custom-file-label i {
-    margin-right: 8px;
-    font-size: 18px;
-    color: #00a4bd;
-}
-
-.custom-file-input:focus ~ .custom-file-label {
-    border-color: #00a4bd;
-    box-shadow: 0 0 0 0.25rem rgba(0, 164, 189, 0.25);
-}
-
 .btn-primary {
     background-color: #00a4bd;
     border-color: #00a4bd;
@@ -928,126 +777,37 @@
 
 /* შეფასების ფორმა - რესპონსიული */
 @media (max-width: 992px) {
-    .form-label,
-    .form-control {
-        font-size: 14px;
-    }
-    .form-control {
-        padding: 0.6rem;
-    }
-    .btn-primary {
-        font-size: 14px;
-        padding: 0.6rem 1.25rem;
-    }
-    .star-rating label {
-        font-size: 22px;
-    }
-    .custom-file-input-wrapper {
-        height: 38px;
-    }
-    .custom-file-label {
-        padding: 0.6rem;
-        font-size: 14px;
-    }
+    .form-label, .form-control { font-size: 14px; }
+    .form-control { padding: 0.6rem; }
+    .btn-primary  { font-size: 14px; padding: 0.6rem 1.25rem; }
+    .star-rating label { font-size: 22px; }
 }
-
 @media (max-width: 768px) {
-    .form-control {
-        font-size: 14px;
-        padding: 0.55rem;
-        border-radius: 6px;
-    }
-    .btn-primary {
-        font-size: 14px;
-        padding: 0.6rem 1.2rem;
-        border-radius: 6px;
-    }
-    .emoji-selector {
-        grid-template-columns: repeat(4, 1fr);
-    }
-    .star-rating label {
-        font-size: 20px;
-    }
-    .custom-file-input-wrapper {
-        height: 36px;
-    }
-    .custom-file-label {
-        padding: 0.55rem;
-        font-size: 14px;
-        border-radius: 6px;
-    }
-    .custom-file-label i {
-        font-size: 16px;
-    }
+    .form-control { font-size: 14px; padding: 0.55rem; border-radius: 6px; }
+    .btn-primary  { font-size: 14px; padding: 0.6rem 1.2rem; border-radius: 6px; }
+    .emoji-selector { grid-template-columns: repeat(4, 1fr); }
+    .star-rating label { font-size: 20px; }
 }
-
 @media (max-width: 576px) {
-    .form-label,
-    .form-control,
-    .btn-primary {
-        font-size: 14px;
-    }
-    .form-control {
-        padding: 0.55rem;
-    }
-    .emoji-picker {
-        gap: 3px;
-    }
-    .emoji-btn,
-    .emoji-selector button {
-        font-size: 16px;
-    }
-    .emoji-selector {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    .star-rating label {
-        font-size: 18px;
-    }
-    .custom-file-input-wrapper {
-        height: 34px;
-    }
+    .form-label, .form-control, .btn-primary { font-size: 14px; }
+    .form-control { padding: 0.55rem; }
+    .emoji-picker { gap: 3px; }
+    .emoji-btn, .emoji-selector button { font-size: 16px; }
+    .emoji-selector { grid-template-columns: repeat(3, 1fr); }
+    .star-rating label { font-size: 18px; }
 }
-
 @media (max-width: 359px) {
-    .form-label,
-    .form-control,
-    .btn-primary {
-        font-size: 13px;
-    }
-    .form-control {
-        padding: 0.5rem;
-    }
-    .btn-primary {
-        padding: 0.5rem 1rem;
-    }
-    .emoji-btn,
-    .emoji-selector button {
-        font-size: 15px;
-        padding: 3px;
-    }
-    .star-rating {
-        gap: 2px;
-    }
-    .star-rating label {
-        font-size: 16px;
-    }
-    .custom-file-input-wrapper {
-        height: 32px;
-    }
-    .custom-file-label {
-        padding: 0.45rem;
-        font-size: 13px;
-    }
-    .custom-file-label i {
-        font-size: 14px;
-    }
+    .form-label, .form-control, .btn-primary { font-size: 13px; }
+    .form-control { padding: 0.5rem; }
+    .btn-primary  { padding: 0.5rem 1rem; }
+    .emoji-btn, .emoji-selector button { font-size: 15px; padding: 3px; }
+    .star-rating  { gap: 2px; }
+    .star-rating label { font-size: 16px; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-    .emoji-btn:active, 
-    .emoji-selector button:active {
-        transform: scale(0.95);
-    }
+    .emoji-btn:active,
+    .emoji-selector button:active { transform: scale(0.95); }
 }
 
 /* ===================================================================
@@ -1164,22 +924,20 @@
     hyphens: auto;
 }
 
-/* შეფასებების სლაიდერი - რესპონსიული */
+/* შეფასებები - რესპონსიული */
 @media (max-width: 1200px) {
     .reviews-slide { width: 33.333%; }
-    .review-card { padding: 14px; }
+    .review-card   { padding: 14px; }
     .review-author-icon-wrapper { width: 45px; height: 45px; }
     .review-author-icon-wrapper .bi-person-fill { font-size: 24px; }
     .review-author-name { font-size: 15px; }
 }
-
 @media (max-width: 992px) {
     .reviews-slide { width: 50%; }
-    .review-card { padding: 12px; }
+    .review-card   { padding: 12px; }
     .review-header { margin-bottom: 12px; padding-bottom: 10px; }
     .review-content { font-size: 14px; }
 }
-
 @media (max-width: 768px) {
     .reviews-slide { width: 100%; }
     .review-author-icon-wrapper { width: 40px; height: 40px; }
@@ -1189,26 +947,23 @@
     .review-rating { font-size: 15px; }
     .review-content { font-size: 15px; line-height: 1.5; }
 }
-
 @media (max-width: 576px) {
     .reviews-slider { margin: 0 -5px; }
-    .reviews-slide { padding: 0 5px; }
-    .review-card { padding: 12px; border-radius: 10px; }
+    .reviews-slide  { padding: 0 5px; }
+    .review-card    { padding: 12px; border-radius: 10px; }
     .review-author-icon-wrapper { width: 40px; height: 40px; }
-    .review-author { gap: 10px; }
+    .review-author  { gap: 10px; }
     .review-author-name { font-size: 16px; font-weight: 600; }
     .review-content { font-size: 15px; line-height: 1.6; }
 }
-
 @media (max-width: 480px) {
-    .review-card { padding: 10px; }
-    .review-header { margin-bottom: 12px; padding-bottom: 10px; }
+    .review-card    { padding: 10px; }
+    .review-header  { margin-bottom: 12px; padding-bottom: 10px; }
     .review-content { font-size: 16px; line-height: 1.6; margin-bottom: 5px; }
 }
-
 @media (max-width: 359px) {
     .review-author-name { font-size: 15px; }
-    .review-date { font-size: 12px; }
+    .review-date    { font-size: 12px; }
     .review-content { font-size: 15px; line-height: 1.5; }
 }
 
@@ -1254,7 +1009,7 @@
 }
 
 @keyframes scrollBrands {
-    0% { transform: translateX(0); }
+    0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
 }
 
@@ -1266,10 +1021,9 @@
 @media (max-width: 992px) {
     .brand-slide { flex: 0 0 25%; }
 }
-
 @media (max-width: 768px) {
     .brand-slide { flex: 0 0 33.333%; }
-    .brand-logo { max-height: 50px; }
+    .brand-logo  { max-height: 50px; }
 }
 
 /* ===================================================================
@@ -1354,7 +1108,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+    background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.2));
 }
 
 .blog-card:hover .blog-card-img {
@@ -1393,58 +1147,41 @@
     font-size: 14px;
 }
 
-.blog-slider-item:first-child .blog-card {
-    margin-left: 0;
-}
-
-.blog-slider-item:last-child .blog-card {
-    margin-right: 0;
-}
+.blog-slider-item:first-child .blog-card { margin-left: 0; }
+.blog-slider-item:last-child .blog-card  { margin-right: 0; }
 
 /* ბლოგი - რესპონსიული */
 @media (min-width: 576px) {
-    .blog-slider-item {
-        width: 50%;
-    }
+    .blog-slider-item { width: 50%; }
 }
-
 @media (min-width: 992px) {
-    .blog-slider-item {
-        width: 33.333%;
-    }
+    .blog-slider-item { width: 33.333%; }
 }
-
 
 /* ===================================================================
    09. ზოგადი და დამხმარე სტილები
 ==================================================================== */
-
-/* წაარბენის თავიდან ასაცილებლად */
-.carousel-item, .category-card, .popular-card {
+.carousel-item, .category-card, .home-product-card {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Safari-სთვის სწრაფი რენდერინგის გასაუმჯობესებლად */
 .carousel-item, .category-slider, .popular-slider, .newest-slider {
     will-change: transform;
     -webkit-will-change: transform;
 }
 
-/* iOS-ზე გადაფურცლის მომენტში "გადამეტებული" ეფექტის გასაუქმებლად */
 .category-slider-container, .popular-slider-container, .newest-slider-container {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: none;
 }
 
-/* სწრაფი ანიმაციებისთვის აპარატურული აჩქარების გამოყენება */
 .category-slider, .popular-slider, .newest-slider {
     transform: translate3d(0, 0, 0);
     -webkit-transform: translate3d(0, 0, 0);
 }
 
-/* სტანდარტული ნავიგაციის გამოწერა WebKit მოწყობილობებზე */
 @supports (-webkit-touch-callout: none) {
-    .carousel-item, .category-card, .popular-card {
+    .carousel-item, .category-card, .home-product-card {
         user-select: none;
         -webkit-user-select: none;
     }

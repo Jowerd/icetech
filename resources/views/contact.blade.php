@@ -74,7 +74,7 @@
 @endpush
 
 @push('styles')
-        <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/layout.css?v=' . filemtime(public_path('css/layout.css'))) }}">
             <link rel="stylesheet" href="{{ asset('css/contact.css') }}">
 @endpush
 

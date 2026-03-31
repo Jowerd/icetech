@@ -1,426 +1,407 @@
-// --- გლობალური ფუნქციები, რომლებიც HTML-ის onclick ატრიბუტებს სჭირდება ---
+// --- გლობალური ფუნქციები ---
 function toggleEmojiSelector() {
     const emojiSelector = document.getElementById('emojiSelector');
     if (!emojiSelector) return;
-    const isVisible = emojiSelector.style.display === 'grid';
-    emojiSelector.style.display = isVisible ? 'none' : 'grid';
+    emojiSelector.style.display = emojiSelector.style.display === 'grid' ? 'none' : 'grid';
 }
 
 function addEmoji(emoji) {
     const textarea = document.getElementById('content');
     if (!textarea) return;
     const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const text = textarea.value;
-    textarea.value = text.substring(0, start) + emoji + text.substring(end);
+    const end   = textarea.selectionEnd;
+    textarea.value = textarea.value.substring(0, start) + emoji + textarea.value.substring(end);
     textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
     textarea.focus();
 }
 
-// --- მთავარი ლოგიკა, რომელიც სრულდება გვერდის ჩატვირთვის შემდეგ ---
-document.addEventListener('DOMContentLoaded', function() {
-
-    // ========= ზოგადი სლაიდერები (კატეგორიები, პოპულარული, ახალი) - თქვენი ორიგინალი, შეუცვლელი კოდი =========
-    const sliderConfigs = [
-        { container: '.category-slider-container', slider: '.category-slider', slides: '.category-slide', prevBtn: '.category-control-prev', nextBtn: '.category-control-next', indicatorsContainer: '.category-slider-indicators', indicatorClass: 'category-indicator' },
-        { container: '.popular-slider-container', slider: '.popular-slider', slides: '.popular-slide', prevBtn: '.popular-control-prev', nextBtn: '.popular-control-next', indicatorsContainer: '.popular-slider-indicators', indicatorClass: 'popular-indicator' },
-        { container: '.newest-slider-container', slider: '.newest-slider', slides: '.newest-slide', prevBtn: '.newest-control-prev', nextBtn: '.newest-control-next', indicatorsContainer: '.newest-slider-indicators', indicatorClass: 'newest-indicator' }
-    ];
+// --- მთავარი ლოგიკა ---
+document.addEventListener('DOMContentLoaded', function () {
 
     const minSwipeDistance = 50;
-    let isMobile = window.innerWidth < 768;
 
-    // Initialize all sliders from the config
+    const sliderConfigs = [
+        { container: '.category-slider-container', slider: '.category-slider', slides: '.category-slide', prevBtn: '.category-control-prev', nextBtn: '.category-control-next', indicatorsContainer: '.category-slider-indicators', indicatorClass: 'category-indicator' },
+        { container: '.popular-slider-container',  slider: '.popular-slider',  slides: '.popular-slide',  prevBtn: '.popular-control-prev',  nextBtn: '.popular-control-next',  indicatorsContainer: '.popular-slider-indicators',  indicatorClass: 'popular-indicator'  },
+        { container: '.newest-slider-container',   slider: '.newest-slider',   slides: '.newest-slide',   prevBtn: '.newest-control-prev',   nextBtn: '.newest-control-next',   indicatorsContainer: '.newest-slider-indicators',   indicatorClass: 'newest-indicator'   }
+    ];
+
     sliderConfigs.forEach(initSlider);
-    
-    // Handle main bootstrap carousel
     initMainCarousel();
-    
-    // Initialize reviews slider
     initReviewsSlider();
+    initBlogSlider();
 
-    // ეს არის თქვენი ორიგინალი, მომუშავე ფუნქცია, შეუცვლელად
+    // ========= ზოგადი სლაიდერი =========
     function initSlider(config) {
         const sliderContainer = document.querySelector(config.container);
         if (!sliderContainer) return;
-        
         const slider = document.querySelector(config.slider);
         if (!slider) return;
-        
         const slides = document.querySelectorAll(config.slides);
         if (!slides.length) return;
-        
-        const prevBtn = document.querySelector(config.prevBtn);
-        const nextBtn = document.querySelector(config.nextBtn);
+
+        const prevBtn             = document.querySelector(config.prevBtn);
+        const nextBtn             = document.querySelector(config.nextBtn);
         const indicatorsContainer = document.querySelector(config.indicatorsContainer);
 
-        let currentIndex = 0;
-        let slidesPerView = calculateSlidesPerView();
-        let totalSlides = slides.length;
-        let maxIndex = Math.ceil(totalSlides / slidesPerView) - 1;
-        let touchStartX = 0, touchEndX = 0, touchStartY = 0, touchEndY = 0;
-        let isSwiping = false;
+        let currentIndex  = 0;
+        let slidesPerView = getSPV();
+        let totalSlides   = slides.length;
+        let maxIndex      = Math.max(0, Math.ceil(totalSlides / slidesPerView) - 1);
+
+        let touchStartX = 0, touchStartY = 0, touchEndX = 0;
+        let dirLocked   = null; // null | 'h' | 'v'
 
         if (indicatorsContainer) createIndicators();
         updateSlider();
-        setupCardNavigation();
 
         if (prevBtn) prevBtn.addEventListener('click', () => moveSlider(-1));
         if (nextBtn) nextBtn.addEventListener('click', () => moveSlider(1));
 
-        sliderContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
-        sliderContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
-        sliderContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
-        window.addEventListener('resize', handleResize);
+        sliderContainer.addEventListener('touchstart', onTouchStart, { passive: true });
+        sliderContainer.addEventListener('touchmove',  onTouchMove,  { passive: false }); // false = შეგვიძლია preventDefault
+        sliderContainer.addEventListener('touchend',   onTouchEnd,   { passive: true });
 
-        function handleResize() {
-            const wasMobile = isMobile;
-            isMobile = window.innerWidth < 768;
-            if (wasMobile !== isMobile) setupCardNavigation();
-            slidesPerView = calculateSlidesPerView();
-            maxIndex = Math.ceil(totalSlides / slidesPerView) - 1;
-            currentIndex = Math.min(currentIndex, maxIndex);
+        window.addEventListener('resize', () => {
+            slidesPerView = getSPV();
+            maxIndex      = Math.max(0, Math.ceil(totalSlides / slidesPerView) - 1);
+            currentIndex  = Math.min(currentIndex, maxIndex);
             if (indicatorsContainer) createIndicators();
             updateSlider();
+        });
+
+        function onTouchStart(e) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            touchEndX   = touchStartX;
+            dirLocked   = null;
         }
 
-        function setupCardNavigation() {
-            slides.forEach(slide => {
-                const cardLinks = slide.querySelectorAll('a');
-                const cardElements = slide.querySelectorAll('.card, [role="button"]');
-                
-                cardLinks.forEach(link => {
-                    const newLink = link.cloneNode(true);
-                    link.parentNode.replaceChild(newLink, link);
-                    if (isMobile) {
-                        newLink.addEventListener('click', e => e.stopPropagation());
-                    }
-                });
-                
-                cardElements.forEach(card => {
-                    const newCard = card.cloneNode(true);
-                    card.parentNode.replaceChild(newCard, card);
-                    const cardLink = newCard.querySelector('a');
-                    if (cardLink && isMobile) {
-                        const targetUrl = cardLink.getAttribute('href');
-                        newCard.addEventListener('click', e => {
-                            e.stopPropagation();
-                            window.location.href = targetUrl;
-                        });
-                    }
-                });
-            });
-        }
+        function onTouchMove(e) {
+            const dx = Math.abs(e.touches[0].clientX - touchStartX);
+            const dy = Math.abs(e.touches[0].clientY - touchStartY);
 
-        function createIndicators() {
-            if (!indicatorsContainer) return;
-            indicatorsContainer.innerHTML = '';
-            for (let i = 0; i <= maxIndex; i++) {
-                const indicator = document.createElement('div');
-                indicator.classList.add(config.indicatorClass);
-                if (i === currentIndex) indicator.classList.add('active');
-                indicator.addEventListener('click', () => goToSlide(i));
-                indicatorsContainer.appendChild(indicator);
+            // პირველი სვლა — განვსაზღვრავთ მიმართულებას
+            if (!dirLocked && (dx > 8 || dy > 8)) {
+                dirLocked = dx > dy ? 'h' : 'v';
             }
+
+            if (dirLocked === 'h') {
+                // ჰორიზონტალური swipe — ვაჩერებთ გვერდის სქროლს
+                e.preventDefault();
+                touchEndX = e.touches[0].clientX;
+            }
+            // ვერტიკალური — preventDefault არ გამოვიძახებთ, გვერდი ისქროლება
         }
 
-        function moveSlider(direction) {
-            const newIndex = currentIndex + direction;
-            if (newIndex >= 0 && newIndex <= maxIndex) {
-                currentIndex = newIndex;
-                updateSlider();
+        function onTouchEnd() {
+            if (dirLocked === 'h') {
+                const dist = touchEndX - touchStartX;
+                if (Math.abs(dist) > minSwipeDistance) moveSlider(dist > 0 ? -1 : 1);
             }
+            dirLocked   = null;
+            touchStartX = touchEndX = touchStartY = 0;
+        }
+
+        function moveSlider(dir) {
+            const n = currentIndex + dir;
+            if (n >= 0 && n <= maxIndex) { currentIndex = n; updateSlider(); }
         }
 
         function goToSlide(index) {
-            if (index >= 0 && index <= maxIndex) {
-                currentIndex = index;
-                updateSlider();
-            }
+            if (index >= 0 && index <= maxIndex) { currentIndex = index; updateSlider(); }
         }
 
         function updateSlider() {
-            slider.style.transform = `translateX(-${(currentIndex * 100)}%)`;
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
             if (indicatorsContainer) {
-                const indicators = indicatorsContainer.querySelectorAll(`.${config.indicatorClass}`);
-                indicators.forEach((indicator, index) => {
-                    indicator.classList.toggle('active', index === currentIndex);
-                });
+                indicatorsContainer.querySelectorAll(`.${config.indicatorClass}`)
+                    .forEach((ind, i) => ind.classList.toggle('active', i === currentIndex));
             }
-            if (prevBtn) {
-                prevBtn.disabled = currentIndex === 0;
-                prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
-            }
-            if (nextBtn) {
-                nextBtn.disabled = currentIndex === maxIndex;
-                nextBtn.style.opacity = currentIndex === maxIndex ? '0.5' : '1';
+            if (prevBtn) { prevBtn.disabled = currentIndex === 0; prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1'; }
+            if (nextBtn) { nextBtn.disabled = currentIndex === maxIndex; nextBtn.style.opacity = currentIndex === maxIndex ? '0.5' : '1'; }
+        }
+
+        function createIndicators() {
+            indicatorsContainer.innerHTML = '';
+            for (let i = 0; i <= maxIndex; i++) {
+                const ind = document.createElement('div');
+                ind.classList.add(config.indicatorClass);
+                if (i === currentIndex) ind.classList.add('active');
+                ind.addEventListener('click', () => goToSlide(i));
+                indicatorsContainer.appendChild(ind);
             }
         }
 
-        function handleTouchStart(e) {
-            isSwiping = false;
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-            if (!e.target.closest('a') && !e.target.closest('.card') && !e.target.closest('[role="button"]')) {
-                touchEndX = touchStartX;
-                touchEndY = touchStartY;
-            }
-        }
-
-        function handleTouchMove(e) {
-            if (isSwiping === false) {
-                const currentX = e.touches[0].clientX;
-                const currentY = e.touches[0].clientY;
-                const diffX = Math.abs(currentX - touchStartX);
-                const diffY = Math.abs(currentY - touchStartY);
-                if (diffX > diffY && diffX > 10) {
-                    isSwiping = true;
-                }
-            }
-            if (isSwiping) {
-                touchEndX = e.touches[0].clientX;
-                touchEndY = e.touches[0].clientY;
-            }
-        }
-
-        function handleTouchEnd() {
-            if (isSwiping) {
-                const distance = touchEndX - touchStartX;
-                if (Math.abs(distance) > minSwipeDistance) {
-                    moveSlider(distance > 0 ? -1 : 1);
-                }
-            }
-            isSwiping = false;
-            touchStartX = touchEndX = touchStartY = touchEndY = 0;
-        }
-
-        function calculateSlidesPerView() {
-            const width = window.innerWidth;
-            if (width >= 1200) return 5;
-            if (width >= 992) return 3;
+        function getSPV() {
+            const w = window.innerWidth;
+            if (w >= 1200) return 5;
+            if (w >= 992)  return 3;
             return 2;
         }
     }
 
-    // ========= მთავარი კარუსელი (Bootstrap) - თქვენი ორიგინალი, შეუცვლელი კოდი =========
+    // ========= მთავარი კარუსელი =========
     function initMainCarousel() {
         const mainCarousel = document.getElementById('mainCarousel');
         if (!mainCarousel || typeof bootstrap === 'undefined' || !bootstrap.Carousel) return;
+
         const carousel = new bootstrap.Carousel(mainCarousel);
-        let carouselStartX = 0, carouselEndX = 0, isCarouselSwiping = false;
+        let startX = 0, startY = 0, endX = 0;
+        let dirLocked = null;
 
         mainCarousel.addEventListener('touchstart', e => {
-            isCarouselSwiping = false;
-            carouselStartX = e.touches[0].clientX;
+            startX    = e.touches[0].clientX;
+            startY    = e.touches[0].clientY;
+            endX      = startX;
+            dirLocked = null;
         }, { passive: true });
 
         mainCarousel.addEventListener('touchmove', e => {
-            if (isCarouselSwiping === false && Math.abs(e.touches[0].clientX - carouselStartX) > 10) {
-                isCarouselSwiping = true;
+            const dx = Math.abs(e.touches[0].clientX - startX);
+            const dy = Math.abs(e.touches[0].clientY - startY);
+            if (!dirLocked && (dx > 8 || dy > 8)) {
+                dirLocked = dx > dy ? 'h' : 'v';
             }
-            if (isCarouselSwiping) {
-                carouselEndX = e.touches[0].clientX;
+            if (dirLocked === 'h') {
+                e.preventDefault();
+                endX = e.touches[0].clientX;
             }
-        }, { passive: true });
+        }, { passive: false });
 
         mainCarousel.addEventListener('touchend', () => {
-            if (isCarouselSwiping) {
-                const distance = carouselEndX - carouselStartX;
-                if (Math.abs(distance) > minSwipeDistance) {
-                    distance > 0 ? carousel.prev() : carousel.next();
-                }
+            if (dirLocked === 'h') {
+                const dist = endX - startX;
+                if (Math.abs(dist) > minSwipeDistance) dist > 0 ? carousel.prev() : carousel.next();
             }
-            isCarouselSwiping = false;
-            carouselStartX = 0;
-            carouselEndX = 0;
+            dirLocked = null;
+            startX = endX = startY = 0;
         }, { passive: true });
     }
 
-    // ========= შეფასებების (Reviews) სლაიდერი - თქვენი ორიგინალი, შეუცვლელი კოდი =========
+    // ========= შეფასებების სლაიდერი =========
     function initReviewsSlider() {
         const sliderContainer = document.querySelector('.reviews-slider-container');
         if (!sliderContainer) return;
-        
-        const slider = sliderContainer.querySelector('.reviews-slider');
-        const slides = sliderContainer.querySelectorAll('.reviews-slide');
-        const indicatorsContainer = sliderContainer.querySelector('.reviews-slider-indicators');
+        const slider     = sliderContainer.querySelector('.reviews-slider');
+        const slides     = sliderContainer.querySelectorAll('.reviews-slide');
+        const indicators = sliderContainer.querySelector('.reviews-slider-indicators');
         if (!slider || !slides.length) return;
-        
-        let currentIndex = 0;
-        let slidesPerView = calculateReviewsSlidesPerView();
-        let totalSlides = slides.length;
-        let maxIndex = totalSlides - slidesPerView;
-        let startX = 0, endX = 0, isDragging = false;
-        const swipeThreshold = 50;
-        let autoSlideTimer = null, isPaused = false;
-        
-        if (indicatorsContainer) createReviewsIndicators();
-        updateReviewsSlider();
-        startAutoSlide();
+
+        let currentIndex  = 0;
+        let slidesPerView = getReviewsSPV();
+        let totalSlides   = slides.length;
+        let maxIndex      = Math.max(0, totalSlides - slidesPerView);
+
+        let startX = 0, startY = 0, endX = 0;
+        let dirLocked  = null;
+        let isDragging = false;
+        let autoTimer  = null;
+        let isPaused   = false;
+        const swipeThr = 50;
+
+        if (indicators) createIndicators();
+        updateSlider();
+        startAuto();
         sliderContainer.style.cursor = 'grab';
-        
-        sliderContainer.addEventListener('touchstart', e => { startX = e.touches[0].clientX; isDragging = true; pauseAutoSlide(); }, { passive: true });
-        sliderContainer.addEventListener('touchmove', e => { if (isDragging) endX = e.touches[0].clientX; }, { passive: true });
-        sliderContainer.addEventListener('touchend', () => { handleDragEnd(); resumeAutoSlide(); });
-        sliderContainer.addEventListener('mousedown', e => { e.preventDefault(); startX = e.clientX; isDragging = true; sliderContainer.style.cursor = 'grabbing'; pauseAutoSlide(); });
-        document.addEventListener('mousemove', e => { if (isDragging) endX = e.clientX; });
-        document.addEventListener('mouseup', () => { if (isDragging) { sliderContainer.style.cursor = 'grab'; handleDragEnd(); resumeAutoSlide(); } });
-        sliderContainer.addEventListener('mouseenter', pauseAutoSlide);
-        sliderContainer.addEventListener('mouseleave', resumeAutoSlide);
-        window.addEventListener('resize', () => {
-            slidesPerView = calculateReviewsSlidesPerView();
-            maxIndex = totalSlides - slidesPerView;
-            updateReviewsSlider();
-            if (indicatorsContainer) createReviewsIndicators();
+
+        // Touch
+        sliderContainer.addEventListener('touchstart', e => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            endX   = startX;
+            dirLocked = null;
+            pauseAuto();
+        }, { passive: true });
+
+        sliderContainer.addEventListener('touchmove', e => {
+            const dx = Math.abs(e.touches[0].clientX - startX);
+            const dy = Math.abs(e.touches[0].clientY - startY);
+            if (!dirLocked && (dx > 8 || dy > 8)) {
+                dirLocked = dx > dy ? 'h' : 'v';
+            }
+            if (dirLocked === 'h') {
+                e.preventDefault();
+                endX = e.touches[0].clientX;
+            }
+        }, { passive: false });
+
+        sliderContainer.addEventListener('touchend', () => {
+            if (dirLocked === 'h') {
+                const diff = endX - startX;
+                if (Math.abs(diff) > swipeThr) move(diff > 0 ? -1 : 1);
+            }
+            dirLocked = null;
+            resumeAuto();
         });
-    
-        function calculateReviewsSlidesPerView() {
-            const width = window.innerWidth;
-            if (width >= 992) return 3;
-            if (width >= 768) return 2;
+
+        // Mouse drag
+        sliderContainer.addEventListener('mousedown', e => {
+            e.preventDefault();
+            startX = e.clientX; endX = startX;
+            isDragging = true;
+            sliderContainer.style.cursor = 'grabbing';
+            pauseAuto();
+        });
+        document.addEventListener('mousemove', e => { if (isDragging) endX = e.clientX; });
+        document.addEventListener('mouseup', () => {
+            if (!isDragging) return;
+            sliderContainer.style.cursor = 'grab';
+            const diff = endX - startX;
+            if (Math.abs(diff) > swipeThr) move(diff > 0 ? -1 : 1);
+            isDragging = false;
+            resumeAuto();
+        });
+
+        sliderContainer.addEventListener('mouseenter', pauseAuto);
+        sliderContainer.addEventListener('mouseleave', resumeAuto);
+
+        window.addEventListener('resize', () => {
+            slidesPerView = getReviewsSPV();
+            maxIndex      = Math.max(0, totalSlides - slidesPerView);
+            currentIndex  = Math.min(currentIndex, maxIndex);
+            updateSlider();
+            if (indicators) createIndicators();
+        });
+
+        function getReviewsSPV() {
+            const w = window.innerWidth;
+            if (w >= 992) return 3;
+            if (w >= 768) return 2;
             return 1;
         }
-        
-        function updateReviewsSlider() {
-            const slideWidth = 100 / totalSlides;
+
+        function updateSlider() {
+            const sw = 100 / totalSlides;
             slider.style.width = `${totalSlides * 100 / slidesPerView}%`;
-            slides.forEach(slide => slide.style.width = `${slideWidth}%`);
-            const offset = slideWidth * currentIndex;
-            slider.style.transform = `translateX(-${offset}%)`;
-            if (indicatorsContainer) updateReviewsIndicators();
-        }
-        
-        function createReviewsIndicators() {
-            indicatorsContainer.innerHTML = '';
-            for (let i = 0; i <= maxIndex; i++) {
-                const indicator = document.createElement('div');
-                indicator.classList.add('reviews-indicator');
-                if (i === currentIndex) indicator.classList.add('active');
-                indicator.addEventListener('click', () => goToReviewsSlide(i));
-                indicatorsContainer.appendChild(indicator);
+            slides.forEach(s => s.style.width = `${sw}%`);
+            slider.style.transform = `translateX(-${sw * currentIndex}%)`;
+            if (indicators) {
+                indicators.querySelectorAll('.reviews-indicator')
+                    .forEach((ind, i) => ind.classList.toggle('active', i === currentIndex));
             }
         }
-        
-        function updateReviewsIndicators() {
-            const indicators = indicatorsContainer.querySelectorAll('.reviews-indicator');
-            indicators.forEach((ind, idx) => ind.classList.toggle('active', idx === currentIndex));
+
+        function createIndicators() {
+            indicators.innerHTML = '';
+            for (let i = 0; i <= maxIndex; i++) {
+                const ind = document.createElement('div');
+                ind.classList.add('reviews-indicator');
+                if (i === currentIndex) ind.classList.add('active');
+                ind.addEventListener('click', () => goTo(i));
+                indicators.appendChild(ind);
+            }
         }
-        
-        function goToReviewsSlide(index) {
-            currentIndex = index;
-            updateReviewsSlider();
-            restartAutoSlide();
+
+        function goTo(index) { currentIndex = Math.max(0, Math.min(index, maxIndex)); updateSlider(); startAuto(); }
+        function move(dir)   { goTo(currentIndex + dir); }
+        function startAuto() {
+            clearInterval(autoTimer);
+            autoTimer = setInterval(() => { if (!isPaused) currentIndex >= maxIndex ? goTo(0) : move(1); }, 5000);
         }
-        
-        function moveReviewsSlider(direction) {
-            currentIndex += direction;
-            currentIndex = Math.max(0, Math.min(currentIndex, maxIndex));
-            updateReviewsSlider();
-            restartAutoSlide();
-        }
-        
-        function startAutoSlide() {
-            clearInterval(autoSlideTimer);
-            autoSlideTimer = setInterval(() => {
-                if (!isPaused) {
-                    if (currentIndex >= maxIndex) {
-                        goToReviewsSlide(0);
-                    } else {
-                        moveReviewsSlider(1);
-                    }
-                }
-            }, 5000);
-        }
-        
-        function restartAutoSlide() { startAutoSlide(); }
-        function handleDragEnd() {
-            if (!isDragging) return;
-            const diff = endX - startX;
-            if (Math.abs(diff) > swipeThreshold) moveReviewsSlider(diff > 0 ? -1 : 1);
-            isDragging = false;
-            startX = 0;
-            endX = 0;
-        }
-        function pauseAutoSlide() { isPaused = true; }
-        function resumeAutoSlide() { isPaused = false; }
+        function pauseAuto()  { isPaused = true;  }
+        function resumeAuto() { isPaused = false; }
     }
 
-    // ========= ბლოგის სლაიდერი (გამართული ვერსია) =========
+    // ========= ბლოგის სლაიდერი =========
     function initBlogSlider() {
         const sliderContainer = document.querySelector('.blog-slider-container');
         if (!sliderContainer) return;
         const slider = sliderContainer.querySelector('.blog-slider');
         const slides = slider.querySelectorAll('.blog-slider-item');
-        if (!slider || slides.length === 0) return;
+        if (!slider || !slides.length) return;
 
-        let currentIndex = 0, slidesPerView = 3, totalSlides = slides.length, maxIndex = 0;
-        let isDragging = false, startPos = 0, currentTranslate = 0, prevTranslate = 0;
+        let currentIndex     = 0;
+        let slidesPerView    = 3;
+        let maxIndex         = 0;
+        let isDragging       = false;
+        let startX = 0, startY = 0;
+        let currentTranslate = 0, prevTranslate = 0;
+        let dirLocked        = null;
 
         function update() {
-            if (window.innerWidth < 576) slidesPerView = 1;
+            if (window.innerWidth < 576)      slidesPerView = 1;
             else if (window.innerWidth < 992) slidesPerView = 2;
-            else slidesPerView = 3;
-            maxIndex = Math.max(0, totalSlides - slidesPerView);
+            else                              slidesPerView = 3;
+            maxIndex = Math.max(0, slides.length - slidesPerView);
             if (currentIndex > maxIndex) currentIndex = maxIndex;
-            const slideWidth = sliderContainer.clientWidth / slidesPerView;
-            currentTranslate = -currentIndex * slideWidth;
+            const sw = sliderContainer.clientWidth / slidesPerView;
+            currentTranslate = -currentIndex * sw;
             slider.style.transition = 'transform 0.4s ease-out';
-            slider.style.transform = `translateX(${currentTranslate}px)`;
+            slider.style.transform  = `translateX(${currentTranslate}px)`;
         }
-        
-        function dragStart(event) {
-            if (event.target.closest('a')) return;
-            isDragging = true;
-            startPos = event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+
+        function dragStart(e) {
+            if (e.target.closest('a')) return;
+            isDragging    = true;
+            dirLocked     = null;
+            startX        = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+            startY        = e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
             prevTranslate = currentTranslate;
             slider.style.transition = 'none';
-            sliderContainer.style.cursor = 'grabbing';
+            if (e.type.includes('mouse')) sliderContainer.style.cursor = 'grabbing';
         }
-        
-        function dragMove(event) {
+
+        function dragMove(e) {
             if (!isDragging) return;
-            const currentPosition = event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
-            currentTranslate = prevTranslate + (currentPosition - startPos);
-            slider.style.transform = `translateX(${currentTranslate}px)`;
+            const cx = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+            const cy = e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
+
+            if (!dirLocked) {
+                const dx = Math.abs(cx - startX);
+                const dy = Math.abs(cy - startY);
+                if (dx > 8 || dy > 8) {
+                    if (dx > dy) {
+                        dirLocked = 'h';
+                    } else {
+                        // ვერტიკალური სქროლი — drag-ს ვაჩერებთ
+                        isDragging = false;
+                        dirLocked  = 'v';
+                        slider.style.transition = 'transform 0.4s ease-out';
+                        slider.style.transform  = `translateX(${prevTranslate}px)`;
+                        sliderContainer.style.cursor = 'grab';
+                        return;
+                    }
+                }
+            }
+
+            if (dirLocked === 'h') {
+                if (!e.type.includes('mouse')) e.preventDefault();
+                currentTranslate = prevTranslate + (cx - startX);
+                slider.style.transform = `translateX(${currentTranslate}px)`;
+            }
         }
-        
+
         function dragEnd() {
             if (!isDragging) return;
             isDragging = false;
             sliderContainer.style.cursor = 'grab';
-            const movedBy = currentTranslate - prevTranslate;
-            if (movedBy < -50 && currentIndex < maxIndex) currentIndex++;
-            if (movedBy > 50 && currentIndex > 0) currentIndex--;
+            if (dirLocked === 'h') {
+                const moved = currentTranslate - prevTranslate;
+                if (moved < -50 && currentIndex < maxIndex) currentIndex++;
+                if (moved > 50  && currentIndex > 0)        currentIndex--;
+            }
+            dirLocked = null;
             update();
         }
 
-        sliderContainer.addEventListener('mousedown', dragStart);
+        sliderContainer.addEventListener('mousedown',  dragStart);
         sliderContainer.addEventListener('touchstart', dragStart, { passive: true });
-        document.addEventListener('mousemove', dragMove);
-        document.addEventListener('touchmove', dragMove, { passive: true });
-        document.addEventListener('mouseup', dragEnd);
-        document.addEventListener('touchend', dragEnd);
+        document.addEventListener('mousemove',  dragMove);
+        document.addEventListener('touchmove',  dragMove, { passive: false });
+        document.addEventListener('mouseup',    dragEnd);
+        document.addEventListener('touchend',   dragEnd);
         document.addEventListener('mouseleave', dragEnd);
         window.addEventListener('resize', update);
         update();
     }
-    
-    // აქ გამოვიძახებთ ბლოგის სლაიდერს
-    initBlogSlider();
 
-    // ========= ფორმების და სხვა დანარჩენი ლოგიკა =========
-    // ... (თქვენი ფორმების ლოგიკა, რომელიც არ იცვლება)
-    const commentForm = document.querySelector('form#commentForm');
-    if (commentForm) {
-        // ... (დანარჩენი კოდი იგივეა)
-    }
+    // ========= სხვა =========
     const successAlert = document.querySelector('.alert-success');
     if (successAlert) {
         setTimeout(() => {
             successAlert.style.opacity = '0';
-            setTimeout(() => {
-                successAlert.style.display = 'none';
-            }, 500);
+            setTimeout(() => { successAlert.style.display = 'none'; }, 500);
         }, 3000);
     }
 });

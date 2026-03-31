@@ -1,5 +1,9 @@
+@section('full_width')
+@show
+
+{{-- პროდუქტის მთავარი კონტეინერი --}}
 <div class="container-fluid product-page-container px-0">
-    <div class="container product-main-content py-4">
+    <div class="container-fluid product-main-content py-4 px-4 px-lg-5">
         <div class="row g-4 product-details-row">
 
             {{-- პირველი სვეტი (დესკტოპზე მარცხენა, მობილურზე ზედა) --}}
@@ -17,7 +21,7 @@
                     </div>
                 </div>
 
-                {{-- ✅ ცვლილება: პროდუქტის მახასიათებლების სექცია (მხოლოდ დესკტოპისთვის) ახალი ლოგიკით --}}
+                {{-- პროდუქტის მახასიათებლები (მხოლოდ დესკტოპი) --}}
                 @if($product->features_text)
                     <div class="product-features-section card mb-4 p-3 shadow-sm d-none d-lg-block">
                         <h4 class="card-title mb-3 feature-section-title">
@@ -25,11 +29,10 @@
                         </h4>
                         <ul class="features-list list-unstyled mb-0">
                             @foreach(explode("\n", $product->features_text) as $line)
-                                @if(trim($line)) {{-- ცარიელი ხაზების გამოტოვება --}}
+                                @if(trim($line))
                                     @php
-                                        // ვამოწმებთ, შეიცავს თუ არა ხაზი ':' სიმბოლოს და ვშლით მას
                                         $parts = str_contains($line, ':') ? explode(':', $line, 2) : [null, $line];
-                                        $name = trim($parts[0]);
+                                        $name  = trim($parts[0]);
                                         $value = trim($parts[1]);
                                     @endphp
                                     <li class="feature-item mb-2 d-flex justify-content-between align-items-baseline">
@@ -43,13 +46,13 @@
                         </ul>
                     </div>
                 @endif
-                {{-- /დესკტოპის მახასიათებლების ბლოკის დასასრული --}}
 
             </div>
 
             {{-- მეორე სვეტი (დესკტოპზე მარჯვენა, მობილურზე მეორე) --}}
             <div class="col-12 col-lg-5 order-lg-2">
                 <div class="product-info-panel">
+
                     {{-- პროდუქტის სახელი --}}
                     <h1 class="product-title mb-3">{{ $product->name }}</h1>
 
@@ -90,7 +93,7 @@
                         <span class="show-less-description-text">ნაკლები</span>
                     </button>
 
-                    {{-- ✅ ცვლილება: პროდუქტის მახასიათებლების სექცია (მხოლოდ მობილურისთვის) ახალი ლოგიკით --}}
+                    {{-- პროდუქტის მახასიათებლები (მხოლოდ მობილური) --}}
                     @if($product->features_text)
                         <div class="product-features-section card mb-4 p-3 shadow-sm d-block d-lg-none">
                             <h4 class="card-title mb-3 feature-section-title">
@@ -98,10 +101,10 @@
                             </h4>
                             <ul class="features-list list-unstyled mb-0">
                                 @foreach(explode("\n", $product->features_text) as $line)
-                                    @if(trim($line)) {{-- ცარიელი ხაზების გამოტოვება --}}
+                                    @if(trim($line))
                                         @php
                                             $parts = str_contains($line, ':') ? explode(':', $line, 2) : [null, $line];
-                                            $name = trim($parts[0]);
+                                            $name  = trim($parts[0]);
                                             $value = trim($parts[1]);
                                         @endphp
                                         <li class="feature-item mb-2 d-flex justify-content-between align-items-baseline">
@@ -115,7 +118,6 @@
                             </ul>
                         </div>
                     @endif
-                    {{-- /მობილურის მახასიათებლების ბლოკის დასასრული --}}
 
                     {{-- გაზიარების ღილაკები --}}
                     <div class="social-share-buttons card p-3 shadow-sm mb-4">
@@ -157,16 +159,36 @@
     </div>
 </div>
 
+{{-- =========================================
+     მსგავსი პროდუქტები
+========================================= --}}
 @if(isset($similarProducts) && $similarProducts->count() > 0)
-<div class="container-fluid similar-products-section px-0 py-5">
-    <div class="container">
+<div class="similar-products-section py-5">
+    <div class="container-fluid px-0">
         <h3 class="section-title mb-4 text-center">მსგავსი პროდუქტები</h3>
 
         <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3 similar-products-container">
             @foreach($similarProducts as $key => $similarProduct)
+                @php
+                    $countryCode = strtolower($similarProduct->supplier_country);
+                    $conditionMap = [
+                        'new'      => ['bg-success',          'ახალი',    'bi-star-fill'],
+                        'like_new' => ['bg-info text-dark',   'ახალივით', 'bi-star-half'],
+                        'used'     => ['bg-secondary',        'მეორადი',  'bi-tag-fill'],
+                    ];
+                    [$conditionClass, $conditionText, $conditionIcon] =
+                        $conditionMap[$similarProduct->condition] ?? ['bg-secondary', 'მეორადი', 'bi-tag-fill'];
+                @endphp
+
                 <div class="col similar-product-item {{ $key >= 5 ? 'hidden-desktop' : '' }} {{ $key >= 2 ? 'hidden-mobile' : '' }}">
-                    <a href="{{ route('products.show', ['product' => $similarProduct->slug]) }}" class="similar-product-card card h-100 shadow-sm">
+                    <a href="{{ route('products.show', ['product' => $similarProduct->slug]) }}"
+                       class="similar-product-card card h-100 shadow-sm">
+
+                        {{-- სურათი + badge --}}
                         <div class="similar-product-image-wrapper">
+                            <span class="badge {{ $conditionClass }} condition-badge shadow-sm">
+                                <i class="bi {{ $conditionIcon }} me-1"></i>{{ $conditionText }}
+                            </span>
                             <img
                                 src="{{ $similarProduct->image ? asset('storage/' . $similarProduct->image) : asset('default-product.png') }}"
                                 alt="{{ $similarProduct->name }}"
@@ -174,9 +196,25 @@
                                 loading="lazy"
                             >
                         </div>
-                        <div class="similar-product-info card-body p-2 d-flex flex-column">
-                            <h5 class="similar-product-title mb-2">{{ $similarProduct->name }}</h5>
-                            <p class="similar-product-price mt-auto">₾ {{ number_format($similarProduct->price, 2) }}</p>
+
+                        {{-- ინფო --}}
+                        <div class="similar-product-info">
+
+                            {{-- ქვეყნის დროშა --}}
+                            <div class="similar-product-country">
+                                <img src="https://flagcdn.com/w40/{{ $countryCode }}.png" alt="{{ $countryCode }}">
+                                <span>{{ strtoupper($similarProduct->supplier_country) }}</span>
+                            </div>
+
+                            {{-- სათაური --}}
+                            <h5 class="similar-product-title">{{ $similarProduct->name }}</h5>
+
+                            {{-- ფასი + ისარი --}}
+                            <div class="similar-product-footer">
+                                <p class="similar-product-price">₾ {{ number_format($similarProduct->price, 2) }}</p>
+                                <i class="bi bi-arrow-right-circle-fill similar-product-arrow"></i>
+                            </div>
+
                         </div>
                     </a>
                 </div>
