@@ -252,6 +252,12 @@
             </a>
         </li>
         
+        <li class="nav-item">
+            <a href="{{ route('admin.slides.index') }}" class="nav-link">
+                <i class="bi bi-collection-play-fill"></i> ბანერის სლაიდები
+            </a>
+        </li>
+
         <div class="nav-label">Content & Community</div>
         <li class="nav-item">
             <a href="{{ route('admin.reviews.index') }}" class="nav-link">

@@ -406,3 +406,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 3000);
     }
 });
+// ===== Kitchen Assembly — Scroll Reveal =====
+(function () {
+    const reveals = document.querySelectorAll('.ka-reveal');
+    if (!reveals.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('ka-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    reveals.forEach(el => observer.observe(el));
+})();

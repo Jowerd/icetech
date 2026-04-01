@@ -46,6 +46,8 @@
     <link rel="stylesheet" href="{{ asset('css/about.css') }}">
 @endpush
 
+@section('full_width', true)
+
 @section('content')
     <div class="w-100 bg-white shadow-sm border-top">
         <div class="container py-5">

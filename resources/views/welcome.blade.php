@@ -12,13 +12,14 @@
 @section('og_url', url('/'))
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/chat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/home-sliders.css?v=' . filemtime(public_path('css/home-sliders.css'))) }}">
     <link rel="stylesheet" href="{{ asset('css/layout.css?v=' . filemtime(public_path('css/layout.css'))) }}">
 @endpush
 
 
 
+
+@section('full_width', true)
 
 @section('content')
     <!-- პროდუქტების სლაიდერი Schema.org მონიშვნით -->
@@ -28,10 +29,8 @@
         @include('partials.sliders')
     </div>
 
-    @include('partials.chat')
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/chat.js') }}"></script>
     <script src="{{ asset('js/home-sliders.js?v=' . filemtime(public_path('js/home-sliders.js'))) }}" defer></script>
 @endpush

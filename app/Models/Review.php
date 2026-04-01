@@ -10,11 +10,17 @@ class Review extends Model
     use HasFactory;
 
     protected $fillable = [
+        'product_id',
         'author_name',
         'author_email',
         'content',
         'rating',
         'image',
-        'is_approved'
+        'is_approved',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

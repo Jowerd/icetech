@@ -79,6 +79,8 @@
 @endpush
 
 
+@section('full_width', true)
+
 @section('content')
     <!-- რუკა სრულ სიგანეზე -->
     <div class="w-100 position-relative map-container">

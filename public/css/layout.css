@@ -1,41 +1,13 @@
 /* ===================================================================
    გლობალური Scrollbar
 =================================================================== */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #f0f0f0; }
+::-webkit-scrollbar-thumb { background: #00a4bd; border-radius: 8px; border: 2px solid #f0f0f0; }
+::-webkit-scrollbar-thumb:hover { background: #1a365d; }
+::-webkit-scrollbar-corner { background: #f0f0f0; }
+* { scrollbar-width: thin; scrollbar-color: #00a4bd #f0f0f0; }
 
-/* Chrome, Edge, Safari */
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f0f0f0;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #00a4bd;
-    border-radius: 8px;
-    border: 2px solid #f0f0f0;
-    transition: background 0.2s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #1a365d;
-}
-
-::-webkit-scrollbar-corner {
-    background: #f0f0f0;
-}
-
-/* Firefox */
-* {
-    scrollbar-width: thin;
-    scrollbar-color: #00a4bd #f0f0f0;
-}
-
-/* ===================================================================
-   Body
-=================================================================== */
 body {
     display: flex;
     flex-direction: column;
@@ -350,18 +322,23 @@ body {
     border-radius: 3px;
 }
 
-/* search suggestions scrollbar — inherits global but narrower */
+/* Scrollbar სტილები */
 .search-suggestions::-webkit-scrollbar {
-    width: 5px;
+    width: 6px;
 }
+
 .search-suggestions::-webkit-scrollbar-track {
-    background: #f0f8fa;
-    border-radius: 5px;
+    background: #f8f9fa;
+    border-radius: 3px;
 }
+
 .search-suggestions::-webkit-scrollbar-thumb {
-    background: #00a4bd;
-    border-radius: 5px;
-    border: none;
+    background: #ddd;
+    border-radius: 3px;
+}
+
+.search-suggestions::-webkit-scrollbar-thumb:hover {
+    background: #bbb;
 }
 
 /* Loading state */
@@ -671,6 +648,33 @@ body {
 .designer-link:hover {
     text-decoration: underline;
 }
+/* Breadcrumb */
+.icetech-breadcrumb {
+    padding: 10px 0;
+    font-size: 0.85rem;
+}
+.icetech-breadcrumb .breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+}
+.icetech-breadcrumb .breadcrumb-item a {
+    color: #6c757d;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.icetech-breadcrumb .breadcrumb-item a:hover {
+    color: #00a4bd;
+}
+.icetech-breadcrumb .breadcrumb-item.active {
+    color: #343a40;
+    font-weight: 500;
+}
+.icetech-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+    color: #adb5bd;
+}
+
 /* ქუქის ბანერის სტილები */
 .cookie-banner {
     position: fixed;

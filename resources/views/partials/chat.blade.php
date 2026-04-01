@@ -1,42 +1,13 @@
-<!-- Bootstrap Icons CDN -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
-<!-- ჩათის აიქონი (ფიქსირებული პოზიცია) -->
-<div id="chatIcon" class="chat-icon">
-    <i class="bi bi-chat-dots-fill"></i>
-    <span class="chat-badge">1</span>
-</div>
-
-<!-- ჩათის მოდალი -->
-<div id="chatModal" class="chat-modal">
-    <div class="chat-header">
-        <h5>ICETECH ბოტი</h5>
-        <div class="chat-controls">
-            <button id="chatMinimize" class="chat-control-btn">
-                <i class="bi bi-dash-lg"></i>
-            </button>
-            <button id="chatClose" class="chat-control-btn">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
-    </div>
-    <div class="chat-body">
-        <div id="chatMessages" class="chat-messages">
-            <!-- ადმინისტრატორის მისალმება -->
-            <div class="message admin-message">
-                <div class="message-content">
-                    <p>გამარჯობა! რით შემიძლია დაგეხმაროთ?</p>
-                    <span class="message-time" id="initialMessageTime">12:00</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="chat-footer">
-        <div class="chat-input-container">
-            <input type="text" id="chatInput" class="chat-input" placeholder="დაწერეთ შეტყობინება...">
-            <button id="chatSend" class="chat-send-btn">
-                <i class="bi bi-send-fill"></i>
-            </button>
-        </div>
-    </div>
-</div>
+<a
+    href="https://wa.me/995511555888?text={{ urlencode('გამარჯობა! მაინტერესებს თქვენი პროდუქცია.') }}"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="whatsapp-float"
+    aria-label="WhatsApp-ზე დაწერა"
+>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.118.549 4.107 1.508 5.837L.057 23.804a.5.5 0 0 0 .614.642l6.084-1.596A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.6a9.567 9.567 0 0 1-4.889-1.342l-.351-.208-3.644.956.973-3.552-.228-.364A9.558 9.558 0 0 1 2.4 12C2.4 6.698 6.698 2.4 12 2.4S21.6 6.698 21.6 12 17.302 21.6 12 21.6z"/>
+    </svg>
+    <span class="whatsapp-float-label">WhatsApp-ზე მიწერა</span>
+</a>

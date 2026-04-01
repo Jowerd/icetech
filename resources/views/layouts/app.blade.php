@@ -66,6 +66,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="preload" href="/fonts/BPGMrgvlovaniCaps2010.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('css/chat.css?v=' . filemtime(public_path('css/chat.css'))) }}">
     @stack('styles')
 <!-- Google tag (gtag.js) with Consent Mode -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0VJEBWMJL1"></script>
@@ -227,8 +228,8 @@
 
 <!-- სკრიპტები -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('js/layout.js') }}" defer></script>
-<script src="{{ asset('js/cookies.js') }}" defer></script>
+<script src="{{ asset('js/layout.js?v=' . filemtime(public_path('js/layout.js'))) }}" defer></script>
+<script src="{{ asset('js/cookies.js?v=' . filemtime(public_path('js/cookies.js'))) }}" defer></script>
 @stack('scripts')
 <!-- ქუქის მაფრთხილებელი ბანერი -->
 <div class="cookie-banner" id="cookieBanner">
@@ -293,5 +294,7 @@
         </div>
     </div>
 </div>
+
+@include('partials.chat')
 </body>
 </html>

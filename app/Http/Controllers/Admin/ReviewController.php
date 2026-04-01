@@ -10,7 +10,7 @@ class ReviewController extends Controller
 {
     public function index()
     {
-        $reviews = Review::orderBy('created_at', 'desc')->paginate(10);
+        $reviews = Review::with('product')->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.reviews.index', compact('reviews'));
     }
 

@@ -10,7 +10,10 @@
 @endpush
 
 @section('content')
-<div class="container py-4">
+@include('partials.breadcrumb', ['crumbs' => [
+    ['label' => 'კატეგორიები', 'url' => '']
+]])
+<div class="py-4">
     <div class="row mb-4">
         <div class="col-12">
             <h1 class="products-page-title">კატეგორიები</h1>

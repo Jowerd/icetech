@@ -1,47 +1,57 @@
-<div class="row">
-    <!-- მთავარი სლაიდერი -->
-    <div class="col-12">
-        <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner text-start">
-                <div class="carousel-item active position-relative">
-                    <img src="/images/samz.webp" class="d-block w-100" alt="პროფესიონალური სამზარეულო" fetchpriority="high">
-                    <div class="overlay"></div>
-                    <div class="carousel-caption caption-custom">
-                        <h1 class="slide-title">პროფესიონალური სამზარეულო</h1>
-                        <p class="slide-description">კომერციული სამზარეულოს სრულყოფილი აღჭურვილობა მაღალი სტანდარტებით.</p>
-                        <a href="{{ route('products') }}" class="slide-cta-btn">პროდუქციის ნახვა <i class="bi bi-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="carousel-item position-relative">
-                    <img src="/images/tuza.webp" class="d-block w-100" alt="მაქსიმალური სისუფთავე">
-                    <div class="overlay"></div>
-                    <div class="carousel-caption caption-custom">
-                        <h2 class="slide-title">მაქსიმალური სისუფთავე</h2>
-                        <p class="slide-description">ყველა ჰიგიენური მოთხოვნის დაცვით მოწყობილი სივრცე პროფესიონალებისთვის.</p>
-                        <a href="{{ route('products') }}" class="slide-cta-btn">პროდუქციის ნახვა <i class="bi bi-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="carousel-item position-relative">
-                    <img src="/images/utas.webp" class="d-block w-100" alt="მაღალი ხარისხის ტექნიკა">
-                    <div class="overlay"></div>
-                    <div class="carousel-caption caption-custom">
-                        <h2 class="slide-title">მაღალი ხარისხის ტექნიკა</h2>
-                        <p class="slide-description">უსაფრთხო, გამძლე და ეფექტური ტექნიკა პროფესიონალური სამუშაოსთვის.</p>
-                        <a href="{{ route('contact') }}" class="slide-cta-btn">დაგვიკავშირდით <i class="bi bi-arrow-right"></i></a>
-                    </div>
-                </div>
+{{-- ===== Hero Carousel — full-width, DB-driven ===== --}}
+@if(isset($slides) && $slides->isNotEmpty())
+<div class="hero-carousel-wrap">
+    <div class="hero-carousel-frame">
+        <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000" data-bs-pause="false">
+            @if($slides->count() > 1)
+            <div class="carousel-indicators hero-indicators">
+                @foreach($slides as $i => $slide)
+                <button type="button"
+                        data-bs-target="#mainCarousel"
+                        data-bs-slide-to="{{ $i }}"
+                        class="{{ $i === 0 ? 'active' : '' }}"
+                        @if($i === 0) aria-current="true" @endif
+                        aria-label="სლაიდი {{ $i + 1 }}"></button>
+                @endforeach
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">წინა</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">შემდეგი</span>
-            </button>
+            @endif
+            <div class="carousel-inner text-start">
+                @foreach($slides as $i => $slide)
+                <div class="carousel-item {{ $i === 0 ? 'active' : '' }} position-relative">
+                    @if($slide->image)
+                        <img src="{{ asset('storage/' . $slide->image) }}"
+                             class="d-block w-100"
+                             alt="{{ $slide->title }}"
+                             {{ $i === 0 ? 'fetchpriority="high"' : 'loading="lazy"' }}>
+                    @else
+                        <div class="carousel-placeholder"></div>
+                    @endif
+                    <div class="overlay"></div>
+                    <div class="carousel-caption caption-custom">
+                        @if($i === 0)
+                            <h1 class="slide-title">{{ $slide->title }}</h1>
+                        @else
+                            <h2 class="slide-title">{{ $slide->title }}</h2>
+                        @endif
+                        @if($slide->description)
+                            <p class="slide-description">{{ $slide->description }}</p>
+                        @endif
+                        @if($slide->button_text && $slide->button_url)
+                            <a href="{{ $slide->button_url }}" class="slide-cta-btn">
+                                {{ $slide->button_text }} <i class="bi bi-arrow-right"></i>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+                @endforeach
+            </div>
         </div>
     </div>
 </div>
+@endif
+
+{{-- ===== დანარჩენი კონტენტი — container-ში ===== --}}
+<div class="container home-content-wrap">
 
 <!-- კატეგორიების სლაიდერი -->
 <div class="row mt-4 mb-2">
@@ -246,9 +256,20 @@
     <div class="col-12">
         <div class="reviews-slider-container">
             <div class="reviews-slider">
-                @foreach(\App\Models\Review::where('is_approved', true)->orderBy('created_at', 'desc')->take(10)->get() as $review)
+                @foreach(\App\Models\Review::where('is_approved', true)->whereNull('product_id')->orderBy('created_at', 'desc')->take(10)->get() as $review)
                     <div class="reviews-slide">
                         <div class="review-card">
+                            {{-- ვარსკვლავები ზევით --}}
+                            <div class="review-rating">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <i class="bi {{ $i <= $review->rating ? 'bi-star-fill' : 'bi-star' }}"></i>
+                                @endfor
+                            </div>
+                            {{-- ტექსტი --}}
+                            <div class="review-content">
+                                <p>{{ $review->content }}</p>
+                            </div>
+                            {{-- ავტორი ქვევით --}}
                             <div class="review-header">
                                 <div class="review-author">
                                     <div class="review-author-icon-wrapper">
@@ -256,23 +277,11 @@
                                     </div>
                                     <div class="review-author-info">
                                         <h3 class="review-author-name">{{ $review->author_name }}</h3>
-                                        <div class="review-rating">
-                                            @for($i = 1; $i <= 5; $i++)
-                                                @if($i <= $review->rating)
-                                                    <i class="bi bi-star-fill text-warning"></i>
-                                                @else
-                                                    <i class="bi bi-star text-warning"></i>
-                                                @endif
-                                            @endfor
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="review-date">
                                     {{ \Carbon\Carbon::parse($review->created_at)->format('d.m.Y') }}
                                 </div>
-                            </div>
-                            <div class="review-content">
-                                <p>{{ $review->content }}</p>
                             </div>
                         </div>
                     </div>
@@ -356,101 +365,139 @@
     </div>
 </div>
 
+{{-- შეფასების ღილაკი --}}
 <div class="review-form-container mt-5">
-    <button class="btn btn-primary review-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#reviewFormCollapse" aria-expanded="false" aria-controls="reviewFormCollapse">
+    <button class="btn btn-primary review-toggle-btn" type="button" data-bs-toggle="modal" data-bs-target="#reviewModal">
         <i class="bi bi-star-fill me-2"></i>დატოვეთ შეფასება
     </button>
-    
-    <div class="collapse mt-3" id="reviewFormCollapse">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">დატოვეთ შეფასება</h4>
-            </div>
-            <div class="card-body">
-                @if (session('success'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('success') }}
-                    </div>
-                @endif
+</div>
 
-                <form action="{{ route('reviews.store') }}" method="POST">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="author_name" class="form-label">თქვენი სახელი</label>
-                        <input type="text" class="form-control @error('author_name') is-invalid @enderror" id="author_name" name="author_name" required>
-                        @error('author_name')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="author_email" class="form-label">ელ. ფოსტა (არ გამოჩნდება საჯაროდ)</label>
-                        <input type="email" class="form-control @error('author_email') is-invalid @enderror" id="author_email" name="author_email">
-                        @error('author_email')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="content" class="form-label">თქვენი შეფასება</label>
-                        
-                        <div class="emoji-picker">
-                            <button type="button" class="emoji-btn" onclick="addEmoji('😊')">😊</button>
-                            <button type="button" class="emoji-btn" onclick="addEmoji('👍')">👍</button>
-                            <button type="button" class="emoji-btn" onclick="addEmoji('❤️')">❤️</button>
-                            <button type="button" class="emoji-btn" onclick="addEmoji('😍')">😍</button>
-                            <button type="button" class="emoji-btn" onclick="addEmoji('🔥')">🔥</button>
-                            <button type="button" class="emoji-btn" onclick="addEmoji('👏')">👏</button>
-                            <button type="button" class="emoji-btn" onclick="toggleEmojiSelector()">➕</button>
-                        </div>
-                        
-                        <div id="emojiSelector" class="emoji-selector" style="display: none;">
-                            <button type="button" onclick="addEmoji('😃')">😃</button>
-                            <button type="button" onclick="addEmoji('😁')">😁</button>
-                            <button type="button" onclick="addEmoji('😂')">😂</button>
-                            <button type="button" onclick="addEmoji('🤣')">🤣</button>
-                            <button type="button" onclick="addEmoji('😎')">😎</button>
-                            <button type="button" onclick="addEmoji('🙌')">🙌</button>
-                            <button type="button" onclick="addEmoji('🎉')">🎉</button>
-                            <button type="button" onclick="addEmoji('✨')">✨</button>
-                            <button type="button" onclick="addEmoji('⭐')">⭐</button>
-                            <button type="button" onclick="addEmoji('💯')">💯</button>
-                            <button type="button" onclick="addEmoji('🤩')">🤩</button>
-                            <button type="button" onclick="addEmoji('👌')">👌</button>
-                        </div>
-                        
-                        <textarea class="form-control @error('content') is-invalid @enderror" id="content" name="content" rows="3" required></textarea>
-                        @error('content')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">შეაფასეთ</label>
-                        <div class="rating">
-                            <div class="star-rating">
-                                <input type="radio" id="rating5" name="rating" value="5" checked>
-                                <label for="rating5" title="5 ვარსკვლავი"><i class="bi bi-star-fill"></i></label>
-                                <input type="radio" id="rating4" name="rating" value="4">
-                                <label for="rating4" title="4 ვარსკვლავი"><i class="bi bi-star-fill"></i></label>
-                                <input type="radio" id="rating3" name="rating" value="3">
-                                <label for="rating3" title="3 ვარსკვლავი"><i class="bi bi-star-fill"></i></label>
-                                <input type="radio" id="rating2" name="rating" value="2">
-                                <label for="rating2" title="2 ვარსკვლავი"><i class="bi bi-star-fill"></i></label>
-                                <input type="radio" id="rating1" name="rating" value="1">
-                                <label for="rating1" title="1 ვარსკვლავი"><i class="bi bi-star-fill"></i></label>
+{{-- შეფასების Modal --}}
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0" style="border-radius:18px; overflow:hidden;">
+
+            <div class="modal-header border-0 pb-0 px-4 pt-4">
+                <div>
+                    <h5 class="modal-title fw-bold mb-1" id="reviewModalLabel">
+                        <i class="bi bi-star-fill text-warning me-2"></i>შეფასების დატოვება
+                    </h5>
+                    <p class="text-muted small mb-0">თქვენი აზრი ჩვენთვის მნიშვნელოვანია</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="დახურვა"></button>
+            </div>
+
+            <div class="modal-body px-4 pb-4 pt-3">
+
+                {{-- ფორმა --}}
+                <div id="reviewFormWrap">
+                    <form id="reviewAjaxForm" action="{{ route('reviews.store') }}" method="POST">
+                        @csrf
+
+                        <div class="mb-4 text-center">
+                            <div class="modal-star-rating">
+                                <input type="radio" id="mrating5" name="rating" value="5" checked>
+                                <label for="mrating5"><i class="bi bi-star-fill"></i></label>
+                                <input type="radio" id="mrating4" name="rating" value="4">
+                                <label for="mrating4"><i class="bi bi-star-fill"></i></label>
+                                <input type="radio" id="mrating3" name="rating" value="3">
+                                <label for="mrating3"><i class="bi bi-star-fill"></i></label>
+                                <input type="radio" id="mrating2" name="rating" value="2">
+                                <label for="mrating2"><i class="bi bi-star-fill"></i></label>
+                                <input type="radio" id="mrating1" name="rating" value="1">
+                                <label for="mrating1"><i class="bi bi-star-fill"></i></label>
                             </div>
                         </div>
-                        @error('rating')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-send me-2"></i>გაგზავნა
+
+                        <div class="mb-3">
+                            <input type="text" class="form-control rounded-3"
+                                   name="author_name" id="r_name" placeholder="თქვენი სახელი" required>
+                            <div class="invalid-feedback" id="err_name"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <input type="email" class="form-control rounded-3"
+                                   name="author_email" placeholder="ელ. ფოსტა (არ გამოჩნდება)">
+                        </div>
+
+                        <div class="mb-4">
+                            <textarea class="form-control rounded-3" name="content" id="r_content"
+                                      rows="4" placeholder="დაწერეთ თქვენი შეფასება..." required></textarea>
+                            <div class="invalid-feedback" id="err_content"></div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 rounded-3 fw-bold" id="reviewSubmitBtn">
+                            <i class="bi bi-send me-2"></i>გაგზავნა
+                        </button>
+                    </form>
+                </div>
+
+                {{-- დადასტურება --}}
+                <div id="reviewSuccess" style="display:none; text-align:center; padding: 24px 0 16px;">
+                    <div style="font-size:3.5rem; margin-bottom:12px;">✅</div>
+                    <h5 class="fw-bold mb-2" style="color:#1a365d;">გმადლობთ შეფასებისთვის!</h5>
+                    <p class="text-muted mb-4">თქვენი შეფასება მიღებულია და განხილვის შემდეგ გამოჩნდება.</p>
+                    <button type="button" class="btn btn-primary rounded-3 px-4" data-bs-dismiss="modal">
+                        დახურვა
                     </button>
-                </form>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
+
+<script>
+document.getElementById('reviewAjaxForm')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('reviewSubmitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>იგზავნება...';
+
+    // clear previous errors
+    document.querySelectorAll('#reviewAjaxForm .form-control').forEach(el => el.classList.remove('is-invalid'));
+
+    try {
+        const res = await fetch(this.action, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('[name=_token]').value },
+            body: new FormData(this)
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+            document.getElementById('reviewFormWrap').style.display = 'none';
+            document.getElementById('reviewSuccess').style.display = 'block';
+        } else if (res.status === 422) {
+            // validation errors
+            Object.entries(data.errors || {}).forEach(([field, msgs]) => {
+                const input = document.querySelector(`#reviewAjaxForm [name="${field}"]`);
+                if (input) {
+                    input.classList.add('is-invalid');
+                    const errEl = document.getElementById('err_' + field.replace('author_', ''));
+                    if (errEl) errEl.textContent = msgs[0];
+                }
+            });
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-send me-2"></i>გაგზავნა';
+        }
+    } catch {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-send me-2"></i>გაგზავნა';
+    }
+});
+
+// reset modal on close
+document.getElementById('reviewModal')?.addEventListener('hidden.bs.modal', function() {
+    document.getElementById('reviewFormWrap').style.display = 'block';
+    document.getElementById('reviewSuccess').style.display = 'none';
+    document.getElementById('reviewAjaxForm').reset();
+    const btn = document.getElementById('reviewSubmitBtn');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bi bi-send me-2"></i>გაგზავნა';
+    document.querySelectorAll('#reviewAjaxForm .form-control').forEach(el => el.classList.remove('is-invalid'));
+});
+</script>
+
+{{-- container დახურვა --}}
+</div>{{-- .home-content-wrap --}}

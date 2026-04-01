@@ -90,7 +90,10 @@
 @endpush
 
 @section('content')
-<div class="container blog-section">
+@include('partials.breadcrumb', ['crumbs' => [
+    ['label' => 'პროფესიონალური რჩევები', 'url' => '']
+]])
+<div class="blog-section">
     <h2 class="blog-header">პროფესიონალური რჩევები</h2>
 
     @if($posts->isEmpty())
@@ -98,17 +101,27 @@
     @else
         <div class="row">
             @foreach($posts as $post)
+                @php
+                    preg_match_all('/\S+/u', strip_tags($post->content), $_bm);
+                    $mins = max(1, (int) ceil(count($_bm[0]) / 180));
+                @endphp
                 <div class="col-md-6 col-lg-4 mb-4">
+                    <a href="{{ route('blog.show', $post->slug) }}" class="text-decoration-none">
                     <div class="blog-card">
                         @if($post->image)
-                            <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}">
+                            <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" loading="lazy">
                         @endif
                         <div class="blog-card-body">
+                            <div class="d-flex align-items-center gap-3 mb-2" style="font-size:0.78rem;color:#94a3b8;">
+                                <span><i class="bi bi-calendar3 me-1"></i>{{ $post->created_at->format('d.m.Y') }}</span>
+                                <span><i class="bi bi-clock me-1"></i>{{ $mins }} წთ</span>
+                            </div>
                             <h5>{{ $post->title }}</h5>
                             <p>{{ Str::limit($post->excerpt ?? strip_tags($post->content), 100) }}</p>
-                            <a href="{{ route('blog.show', $post->slug) }}" class="btn">სრულად ნახვა</a>
+                            <span class="btn">სრულად ნახვა</span>
                         </div>
                     </div>
+                    </a>
                 </div>
             @endforeach
         </div>

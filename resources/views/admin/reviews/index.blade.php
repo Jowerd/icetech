@@ -24,6 +24,7 @@
                     <tr>
                         <th class="ps-4 py-3" style="width: 50px;">ID</th>
                         <th class="py-3">ავტორი</th>
+                        <th class="py-3">სახეობა</th>
                         <th class="py-3">შეფასება</th>
                         <th class="py-3">რეიტინგი</th>
                         <th class="py-3 text-center">სტატუსი</th>
@@ -37,6 +38,18 @@
                         <td>
                             <div class="fw-bold text-dark small">{{ $review->author_name }}</div>
                             <div class="x-small-text text-muted">{{ $review->author_email ?: 'No Email' }}</div>
+                        </td>
+                        <td>
+                            @if($review->product_id && $review->product)
+                                <span class="badge bg-soft-primary text-primary border border-primary x-small-badge">პროდუქტი</span>
+                                <div class="x-small-text text-muted mt-1 text-truncate" style="max-width:140px;">
+                                    <a href="{{ route('products.show', $review->product->slug) }}" target="_blank" class="text-decoration-none text-muted">
+                                        {{ $review->product->name }}
+                                    </a>
+                                </div>
+                            @else
+                                <span class="badge bg-soft-info text-info border border-info x-small-badge">ზოგადი</span>
+                            @endif
                         </td>
                         <td>
                             <div class="text-dark small text-truncate" style="max-width: 250px;">
@@ -124,7 +137,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center py-5 text-muted small">შეფასებები არ არის</td>
+                        <td colspan="7" class="text-center py-5 text-muted small">შეფასებები არ არის</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -146,6 +159,8 @@
     
     .bg-soft-success { background-color: #e8f5e9; }
     .bg-soft-warning { background-color: #fff3e0; }
+    .bg-soft-primary { background-color: #e8f0fe; }
+    .bg-soft-info    { background-color: #e0f7fa; }
     .text-light-gray { color: #e0e0e0; }
 
     .btn-white { background: #fff; border: none; }

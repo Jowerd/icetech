@@ -77,6 +77,9 @@
 @endpush
 
 @section('content')
+    @include('partials.breadcrumb', ['crumbs' => [
+        ['label' => $category->name, 'url' => '']
+    ]])
     <div class="category-container">
         {{-- კატეგორიის სათაური --}}
         <div class="category-header">

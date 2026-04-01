@@ -61,6 +61,11 @@ class Product extends Model implements Sitemapable
         return $this->belongsTo(Category::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class)->where('is_approved', true)->orderByDesc('created_at');
+    }
+
     // ✅ დამატებული ფუნქცია საიტის რუკისთვის
     public function toSitemapTag(): Url | string | array
     {

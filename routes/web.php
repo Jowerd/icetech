@@ -8,6 +8,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Admin\BlogPostController;
+use App\Http\Controllers\Admin\SlideController;
 
 // ====================
 // 🟢 მომხმარებლის მხარე
@@ -15,7 +16,8 @@ use App\Http\Controllers\Admin\BlogPostController;
 
 // მთავარი გვერდი
 Route::get('/', function () {
-    return view('welcome');
+    $slides = \App\Models\Slide::active()->get();
+    return view('welcome', compact('slides'));
 })->name('home');
 
 // პროდუქტის ძიება
@@ -81,6 +83,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // ბლოგპოსტების CRUD (💡 ეს დამატებულია შენს მოთხოვნაზე)
         Route::resource('blog', BlogPostController::class);
+
+        // ბანერის სლაიდები
+        Route::resource('slides', SlideController::class)->names('slides');
 
         // ნახვების განულების მექანიზმი
         Route::get('/reset-views', function () {
