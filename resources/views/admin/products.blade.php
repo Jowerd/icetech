@@ -73,6 +73,11 @@
                         <textarea name="description" id="description" class="form-control"></textarea>
                     </div>
 
+                    <div class="col-md-6 mt-3">
+                        <label class="form-label small fw-bold">ვიდეო ლინკი (YouTube/URL)</label>
+                        <input type="url" name="video_link" class="form-control border-2 shadow-none" placeholder="https://...">
+                    </div>
+
                     <div class="col-12 mt-3">
                         <label class="form-label small fw-bold text-primary">მახასიათებლები (თითო ხაზზე თითო მახასიათებელი)</label>
                         <textarea name="features_text" class="form-control border-2 shadow-none" rows="4" placeholder="ზომა: 200x100&#10;სიმძლავრე: 5kW"></textarea>

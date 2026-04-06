@@ -60,12 +60,12 @@ class ProductController extends Controller
             'category_id'       => $validatedData['category_id'],
             'name'              => $validatedData['name'],
             'description'       => $validatedData['description'],
-            'features_text'     => $validatedData['features_text'], // ✅ ცვლილება: features-ის ნაცვლად
+            'features_text'     => $validatedData['features_text'] ?? null,
             'price'             => $validatedData['price'],
             'supplier_country'  => $validatedData['supplier_country'],
             'condition'         => $validatedData['condition'],
-            'video_link'        => $validatedData['video_link'],
-            'sub_type'          => $validatedData['sub_type'],
+            'video_link'        => $validatedData['video_link'] ?? null,
+            'sub_type'          => $validatedData['sub_type'] ?? null,
             'image'             => $imagePath,
         ]);
         
