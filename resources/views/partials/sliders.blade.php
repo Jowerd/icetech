@@ -126,7 +126,7 @@
     <div class="col-12">
         <div class="popular-slider-container">
             <div class="popular-slider">
-                @foreach(\App\Models\Product::orderBy('views_count', 'desc')->take(10)->get() as $product)
+                @foreach(\App\Models\Product::whereNotNull('slug')->orderBy('views_count', 'desc')->take(8)->get() as $product)
                     @php
                         $countryCode = strtolower($product->supplier_country);
                         $conditionMap = [
@@ -151,13 +151,14 @@
                                     alt="{{ $product->name }}"
                                     class="home-product-image"
                                     loading="lazy"
+                                    width="300" height="300"
                                 >
                             </div>
 
                             {{-- ინფო --}}
                             <div class="home-product-info">
                                 <div class="home-product-country">
-                                    <img src="https://flagcdn.com/w40/{{ $countryCode }}.png" alt="{{ $countryCode }}">
+                                    <img src="https://flagcdn.com/w20/{{ $countryCode }}.png" alt="{{ $countryCode }}" loading="lazy" width="20" height="15">
                                     <span>{{ strtoupper($product->supplier_country) }}</span>
                                 </div>
                                 <h3 class="home-product-title">{{ $product->name }}</h3>
@@ -197,7 +198,7 @@
     <div class="col-12">
         <div class="newest-slider-container">
             <div class="newest-slider">
-                @foreach(\App\Models\Product::orderBy('created_at', 'desc')->take(10)->get() as $product)
+                @foreach(\App\Models\Product::whereNotNull('slug')->orderBy('created_at', 'desc')->take(8)->get() as $product)
                     @php
                         $countryCode = strtolower($product->supplier_country);
                         $conditionMap = [
@@ -222,13 +223,14 @@
                                     alt="{{ $product->name }}"
                                     class="home-product-image"
                                     loading="lazy"
+                                    width="300" height="300"
                                 >
                             </div>
 
                             {{-- ინფო --}}
                             <div class="home-product-info">
                                 <div class="home-product-country">
-                                    <img src="https://flagcdn.com/w40/{{ $countryCode }}.png" alt="{{ $countryCode }}">
+                                    <img src="https://flagcdn.com/w20/{{ $countryCode }}.png" alt="{{ $countryCode }}" loading="lazy" width="20" height="15">
                                     <span>{{ strtoupper($product->supplier_country) }}</span>
                                 </div>
                                 <h3 class="home-product-title">{{ $product->name }}</h3>

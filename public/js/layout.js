@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // დაყოვნება AJAX request-ისთვის (დებაუნსი)
             searchTimeout = setTimeout(() => {
                 fetchSuggestions(query);
-            }, 300);
+            }, 500);
         });
 
         // კლავიატურის ნავიგაცია
@@ -227,7 +227,7 @@ function displaySuggestions(suggestions) {
         return;
     }
 
-    suggestions.forEach((suggestion, index) => {
+    suggestions.forEach((suggestion) => {
         const div = document.createElement('div');
         div.className = 'suggestion-item';
         
@@ -436,7 +436,7 @@ function setupLazyLoadingForSuggestions() {
         var lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
         
         if ("IntersectionObserver" in window) {
-            let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+            let lazyImageObserver = new IntersectionObserver(function(entries) {
                 entries.forEach(function(entry) {
                     if (entry.isIntersecting) {
                         let lazyImage = entry.target;
