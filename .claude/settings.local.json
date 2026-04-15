@@ -4,7 +4,9 @@
       "Bash(xargs grep:*)",
       "Bash(php -r \"echo extension_loaded\\('gd'\\) ? 'GD: yes' : 'GD: no'; echo PHP_EOL; echo extension_loaded\\('imagick'\\) ? 'Imagick: yes' : 'Imagick: no';\")",
       "Bash(php artisan:*)",
-      "Bash(grep -n 'image\\\\|photo\\\\|avatar\\\\|$fillable' /c/Users/nkapa/icetech/app/Models/Review.php)"
+      "Bash(grep -n 'image\\\\|photo\\\\|avatar\\\\|$fillable' /c/Users/nkapa/icetech/app/Models/Review.php)",
+      "Read(//etc/nginx/**)",
+      "Read(//etc/nginx/sites-enabled/**)"
     ]
   }
 }

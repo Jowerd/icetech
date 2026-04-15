@@ -26,9 +26,7 @@ class ConvertImagesToWebp extends Command
         ];
 
         foreach ($models as $label => [$modelClass, $folder]) {
-            $items = $modelClass::whereNotNull('image')
-                ->where('image', 'not like', '%.webp')
-                ->get(['id', 'image']);
+            $items = $modelClass::whereNotNull('image')->get(['id', 'image']);
 
             if ($items->isEmpty()) {
                 $this->line("<fg=gray>$label: nothing to convert</>");

@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
@@ -79,62 +80,58 @@ class ProductController extends Controller
     public function getSuggestions(Request $request)
     {
         try {
-            $query = $request->input('query');
-            
-            if (empty($query) || strlen($query) < 2) {
-                return response()->json(['suggestions' => []]);
+            $query = trim($request->input('query', ''));
+
+            if (strlen($query) < 2) {
+                return response()->json(['suggestions' => []])
+                    ->header('Cache-Control', 'no-store');
             }
 
-            $suggestions = collect();
+            $cacheKey = 'search_suggestions_' . mb_strtolower($query);
 
-            // 1. Search products
-            $products = Product::where('name', 'LIKE', "%{$query}%")
-                ->orWhereHas('category', function ($q) use ($query) {
-                    $q->where('name', 'LIKE', "%{$query}%");
-                })
-                ->orWhere('sub_type', 'LIKE', "%{$query}%")
-                ->with('category')
-                ->limit(5)
-                ->get();
+            $suggestions = Cache::remember($cacheKey, 120, function () use ($query) {
+                $results = collect();
 
-            foreach ($products as $product) {
-                if (!$product->slug) continue;
+                // 1. Products — მხოლოდ name-ით, orWhereHas subquery ძვირია
+                $products = Product::where('name', 'LIKE', "%{$query}%")
+                    ->whereNotNull('slug')
+                    ->with('category:id,name')
+                    ->limit(5)
+                    ->get(['id', 'name', 'slug', 'image', 'price', 'category_id']);
 
-                $suggestions->push([
-                    'name' => $product->name,
-                    'category' => $product->category ? $product->category->name : null,
-                    'price' => $product->price,
-                    'formatted_price' => number_format($product->price, 2) . ' ₾',
-                    'image' => $product->image ? asset('storage/' . $product->image) : asset('images/no-image.jpg'),
-                    'url' => route('products.show', $product->slug),
-                    'type' => 'product'
-                ]);
-            }
-
-            // 2. Search categories
-            $categories = Category::where('name', 'LIKE', "%{$query}%")
-                ->limit(3)
-                ->get();
-
-            foreach ($categories as $category) {
-                $exists = $suggestions->contains(function ($item) use ($category) {
-                    return $item['name'] === $category->name && $item['type'] === 'category';
-                });
-
-                if (!$exists && $category->slug) {
-                    $suggestions->push([
-                        'name' => $category->name,
-                        'category' => 'კატეგორია',
-                        'price' => null,
-                        'formatted_price' => null,
-                        'image' => $category->image ? asset('storage/' . $category->image) : asset('images/category-default.jpg'),
-                        'url' => route('categories.show', $category->slug),
-                        'type' => 'category'
+                foreach ($products as $product) {
+                    $results->push([
+                        'name'            => $product->name,
+                        'category'        => $product->category?->name,
+                        'formatted_price' => number_format($product->price, 2) . ' ₾',
+                        'image'           => $product->image ? asset('storage/' . $product->image) : asset('images/no-image.jpg'),
+                        'url'             => route('products.show', $product->slug),
+                        'type'            => 'product',
                     ]);
                 }
-            }
-            
-            return response()->json(['suggestions' => $suggestions->values()->all()]);
+
+                // 2. Categories
+                $categories = Category::where('name', 'LIKE', "%{$query}%")
+                    ->whereNotNull('slug')
+                    ->limit(3)
+                    ->get(['id', 'name', 'slug', 'image']);
+
+                foreach ($categories as $category) {
+                    $results->push([
+                        'name'            => $category->name,
+                        'category'        => 'კატეგორია',
+                        'formatted_price' => null,
+                        'image'           => $category->image ? asset('storage/' . $category->image) : asset('images/category-default.jpg'),
+                        'url'             => route('categories.show', $category->slug),
+                        'type'            => 'category',
+                    ]);
+                }
+
+                return $results->values()->all();
+            });
+
+            return response()->json(['suggestions' => $suggestions])
+                ->header('Cache-Control', 'public, max-age=120');
         } catch (\Exception $e) {
             Log::error('Search suggestions error: ' . $e->getMessage());
             return response()->json(['suggestions' => []], 500);
