@@ -132,12 +132,14 @@
                                 alt="{{ $product->name }}"
                                 class="product-card-image"
                                 loading="lazy"
+                                width="300"
+                                height="300"
                             >
                         </div>
 
                         <div class="product-card-info">
                             <div class="product-card-country">
-                                <img src="https://flagcdn.com/w40/{{ $countryCode }}.png" alt="{{ $countryCode }}">
+                                <img src="https://flagcdn.com/w40/{{ $countryCode }}.png" alt="{{ $countryCode }}" loading="lazy" width="20" height="15">
                                 <span>{{ strtoupper($product->supplier_country) }}</span>
                             </div>
                             <h5 class="product-card-title">{{ $product->name }}</h5>

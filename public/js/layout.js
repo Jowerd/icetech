@@ -226,7 +226,7 @@ function displaySuggestions(suggestions) {
             div.innerHTML = `
                 <div class="suggestion-content-with-image">
                     <div class="suggestion-image">
-                        <img src="${suggestion.image}" alt="${suggestion.name}" onerror="this.src='${getDefaultImage()}'" loading="lazy">
+                        <img data-src="${suggestion.image}" alt="${suggestion.name}" onerror="this.src='${getDefaultImage()}'" width="40" height="40">
                     </div>
                     <div class="suggestion-details">
                         <div class="suggestion-name">${highlightMatch(suggestion.name, searchInput.value)}</div>
@@ -240,7 +240,7 @@ function displaySuggestions(suggestions) {
             div.innerHTML = `
                 <div class="suggestion-content-with-image">
                     <div class="suggestion-image">
-                        <img src="${suggestion.image}" alt="${suggestion.name}" onerror="this.src='${getDefaultImage()}'" loading="lazy">
+                        <img data-src="${suggestion.image}" alt="${suggestion.name}" onerror="this.src='${getDefaultImage()}'" width="40" height="40">
                     </div>
                     <div class="suggestion-details">
                         <div class="suggestion-name">${highlightMatch(suggestion.name, searchInput.value)}</div>
@@ -261,6 +261,7 @@ function displaySuggestions(suggestions) {
     });
 
     showSuggestions();
+    setupLazyLoadingForSuggestions();
 }
 // Default image function
 function getDefaultImage() {
@@ -269,6 +270,8 @@ function getDefaultImage() {
 
 // Lazy loading for suggestion images
 function setupLazyLoadingForSuggestions() {
+    const images = searchSuggestions.querySelectorAll('.suggestion-image img[data-src]');
+
     if ("IntersectionObserver" in window) {
         const imageObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
@@ -277,15 +280,20 @@ function setupLazyLoadingForSuggestions() {
                     if (img.dataset.src) {
                         img.src = img.dataset.src;
                         img.removeAttribute('data-src');
-                        imageObserver.unobserve(img);
+                        observer.unobserve(img);
                     }
                 }
             });
-        });
+        }, { rootMargin: '50px' });
 
-        // Observe all suggestion images
-        document.querySelectorAll('.suggestion-image img[data-src]').forEach(img => {
-            imageObserver.observe(img);
+        images.forEach(img => imageObserver.observe(img));
+    } else {
+        // Fallback for browsers without IntersectionObserver
+        images.forEach(img => {
+            if (img.dataset.src) {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+            }
         });
     }
 }

@@ -93,7 +93,7 @@ class ProductController extends Controller
                 })
                 ->orWhere('sub_type', 'LIKE', "%{$query}%")
                 ->with('category')
-                ->limit(10)
+                ->limit(5)
                 ->get();
 
             foreach ($products as $product) {
@@ -110,7 +110,7 @@ class ProductController extends Controller
 
             // 2. Search categories
             $categories = Category::where('name', 'LIKE', "%{$query}%")
-                ->limit(5)
+                ->limit(3)
                 ->get();
 
             foreach ($categories as $category) {
