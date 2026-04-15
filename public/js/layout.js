@@ -184,10 +184,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // AJAX მოთხოვნა suggestions-ისთვის
+    let activeController = null;
+
     function fetchSuggestions(query) {
-        // თუ არ არის Laravel route, შექმენი შესაბამისი endpoint
-        const url = '/api/products/suggestions'; // ეს route უნდა შექმნათ Laravel-ში
-        
+        // გააუქმე წინა request თუ ჯერ კიდევ მიდის
+        if (activeController) {
+            activeController.abort();
+        }
+        activeController = new AbortController();
+
+        const url = '/api/products/suggestions';
+
         fetch(url, {
             method: 'POST',
             headers: {
@@ -195,13 +202,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
             },
-            body: JSON.stringify({ query: query })
+            body: JSON.stringify({ query: query }),
+            signal: activeController.signal
         })
         .then(response => response.json())
         .then(data => {
+            activeController = null;
             displaySuggestions(data.suggestions || []);
         })
         .catch(error => {
+            if (error.name === 'AbortError') return; // ნორმალურად გაუქმებული request
             console.error('Search suggestions error:', error);
             hideSuggestions();
         });
@@ -301,7 +311,9 @@ function setupLazyLoadingForSuggestions() {
     // ტექსტში მატჩის გამოკვეთა
     function highlightMatch(text, query) {
         if (!query) return text;
-        const regex = new RegExp(`(${query})`, 'gi');
+        // escape special regex characters to prevent crash on ( ) . * etc.
+        const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(${escaped})`, 'gi');
         return text.replace(regex, '<strong>$1</strong>');
     }
 
