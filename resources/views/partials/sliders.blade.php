@@ -74,7 +74,7 @@
     <div class="col-12">
         <div class="category-slider-container">
             <div class="category-slider">
-                @foreach(\App\Models\Category::all() as $category)
+                @foreach(\App\Models\Category::whereNotNull('slug')->get() as $category)
                     <div class="category-slide">
                         <a href="{{ route('category.products', $category->slug) }}" class="text-decoration-none category-link">
                             <div class="category-card">
