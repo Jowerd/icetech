@@ -121,7 +121,7 @@ class ProductController extends Controller
                     return $item['name'] === $category->name && $item['type'] === 'category';
                 });
 
-                if (!$exists) {
+                if (!$exists && $category->slug) {
                     $suggestions->push([
                         'name' => $category->name,
                         'category' => 'კატეგორია',
