@@ -51,9 +51,7 @@ Route::get('/contact', function () {
 // =====================
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{blogPost}', [BlogController::class, 'show'])->name('blog.show');
-Route::post('/api/products/suggestions', [ProductController::class, 'getSuggestions'])
-    ->name('products.suggestions')
-    ->withoutMiddleware([\Illuminate\Session\Middleware\StartSession::class, \Illuminate\View\Middleware\ShareErrorsFromSession::class]);
+Route::post('/api/products/suggestions', [ProductController::class, 'getSuggestions'])->name('products.suggestions');
 // ========================
 // 🔐 ადმინის პანელი & აუთენთიკაცია
 // ========================
