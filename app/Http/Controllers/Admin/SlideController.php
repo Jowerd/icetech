@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Slide;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -33,7 +34,7 @@ class SlideController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('slides', 'public');
+            $data['image'] = (new ImageService())->storeAsWebp($request->file('image'), 'slides');
         }
 
         $data['is_active'] = $request->boolean('is_active', true);
@@ -64,7 +65,7 @@ class SlideController extends Controller
             if ($slide->image) {
                 Storage::disk('public')->delete($slide->image);
             }
-            $data['image'] = $request->file('image')->store('slides', 'public');
+            $data['image'] = (new ImageService())->storeAsWebp($request->file('image'), 'slides');
         }
 
         $data['is_active'] = $request->boolean('is_active', true);

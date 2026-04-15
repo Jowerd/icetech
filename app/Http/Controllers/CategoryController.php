@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -33,10 +34,9 @@ class CategoryController extends Controller
         $data = $request->only('name', 'description', 'keywords');
     
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('category_images', 'public');
-            $data['image'] = $imagePath;
+            $data['image'] = (new ImageService())->storeAsWebp($request->file('image'), 'category_images');
         }
-    
+
         Category::create($data);
     
         return redirect()->route(route: 'admin.categories.index');
@@ -106,8 +106,7 @@ class CategoryController extends Controller
         $data = $request->only('name', 'description', 'keywords');
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('category_images', 'public');
-            $data['image'] = $imagePath;
+            $data['image'] = (new ImageService())->storeAsWebp($request->file('image'), 'category_images');
         }
 
         $category->update($data);

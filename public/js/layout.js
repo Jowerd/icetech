@@ -236,7 +236,7 @@ function displaySuggestions(suggestions) {
             div.innerHTML = `
                 <div class="suggestion-content-with-image">
                     <div class="suggestion-image">
-                        <img data-src="${suggestion.image}" alt="${suggestion.name}" onerror="this.src='${getDefaultImage()}'" width="40" height="40">
+                        <img src="${suggestion.image}" alt="${suggestion.name}" onerror="this.src='${getDefaultImage()}'" width="40" height="40" loading="lazy">
                     </div>
                     <div class="suggestion-details">
                         <div class="suggestion-name">${highlightMatch(suggestion.name, searchInput.value)}</div>
@@ -250,7 +250,7 @@ function displaySuggestions(suggestions) {
             div.innerHTML = `
                 <div class="suggestion-content-with-image">
                     <div class="suggestion-image">
-                        <img data-src="${suggestion.image}" alt="${suggestion.name}" onerror="this.src='${getDefaultImage()}'" width="40" height="40">
+                        <img src="${suggestion.image}" alt="${suggestion.name}" onerror="this.src='${getDefaultImage()}'" width="40" height="40" loading="lazy">
                     </div>
                     <div class="suggestion-details">
                         <div class="suggestion-name">${highlightMatch(suggestion.name, searchInput.value)}</div>

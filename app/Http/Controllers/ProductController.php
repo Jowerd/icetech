@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -50,7 +51,7 @@ class ProductController extends Controller
         // 2. სურათის ატვირთვა
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
+            $imagePath = (new ImageService())->storeAsWebp($request->file('image'), 'products');
         }
 
         // ❌ ძველი მახასიათებლების დამუშავების ლოგიკა წაშლილია
@@ -175,7 +176,7 @@ class ProductController extends Controller
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
-            $imagePath = $request->file('image')->store('products', 'public');
+            $imagePath = (new ImageService())->storeAsWebp($request->file('image'), 'products');
         }
 
         // ❌ ძველი მახასიათებლების დამუშავების ლოგიკა წაშლილია

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BlogPost;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -33,7 +34,7 @@ class BlogPostController extends Controller
         $validated['slug'] = Str::slug($validated['title']);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('blog', 'public');
+            $validated['image'] = (new ImageService())->storeAsWebp($request->file('image'), 'blog');
         }
 
         BlogPost::create($validated);
@@ -58,7 +59,7 @@ class BlogPostController extends Controller
         $validated['slug'] = Str::slug($validated['title']);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('blog', 'public');
+            $validated['image'] = (new ImageService())->storeAsWebp($request->file('image'), 'blog');
         }
 
         $blog->update($validated);

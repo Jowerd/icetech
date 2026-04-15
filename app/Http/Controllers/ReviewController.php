@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Review;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
@@ -20,7 +21,7 @@ class ReviewController extends Controller
 
         // შენახვა ფოტოს, თუ ატვირთულია
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('reviews', 'public');
+            $validated['image'] = (new ImageService())->storeAsWebp($request->file('image'), 'reviews');
         }
 
         // შეფასების შენახვა
