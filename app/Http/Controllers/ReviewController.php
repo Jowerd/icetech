@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Review;
-use App\Services\ImageService;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
@@ -16,13 +15,7 @@ class ReviewController extends Controller
             'author_email' => 'nullable|email|max:255',
             'content'      => 'required|string',
             'rating'       => 'required|integer|min:1|max:5',
-            'image'        => 'nullable|image|max:2048',
         ]);
-
-        // შენახვა ფოტოს, თუ ატვირთულია
-        if ($request->hasFile('image')) {
-            $validated['image'] = (new ImageService())->storeAsWebp($request->file('image'), 'reviews');
-        }
 
         // შეფასების შენახვა
         Review::create($validated);

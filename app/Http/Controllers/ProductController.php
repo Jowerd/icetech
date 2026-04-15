@@ -98,6 +98,8 @@ class ProductController extends Controller
                 ->get();
 
             foreach ($products as $product) {
+                if (!$product->slug) continue;
+
                 $suggestions->push([
                     'name' => $product->name,
                     'category' => $product->category ? $product->category->name : null,

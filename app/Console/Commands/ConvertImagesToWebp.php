@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\BlogPost;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Review;
 use App\Models\Slide;
 use App\Services\ImageService;
 use Illuminate\Console\Command;
@@ -24,7 +23,6 @@ class ConvertImagesToWebp extends Command
             'Categories' => [Category::class, 'category_images'],
             'Blog posts' => [BlogPost::class, 'blog'],
             'Slides'     => [Slide::class,    'slides'],
-            'Reviews'    => [Review::class,   'reviews'],
         ];
 
         foreach ($models as $label => [$modelClass, $folder]) {

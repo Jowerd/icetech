@@ -15,7 +15,6 @@ class Review extends Model
         'author_email',
         'content',
         'rating',
-        'image',
         'is_approved',
     ];
 
