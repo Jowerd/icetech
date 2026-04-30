@@ -23,11 +23,25 @@ body {
 /* =========================================
    მთავარი კონტეინერი
 ========================================= */
+.product-page-container {
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 20px rgba(0,0,0,.06);
+    overflow: hidden;
+    margin-bottom: 32px;
+}
+
 .product-main-content {
     background-color: var(--product-card-bg);
-    border-radius: 0;
-    box-shadow: 0 0 20px var(--box-shadow-light);
-    padding: 30px 0;
+    padding: 28px 28px 20px;
+}
+
+.product-details-row {
+    align-items: flex-start;
+}
+
+.product-info-panel {
+    padding: 4px 0 0 8px;
 }
 
 /* =========================================
@@ -396,7 +410,18 @@ body {
    მსგავსი პროდუქტების სექცია
 ========================================= */
 .similar-products-section {
-    padding: 40px 0;
+    padding: 40px 28px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 20px rgba(0,0,0,.06);
+    margin-bottom: 32px;
+}
+
+@media (min-width: 768px) {
+    .similar-products-section { padding: 48px 36px; }
+}
+@media (max-width: 767.98px) {
+    .similar-products-section { padding: 28px 16px; }
 }
 
 
@@ -477,7 +502,7 @@ body {
 ========================================= */
 @media (min-width: 768px) {
     .product-main-content {
-        padding: 40px 0;
+        padding: 36px 36px 28px;
     }
     .product-title {
         font-size: 2.5rem;
@@ -492,14 +517,14 @@ body {
     .product-image {
         padding: 25px;
     }
-    .similar-products-section {
-        padding: 60px 0;
-    }
 }
 
 @media (max-width: 767.98px) {
     .product-main-content {
-        padding: 20px 0;
+        padding: 16px 16px 12px;
+    }
+    .product-info-panel {
+        padding: 0;
     }
     .product-title {
         font-size: 1.8rem;
@@ -548,7 +573,18 @@ body {
    შეფასებების სექცია
 ========================================= */
 .product-reviews-section {
-    padding: 48px 0 56px;
+    padding: 48px 28px 56px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 20px rgba(0,0,0,.06);
+    margin-bottom: 32px;
+}
+
+@media (min-width: 768px) {
+    .product-reviews-section { padding: 52px 36px 60px; }
+}
+@media (max-width: 767.98px) {
+    .product-reviews-section { padding: 32px 16px 40px; }
 }
 
 /* სექციის header */
@@ -1011,4 +1047,44 @@ body {
     .prs-modal-body {
         padding: 16px 20px 20px;
     }
+}
+/* ======= Product Gallery Thumbnails ======= */
+.product-gallery-thumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.gallery-thumb {
+    width: 76px;
+    height: 76px;
+    padding: 0;
+    border: 2px solid #e8e8e8;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #fff;
+    flex-shrink: 0;
+    transition: border-color .2s ease, opacity .2s ease;
+}
+
+.gallery-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.gallery-thumb:hover {
+    border-color: #00a4bd;
+    opacity: .9;
+}
+
+.gallery-thumb.active {
+    border-color: #1a365d;
+    box-shadow: 0 0 0 3px rgba(26,54,93,.12);
+}
+
+@media (max-width: 576px) {
+    .gallery-thumb { width: 62px; height: 62px; }
 }

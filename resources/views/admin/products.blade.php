@@ -64,8 +64,13 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label small fw-bold">ფოტო</label>
-                        <input type="file" name="image" class="form-control border-2 shadow-none">
+                        <label class="form-label small fw-bold">მთავარი ფოტო</label>
+                        <input type="file" name="image" class="form-control border-2 shadow-none" accept="image/*">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold">გალერეა (მრავალი ფოტო)</label>
+                        <input type="file" name="gallery_images[]" id="galleryInputCreate" class="form-control border-2 shadow-none" accept="image/*" multiple onchange="previewGalleryCreate(this)">
+                        <div id="galleryPreviewCreate" class="d-flex flex-wrap gap-1 mt-1"></div>
                     </div>
 
                     <div class="col-12 mt-3">
@@ -209,6 +214,17 @@
         toolbar: 'undo redo | bold italic | bullist numlist | link code',
         promotion: false
     });
+
+    function previewGalleryCreate(input) {
+        const container = document.getElementById('galleryPreviewCreate');
+        container.innerHTML = '';
+        Array.from(input.files).forEach(file => {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.style.cssText = 'width:40px;height:40px;object-fit:cover;border-radius:4px;border:1px solid #dee2e6;';
+            container.appendChild(img);
+        });
+    }
 
     document.getElementById('categoryFilter').addEventListener('change', function() {
         const catId = this.value;

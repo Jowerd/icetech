@@ -17,10 +17,18 @@
             {{-- პირველი სვეტი (დესკტოპზე მარცხენა, მობილურზე ზედა) --}}
             <div class="col-12 col-lg-7 order-lg-1 d-flex flex-column">
 
-                {{-- პროდუქტის სურათი --}}
-                <div class="product-image-wrapper card shadow-sm mb-4">
+                {{-- პროდუქტის სურათი + გალერეა --}}
+                @php
+                    $mainImage    = $product->image ? asset('storage/' . $product->image) : asset('default-product.png');
+                    $galleryImages = $product->images ?? collect();
+                    $allImages    = collect([['src' => $mainImage, 'alt' => $product->name]])
+                        ->concat($galleryImages->map(fn($img) => ['src' => asset('storage/' . $img->image), 'alt' => $product->name]));
+                @endphp
+
+                <div class="product-image-wrapper card shadow-sm mb-2">
                     <img
-                        src="{{ $product->image ? asset('storage/' . $product->image) : asset('default-product.png') }}"
+                        id="productMainImage"
+                        src="{{ $mainImage }}"
                         alt="{{ $product->name }}"
                         class="img-fluid rounded product-image"
                     >
@@ -28,6 +36,19 @@
                         <i class="bi bi-eye-fill"></i> {{ number_format($product->views_count ?? 0) }} ნახვა
                     </div>
                 </div>
+
+                @if($allImages->count() > 1)
+                <div class="product-gallery-thumbs mb-4">
+                    @foreach($allImages as $i => $img)
+                        <button type="button"
+                                class="gallery-thumb {{ $i === 0 ? 'active' : '' }}"
+                                data-src="{{ $img['src'] }}"
+                                title="{{ $img['alt'] }}">
+                            <img src="{{ $img['src'] }}" alt="{{ $img['alt'] }}" loading="lazy">
+                        </button>
+                    @endforeach
+                </div>
+                @endif
 
                 {{-- პროდუქტის მახასიათებლები (მხოლოდ დესკტოპი) --}}
                 @if($product->features_text)

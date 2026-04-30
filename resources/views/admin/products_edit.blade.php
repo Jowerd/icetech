@@ -119,6 +119,87 @@
     </form>
 </div>
 
+{{-- ============================================================
+     გალერეა — დამატებითი ფოტოები
+============================================================ --}}
+<div class="container-fluid px-0 px-md-2 mt-4">
+
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show rounded-1 small py-2" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    <div class="card border rounded-1 shadow-none bg-white">
+        <div class="card-header bg-light py-2 border-bottom d-flex justify-content-between align-items-center">
+            <h6 class="mb-0 fw-bold text-uppercase x-small-text text-secondary">
+                <i class="bi bi-images me-1"></i> გალერეა (დამატებითი ფოტოები)
+            </h6>
+            <span class="badge bg-secondary">{{ $product->images->count() }} ფოტო</span>
+        </div>
+        <div class="card-body p-3">
+
+            {{-- არსებული ფოტოები --}}
+            @if($product->images->isNotEmpty())
+                <div class="row g-2 mb-3" id="galleryGrid">
+                    @foreach($product->images as $img)
+                        <div class="col-4 col-md-3 col-lg-2" id="gallery-item-{{ $img->id }}">
+                            <div class="position-relative border rounded overflow-hidden" style="aspect-ratio:1/1;">
+                                <img src="{{ asset('storage/' . $img->image) }}"
+                                     alt="gallery"
+                                     class="w-100 h-100"
+                                     style="object-fit:cover;">
+                                <form action="{{ route('admin.products.images.destroy', [$product->id, $img->id]) }}"
+                                      method="POST"
+                                      class="gallery-delete-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 p-0 d-flex align-items-center justify-content-center"
+                                            style="width:24px;height:24px;border-radius:50%;"
+                                            title="წაშლა">
+                                        <i class="bi bi-x" style="font-size:14px;"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-muted small mb-3">დამატებითი ფოტოები არ არის.</p>
+            @endif
+
+            {{-- ახალი ფოტოების ატვირთვა --}}
+            <form action="{{ route('admin.products.images.store', $product->id) }}"
+                  method="POST"
+                  enctype="multipart/form-data">
+                @csrf
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <label for="galleryInput" class="btn btn-dark btn-sm fw-bold rounded-1 mb-0">
+                        <i class="bi bi-plus-lg me-1"></i> ფოტოების არჩევა
+                    </label>
+                    <input type="file"
+                           name="images[]"
+                           id="galleryInput"
+                           class="d-none"
+                           multiple
+                           accept="image/*"
+                           onchange="previewGallery(this)">
+                    <button type="submit" id="galleryUploadBtn" class="btn btn-primary btn-sm fw-bold rounded-1 d-none">
+                        <i class="bi bi-cloud-upload me-1"></i> ატვირთვა
+                    </button>
+                    <span id="galleryFileCount" class="text-muted small"></span>
+                </div>
+
+                {{-- Preview thumbnails --}}
+                <div id="galleryPreview" class="row g-2 mt-2"></div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
 <style>
     * { transition: none !important; }
     body { background-color: #f8f9fa; }
@@ -181,5 +262,48 @@
             output.src = URL.createObjectURL(event.target.files[0]);
         }
     }
+
+    function previewGallery(input) {
+        const preview  = document.getElementById('galleryPreview');
+        const countEl  = document.getElementById('galleryFileCount');
+        const uploadBtn = document.getElementById('galleryUploadBtn');
+        preview.innerHTML = '';
+
+        if (!input.files || input.files.length === 0) {
+            uploadBtn.classList.add('d-none');
+            countEl.textContent = '';
+            return;
+        }
+
+        countEl.textContent = input.files.length + ' ფოტო არჩეულია';
+        uploadBtn.classList.remove('d-none');
+
+        Array.from(input.files).forEach(file => {
+            const col = document.createElement('div');
+            col.className = 'col-4 col-md-3 col-lg-2';
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.className = 'w-100 border rounded';
+            img.style.cssText = 'aspect-ratio:1/1;object-fit:cover;';
+            col.appendChild(img);
+            preview.appendChild(col);
+        });
+    }
+
+    // AJAX delete — გვერდის გადატვირთვის გარეშე
+    document.querySelectorAll('.gallery-delete-form').forEach(form => {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (!confirm('ფოტო წაიშლება. დარწმუნებული ხარ?')) return;
+            const res = await fetch(form.action, {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': document.querySelector('[name=_token]').value },
+                body: new FormData(form)
+            });
+            if (res.ok || res.redirected) {
+                form.closest('[id^=gallery-item-]').remove();
+            }
+        });
+    });
 </script>
 @endsection

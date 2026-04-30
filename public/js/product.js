@@ -1,5 +1,26 @@
 // public/js/product.js
 document.addEventListener('DOMContentLoaded', function() {
+
+    // Gallery thumbnail switcher
+    const mainImage = document.getElementById('productMainImage');
+    if (mainImage) {
+        mainImage.style.transition = 'opacity .18s ease';
+
+        document.querySelectorAll('.gallery-thumb').forEach(function(thumb) {
+            thumb.addEventListener('click', function() {
+                if (this.classList.contains('active')) return;
+
+                document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                mainImage.style.opacity = '0';
+                setTimeout(function() {
+                    mainImage.src = thumb.dataset.src;
+                    mainImage.style.opacity = '1';
+                }, 160);
+            });
+        });
+    }
     // Show more products functionality
     const showMoreButton = document.querySelector('.show-more-products');
     if (showMoreButton) {

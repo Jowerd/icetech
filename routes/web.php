@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Admin\BlogPostController;
 use App\Http\Controllers\Admin\SlideController;
+use App\Http\Controllers\Admin\ProductImageController;
 
 // ====================
 // 🟢 მომხმარებლის მხარე
@@ -75,6 +76,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // პროდუქტების მართვა
         Route::resource('/products', ProductController::class)->names('products');
+
+        // პროდუქტის გალერეა
+        Route::post('/products/{product}/images', [ProductImageController::class, 'store'])->name('products.images.store');
+        Route::delete('/products/{product}/images/{image}', [ProductImageController::class, 'destroy'])->name('products.images.destroy');
 
         // შეფასებების მართვა
         Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');

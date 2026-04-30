@@ -37,40 +37,53 @@ class ProductController extends Controller
     {
         // 1. ვალიდაცია
         $validatedData = $request->validate([
-            'category_id'       => 'required|exists:categories,id',
-            'name'              => 'required|string|max:255',
-            'description'       => 'nullable|string',
-            'features_text'     => 'nullable|string', // ✅ ცვლილება: features-ის ნაცვლად
-            'price'             => 'required|numeric|min:0',
-            'supplier_country'  => 'required|string|max:255',
-            'condition'         => 'required|in:new,like_new,used',
-            'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'video_link'        => 'nullable|url|max:255',
-            'sub_type'          => 'nullable|string|max:255',
+            'category_id'        => 'required|exists:categories,id',
+            'name'               => 'required|string|max:255',
+            'description'        => 'nullable|string',
+            'features_text'      => 'nullable|string',
+            'price'              => 'required|numeric|min:0',
+            'supplier_country'   => 'required|string|max:255',
+            'condition'          => 'required|in:new,like_new,used',
+            'image'              => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'video_link'         => 'nullable|url|max:255',
+            'sub_type'           => 'nullable|string|max:255',
+            'gallery_images'     => 'nullable|array|max:10',
+            'gallery_images.*'   => 'image|mimes:jpeg,png,jpg,gif,webp|max:4096',
         ]);
 
-        // 2. სურათის ატვირთვა
+        $service = new ImageService();
+
+        // 2. მთავარი სურათი
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = (new ImageService())->storeAsWebp($request->file('image'), 'products');
+            $imagePath = $service->storeAsWebp($request->file('image'), 'products');
         }
 
-        // ❌ ძველი მახასიათებლების დამუშავების ლოგიკა წაშლილია
-
         // 3. პროდუქტის შექმნა
-        Product::create([
-            'category_id'       => $validatedData['category_id'],
-            'name'              => $validatedData['name'],
-            'description'       => $validatedData['description'],
-            'features_text'     => $validatedData['features_text'] ?? null,
-            'price'             => $validatedData['price'],
-            'supplier_country'  => $validatedData['supplier_country'],
-            'condition'         => $validatedData['condition'],
-            'video_link'        => $validatedData['video_link'] ?? null,
-            'sub_type'          => $validatedData['sub_type'] ?? null,
-            'image'             => $imagePath,
+        $product = Product::create([
+            'category_id'      => $validatedData['category_id'],
+            'name'             => $validatedData['name'],
+            'description'      => $validatedData['description'],
+            'features_text'    => $validatedData['features_text'] ?? null,
+            'price'            => $validatedData['price'],
+            'supplier_country' => $validatedData['supplier_country'],
+            'condition'        => $validatedData['condition'],
+            'video_link'       => $validatedData['video_link'] ?? null,
+            'sub_type'         => $validatedData['sub_type'] ?? null,
+            'image'            => $imagePath,
         ]);
-        
+
+        // 4. გალერეის სურათები
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $i => $file) {
+                \App\Models\ProductImage::create([
+                    'product_id' => $product->id,
+                    'image'      => $service->storeAsWebp($file, 'products'),
+                    'sort_order' => $i,
+                ]);
+            }
+        }
+
         return redirect()->route('admin.products.index')->with('success', 'პროდუქტი წარმატებით დაემატა!');
     }
 
@@ -143,7 +156,7 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::with('images')->findOrFail($id);
         $categories = Category::all();
         return view('admin.products_edit', compact('product', 'categories'));
     }
@@ -219,13 +232,14 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $product->increment('views_count');
-        
+        $product->load('images');
+
         $similarProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->latest()
             ->limit(10)
             ->get();
-        
+
         return view('product_show', compact('product', 'similarProducts'));
     }
     
