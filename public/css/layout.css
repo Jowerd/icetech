@@ -16,7 +16,7 @@ body {
     font-family: 'BPG Mrgvlovani', Tahoma, Arial, sans-serif;
     max-width: 100%;
     padding-top: 173px;
-    transition: padding-top 0.3s ease;
+    transition: padding-top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @font-face {
@@ -38,16 +38,13 @@ body {
     right: 0;
     z-index: 1030;
     width: 100%;
-    transition: transform 0.3s ease;
-}
-/* ჰედერის დამალვა (გადატანილება ზემოთ) */
-.header.hidden {
-    transform: translateY(-100%);
+    overflow: hidden;
+    transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ბრენდის ნაწილი */
 .brand-section {
-    padding: 12px 0;
+    padding: 7px 0;
     background-color: #1a365d;
 }
 

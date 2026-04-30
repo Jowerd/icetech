@@ -83,7 +83,7 @@
     </div>
 
     {{-- 2. ინფორმაციის პანელი და ხედის შეცვლა --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
         <button class="btn-filter-mobile d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas">
             <i class="bi bi-sliders2 me-1"></i> ფილტრი
         </button>

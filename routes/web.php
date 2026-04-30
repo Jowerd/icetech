@@ -25,9 +25,7 @@ Route::get('/', function () {
 Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
 
 // პროდუქტის სია და დეტალი
-Route::get('/products', function () {
-    return view('products');
-})->name('products');
+Route::get('/products', [ProductController::class, 'allProducts'])->name('products');
 
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 

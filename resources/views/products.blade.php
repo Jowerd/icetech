@@ -1,51 +1,330 @@
 @extends('layouts.app')
 
-@section('title', 'კატეგორიები • ICETECH')
+@section('title', 'პროდუქცია • ICETECH')
 
-@section('meta_description', 'ICETECH-ის სრული კატეგორიების ჩამონათვალი - პროფესიონალური სამზარეულოს აღჭურვილობა, გასაცივებელი სისტემები და კომერციული მოწყობილობები საქართველოში.')
+@section('meta_description', 'ICETECH-ის სრული პროდუქციის კატალოგი — პროფესიონალური სამზარეულოს აღჭურვილობა, გასაცივებელი სისტემები და კომერციული მოწყობილობები.')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/layout.css?v=' . filemtime(public_path('css/layout.css'))) }}">
+    <link rel="stylesheet" href="{{ asset('css/layout.css?v='     . filemtime(public_path('css/layout.css'))) }}">
+    <link rel="stylesheet" href="{{ asset('css/category.css?v='   . filemtime(public_path('css/category.css'))) }}">
     <link rel="stylesheet" href="{{ asset('css/categories.css?v=' . filemtime(public_path('css/categories.css'))) }}">
+    <link rel="stylesheet" href="{{ asset('css/products-all.css?v='. filemtime(public_path('css/products-all.css'))) }}">
 @endpush
 
 @section('content')
 @include('partials.breadcrumb', ['crumbs' => [
-    ['label' => 'კატეგორიები', 'url' => '']
+    ['label' => 'პროდუქცია', 'url' => '']
 ]])
-<div class="py-4">
-    <div class="row mb-4">
-        <div class="col-12">
-            <h1 class="products-page-title">კატეგორიები</h1>
-            <p class="products-page-sub">აირჩიეთ კატეგორია სასურველი პროდუქციის სანახავად</p>
+
+<div class="category-container py-2">
+
+    {{-- Page header --}}
+    <div class="category-header" style="padding: 14px 0 10px; margin-bottom: 14px;">
+        <h1>პროდუქცია</h1>
+    </div>
+
+    {{-- Category filter strip --}}
+    <div class="cat-strip-wrapper mb-3">
+        <div class="cat-strip">
+            <a href="{{ route('products') }}" class="cat-chip active">
+                <div class="cat-chip-img"><i class="bi bi-grid-3x3-gap-fill"></i></div>
+                <span>ყველა</span>
+            </a>
+            @foreach($categories as $category)
+            <a href="{{ route('category.products', $category->slug) }}" class="cat-chip">
+                <div class="cat-chip-img">
+                    @if($category->image)
+                        <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" loading="lazy">
+                    @else
+                        <i class="bi bi-tag"></i>
+                    @endif
+                </div>
+                <span>{{ $category->name }}</span>
+            </a>
+            @endforeach
         </div>
     </div>
-    
-    <div class="row g-3 g-md-4">
-        @foreach(\App\Models\Category::all() as $category)
-            <div class="col-6 col-sm-6 col-md-4 col-lg-3">
-                <a href="{{ route('category.products', $category->slug) }}" class="category-link">
-                    <div class="category-card">
-                        <div class="category-image-wrapper">
-                            <div class="category-image-container">
-                                @if($category->image)
-                                    <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="category-image" loading="lazy">
-                                @else
-                                    <img src="{{ asset('default-category.png') }}" alt="Default Image" class="category-image opacity-50" loading="lazy">
-                                @endif
-                            </div>
+
+    <div class="row g-2">
+        <div class="col-12">
+
+            {{-- Desktop filter bar --}}
+            <div class="filter-bar-desktop d-none d-lg-block">
+                <form method="GET" action="{{ route('products') }}" class="row g-3 align-items-end">
+
+                    <div class="col-md-3">
+                        <div class="d-flex justify-content-between align-items-end mb-2">
+                            <label class="filter-label mb-0">ფასი</label>
+                            <span class="filter-price-display" id="desktopPriceDisplay">{{ $currMin }} ₾ - {{ $currMax }} ₾</span>
                         </div>
-                        <div class="category-content">
-                            <h5 class="category-title">{{ $category->name }}</h5>
-                            <div class="view-more">
-                                <span>ნახვა</span>
-                                <i class="bi bi-arrow-right"></i>
-                            </div>
+                        <div class="multi-range-slider pt-1">
+                            <div class="slider-track" id="desktopSliderTrack"></div>
+                            <input type="range" id="desktopMinRange" min="{{ $absMin }}" max="{{ $absMax }}" value="{{ $currMin }}" step="10">
+                            <input type="range" id="desktopMaxRange" min="{{ $absMin }}" max="{{ $absMax }}" value="{{ $currMax }}" step="10">
+                            <input type="hidden" name="min_price" id="desktopMinPriceHidden" value="{{ $currMin }}">
+                            <input type="hidden" name="max_price" id="desktopMaxPriceHidden" value="{{ $currMax }}">
                         </div>
                     </div>
-                </a>
+
+                    <div class="col-md-2">
+                        <label class="filter-label">მდგომარეობა</label>
+                        <select name="condition" class="form-select custom-select-styled">
+                            <option value="">ყველა</option>
+                            <option value="new"      {{ request('condition') === 'new'      ? 'selected' : '' }}>ახალი</option>
+                            <option value="like_new" {{ request('condition') === 'like_new' ? 'selected' : '' }}>ახალივით</option>
+                            <option value="used"     {{ request('condition') === 'used'     ? 'selected' : '' }}>მეორადი</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="filter-label">ქვეყანა</label>
+                        <select name="country" class="form-select custom-select-styled">
+                            <option value="">ყველა</option>
+                            @foreach($countries as $c)
+                                <option value="{{ $c }}" {{ request('country') === $c ? 'selected' : '' }}>{{ strtoupper($c) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="filter-label">დალაგება</label>
+                        <select name="sort" class="form-select custom-select-styled">
+                            <option value="asc"  {{ request('sort', 'asc') === 'asc'  ? 'selected' : '' }}>ფასი: ზრდადი</option>
+                            <option value="desc" {{ request('sort') === 'desc' ? 'selected' : '' }}>ფასი: კლებადი</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-1 d-flex gap-2 pb-1">
+                        <button type="submit" class="btn btn-custom w-100 fw-bold rounded-3" title="ძიება">
+                            <i class="bi bi-search"></i>
+                        </button>
+                        @if(request()->anyFilled(['min_price', 'max_price', 'condition', 'country', 'sort']))
+                            <a href="{{ route('products') }}" class="btn btn-light text-danger w-100 fw-bold rounded-3 border" title="გასუფთავება">
+                                <i class="bi bi-x-lg"></i>
+                            </a>
+                        @endif
+                    </div>
+
+                </form>
             </div>
-        @endforeach
+
+            {{-- Info + view toggle --}}
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <button class="btn-filter-mobile d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas">
+                    <i class="bi bi-sliders2 me-1"></i> ფილტრი
+                </button>
+
+                <div class="d-none d-lg-block">
+                    <p class="text-muted m-0"><small>ნაპოვნია <strong>{{ $products->count() }}</strong> პროდუქტი</small></p>
+                </div>
+
+                <div class="d-none d-md-flex gap-2">
+                    <button class="btn btn-sm btn-view-mode active rounded-3" data-view="grid" title="ბადე"><i class="bi bi-grid-fill"></i></button>
+                    <button class="btn btn-sm btn-view-mode rounded-3" data-view="list" title="სია"><i class="bi bi-list-ul"></i></button>
+                </div>
+
+                <div class="d-lg-none">
+                    <p class="text-muted m-0 small">ნაპოვნია <strong>{{ $products->count() }}</strong></p>
+                </div>
+            </div>
+
+            {{-- Products grid --}}
+            @if($products->isEmpty())
+                <div class="alert alert-light text-center p-5 border rounded-4 shadow-sm mt-3">
+                    <i class="bi bi-search text-muted" style="font-size: 3rem;"></i>
+                    <h4 class="mt-3 text-dark fw-bold">პროდუქტები ვერ მოიძებნა</h4>
+                    <p class="text-muted">შეცვალეთ ფილტრის პარამეტრები და სცადეთ თავიდან.</p>
+                    <a href="{{ route('products') }}" class="btn btn-custom mt-2 rounded-3 px-4">ფილტრის გასუფთავება</a>
+                </div>
+            @else
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3 products-wrapper view-grid" id="productsContainer">
+                    @foreach($products as $product)
+                        @php
+                            $countryCode  = strtolower($product->supplier_country);
+                            $conditionMap = [
+                                'new'      => ['bg-success',        'ახალი',    'bi-star-fill'],
+                                'like_new' => ['bg-info text-dark', 'ახალივით', 'bi-star-half'],
+                                'used'     => ['bg-secondary',      'მეორადი',  'bi-tag-fill'],
+                            ];
+                            [$conditionClass, $conditionText, $conditionIcon] =
+                                $conditionMap[$product->condition] ?? ['bg-secondary', 'მეორადი', 'bi-tag-fill'];
+                        @endphp
+
+                        <div class="col product-col">
+                            <a href="{{ route('products.show', $product->slug) }}" class="product-card card h-100 shadow-sm">
+
+                                <div class="product-image-box">
+                                    <span class="badge {{ $conditionClass }} condition-badge shadow-sm">
+                                        <i class="bi {{ $conditionIcon }} me-1"></i>{{ $conditionText }}
+                                    </span>
+                                    <img
+                                        src="{{ $product->image ? asset('storage/' . $product->image) : asset('default-product.png') }}"
+                                        alt="{{ $product->name }}"
+                                        class="product-card-image"
+                                        loading="lazy"
+                                        width="300" height="300"
+                                    >
+                                </div>
+
+                                <div class="product-card-info">
+                                    <div class="product-card-country">
+                                        <img src="https://flagcdn.com/w40/{{ $countryCode }}.png" alt="{{ $countryCode }}" loading="lazy" width="20" height="15">
+                                        <span>{{ strtoupper($product->supplier_country) }}</span>
+                                    </div>
+                                    <h5 class="product-card-title">{{ $product->name }}</h5>
+                                    <div class="product-card-footer">
+                                        <p class="product-card-price">₾ {{ number_format($product->price, 2) }}</p>
+                                        <i class="bi bi-arrow-right-circle-fill product-card-arrow"></i>
+                                    </div>
+                                </div>
+
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+
+        </div>
+    </div>
+
+</div>
+
+{{-- Mobile offcanvas filter --}}
+<div class="offcanvas offcanvas-start border-0 shadow" tabindex="-1" id="filterOffcanvas">
+    <div class="offcanvas-header border-bottom border-light bg-white">
+        <h5 class="fw-bold m-0"><i class="bi bi-sliders me-2 text-custom"></i> ფილტრი</h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-4 bg-white">
+        <form method="GET" action="{{ route('products') }}">
+
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-end mb-2">
+                    <label class="filter-label mb-0">ფასი</label>
+                    <span class="filter-price-display" id="mobilePriceDisplay">{{ $currMin }} ₾ - {{ $currMax }} ₾</span>
+                </div>
+                <div class="multi-range-slider mt-2 mb-3">
+                    <div class="slider-track" id="mobileSliderTrack"></div>
+                    <input type="range" id="mobileMinRange" min="{{ $absMin }}" max="{{ $absMax }}" value="{{ $currMin }}" step="10">
+                    <input type="range" id="mobileMaxRange" min="{{ $absMin }}" max="{{ $absMax }}" value="{{ $currMax }}" step="10">
+                    <input type="hidden" name="min_price" id="mobileMinPriceHidden" value="{{ $currMin }}">
+                    <input type="hidden" name="max_price" id="mobileMaxPriceHidden" value="{{ $currMax }}">
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="filter-label">მდგომარეობა</label>
+                <select name="condition" class="form-select custom-select-styled py-2">
+                    <option value="">ყველა</option>
+                    <option value="new"      {{ request('condition') === 'new'      ? 'selected' : '' }}>ახალი</option>
+                    <option value="like_new" {{ request('condition') === 'like_new' ? 'selected' : '' }}>ახალივით</option>
+                    <option value="used"     {{ request('condition') === 'used'     ? 'selected' : '' }}>მეორადი</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="filter-label">ქვეყანა</label>
+                <select name="country" class="form-select custom-select-styled py-2">
+                    <option value="">ყველა</option>
+                    @foreach($countries as $c)
+                        <option value="{{ $c }}" {{ request('country') === $c ? 'selected' : '' }}>{{ strtoupper($c) }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="filter-label">დალაგება</label>
+                <select name="sort" class="form-select custom-select-styled py-2">
+                    <option value="asc"  {{ request('sort', 'asc') === 'asc'  ? 'selected' : '' }}>ფასი: ზრდადი</option>
+                    <option value="desc" {{ request('sort') === 'desc' ? 'selected' : '' }}>ფასი: კლებადი</option>
+                </select>
+            </div>
+
+            <div class="d-grid gap-2 mt-5">
+                <button type="submit" class="btn btn-custom fw-bold py-2 rounded-3">ძიება</button>
+                @if(request()->anyFilled(['min_price', 'max_price', 'condition', 'country', 'sort']))
+                    <a href="{{ route('products') }}" class="btn btn-light text-danger py-2 rounded-3 fw-bold border">გასუფთავება</a>
+                @endif
+            </div>
+
+        </form>
     </div>
 </div>
+
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('js/category.js?v=' . filemtime(public_path('js/category.js'))) }}"></script>
+    <script>
+    (function () {
+        const strip = document.getElementById('catStrip');
+        if (!strip) return;
+
+        // Wheel → direct scrollLeft (no queuing)
+        strip.addEventListener('wheel', function (e) {
+            if (e.deltaY === 0) return;
+            e.preventDefault();
+            strip.scrollLeft += e.deltaY;
+        }, { passive: false });
+
+        // Pointer drag + momentum
+        let isDragging = false;
+        let hasDragged = false;
+        let startX     = 0;
+        let scrollStart = 0;
+        let velX       = 0;
+        let lastX      = 0;
+        let lastTime   = 0;
+        let rafId      = null;
+
+        strip.addEventListener('pointerdown', function (e) {
+            if (e.button !== 0) return;
+            isDragging  = true;
+            hasDragged  = false;
+            startX      = e.clientX;
+            scrollStart = strip.scrollLeft;
+            lastX       = e.clientX;
+            lastTime    = Date.now();
+            velX        = 0;
+            strip.setPointerCapture(e.pointerId);
+            strip.classList.add('dragging');
+            if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        });
+
+        strip.addEventListener('pointermove', function (e) {
+            if (!isDragging) return;
+            const dx  = e.clientX - startX;
+            const now = Date.now();
+            const dt  = now - lastTime || 1;
+            velX      = (e.clientX - lastX) / dt;
+            lastX     = e.clientX;
+            lastTime  = now;
+            strip.scrollLeft = scrollStart - dx;
+            if (Math.abs(dx) > 5) hasDragged = true;
+        });
+
+        strip.addEventListener('pointerup', function (e) {
+            if (!isDragging) return;
+            isDragging = false;
+            strip.classList.remove('dragging');
+            strip.releasePointerCapture(e.pointerId);
+
+            // momentum
+            let v = velX * 120;
+            function glide() {
+                if (Math.abs(v) < 0.5) return;
+                strip.scrollLeft -= v;
+                v *= 0.90;
+                rafId = requestAnimationFrame(glide);
+            }
+            glide();
+        });
+
+        strip.querySelectorAll('a').forEach(function (a) {
+            a.addEventListener('click', function (e) {
+                if (hasDragged) e.preventDefault();
+            });
+        });
+    })();
+    </script>
+@endpush

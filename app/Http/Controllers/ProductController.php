@@ -88,6 +88,32 @@ class ProductController extends Controller
     }
 
     /**
+     * Display all products with filters (/products page).
+     */
+    public function allProducts(Request $request)
+    {
+        $categories = Category::whereNotNull('slug')->get();
+        $countries  = Product::whereNotNull('slug')->distinct()->pluck('supplier_country')->filter();
+
+        $absMin = 0;
+        $absMax = Product::whereNotNull('slug')->max('price') ?? 10000;
+
+        $currMin = $request->input('min_price', $absMin);
+        $currMax = $request->input('max_price', $absMax);
+
+        $products = Product::with('category')
+            ->whereNotNull('slug')
+            ->when($request->condition,  fn($q) => $q->where('condition', $request->condition))
+            ->when($request->country,    fn($q) => $q->where('supplier_country', $request->country))
+            ->when($request->min_price,  fn($q) => $q->where('price', '>=', $request->min_price))
+            ->when($request->max_price,  fn($q) => $q->where('price', '<=', $request->max_price))
+            ->orderBy('price', in_array($request->sort, ['asc', 'desc']) ? $request->sort : 'asc')
+            ->get();
+
+        return view('products', compact('categories', 'products', 'countries', 'absMin', 'absMax', 'currMin', 'currMax'));
+    }
+
+    /**
      * Get search suggestions.
      */
     public function getSuggestions(Request $request)

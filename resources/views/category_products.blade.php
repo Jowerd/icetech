@@ -78,16 +78,16 @@
 
 @section('content')
     @include('partials.breadcrumb', ['crumbs' => [
+        ['label' => 'პროდუქცია', 'url' => route('products')],
         ['label' => $category->name, 'url' => '']
     ]])
-    <div class="category-container">
+    <div class="category-container py-2">
         {{-- კატეგორიის სათაური --}}
-        <div class="category-header">
+        <div class="category-header" style="padding: 14px 0 10px; margin-bottom: 14px;">
             <h1>{{ $category->name }}</h1>
-            {{-- აღწერა წაშლილია, რადგან არ გვინდა რომ გამოჩნდეს გვერდზე --}}
         </div>
-        
-        <div class="row g-4">
+
+        <div class="row g-2">
             @include('partials.category.body')
         </div>
     </div>

@@ -12,8 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
         mobileMenu.classList.toggle('show');
         if (mobileMenu.classList.contains('show')) {
             navbarToggler.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-            // როცა მენიუ იხსნება, ჰედერი ყოველთვის უნდა ჩანდეს
-            header.classList.remove('hidden');
+            applyCompact(false);
         } else {
             navbarToggler.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
         }
@@ -45,58 +44,67 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ჰედერის სქროლის ლოგიკა
+    const searchSection = document.querySelector('.search-section');
     let lastScroll = window.pageYOffset || document.documentElement.scrollTop;
     let accumulated = 0;
-    const threshold = 100;
+    const threshold = 60;
     let ticking = false;
 
-    function updateMobileMenuPosition() {
-        // მობილური მენიუს პოზიციის განახლება ჰედერის მდგომარეობის მიხედვით
-        if (header.classList.contains('hidden')) {
-            // თუ ჰედერი დამალულია, მენიუც უნდა დაიმალოს
-            mobileMenu.style.top = '0';
-            mobileMenu.classList.remove('show');
-            navbarToggler.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+    // სიმაღლეები ერთხელ გავზომოთ
+    const brandSection        = document.querySelector('.brand-section');
+    const fullHeaderHeight    = header.offsetHeight;
+    const compactHeaderHeight = brandSection ? brandSection.offsetHeight : fullHeaderHeight;
+
+    // header-ს explicit height დავაყენოთ transition-ისთვის
+    header.style.height = fullHeaderHeight + 'px';
+
+    function applyCompact(compact) {
+        if (compact === header.classList.contains('compact')) return;
+        if (compact) {
+            header.classList.add('compact');
+            header.style.height = compactHeaderHeight + 'px';
+            document.body.style.paddingTop = compactHeaderHeight + 'px';
+            mobileMenu.style.top = compactHeaderHeight + 'px';
         } else {
-            // ჰედერის სიმაღლის მიხედვით განვსაზღვროთ მობილური მენიუს პოზიცია
-            const headerHeight = header.offsetHeight;
-            mobileMenu.style.top = headerHeight + 'px';
+            header.classList.remove('compact');
+            header.style.height = fullHeaderHeight + 'px';
+            document.body.style.paddingTop = fullHeaderHeight + 'px';
+            mobileMenu.style.top = fullHeaderHeight + 'px';
         }
+    }
+
+    function updateMobileMenuPosition() {
+        mobileMenu.style.top = (header.classList.contains('compact') ? compactHeaderHeight : fullHeaderHeight) + 'px';
     }
 
     function onScroll() {
         const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
 
-        // თუ მობილური მენიუ გახსნილია, არ დავმალოთ ჰედერი სქროლისას
         if (mobileMenu.classList.contains('show')) {
-            header.classList.remove('hidden');
+            applyCompact(false);
             lastScroll = currentScroll;
             ticking = false;
             return;
         }
 
-        // თუ გვერდის თავში ვართ, ჰედერი ყოველთვის ჩანს
         if (currentScroll <= 0) {
-            header.classList.remove('hidden');
+            applyCompact(false);
             accumulated = 0;
             lastScroll = currentScroll;
             ticking = false;
-            updateMobileMenuPosition();
             return;
         }
 
         const delta = currentScroll - lastScroll;
 
-        if (delta > 0) { // ქვემოთ სქროლი
+        if (delta > 0) {
             accumulated += delta;
             if (accumulated > threshold) {
-                header.classList.add('hidden');
-                updateMobileMenuPosition();
+                applyCompact(true);
             }
-        } else if (delta < 0) { // ზემოთ სქროლი
-            header.classList.remove('hidden');
+        } else if (delta < 0) {
+            applyCompact(false);
             accumulated = 0;
-            updateMobileMenuPosition();
         }
 
         lastScroll = currentScroll;
