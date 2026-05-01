@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
         mobileMenu.classList.toggle('show');
         if (mobileMenu.classList.contains('show')) {
             navbarToggler.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-            applyCompact(false);
         } else {
             navbarToggler.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
         }
@@ -43,71 +42,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // ჰედერის სქროლის ლოგიკა
-    const searchSection = document.querySelector('.search-section');
-    let lastScroll = window.pageYOffset || document.documentElement.scrollTop;
-    let accumulated = 0;
-    const threshold = 60;
+    // ჰედერის სქროლის ლოგიკა — შესხელება სქროლისას
     let ticking = false;
-
-    // სიმაღლეები ერთხელ გავზომოთ
-    const brandSection        = document.querySelector('.brand-section');
-    const fullHeaderHeight    = header.offsetHeight;
-    const compactHeaderHeight = brandSection ? brandSection.offsetHeight : fullHeaderHeight;
-
-    // header-ს explicit height დავაყენოთ transition-ისთვის
-    header.style.height = fullHeaderHeight + 'px';
-
-    function applyCompact(compact) {
-        if (compact === header.classList.contains('compact')) return;
-        if (compact) {
-            header.classList.add('compact');
-            header.style.height = compactHeaderHeight + 'px';
-            document.body.style.paddingTop = compactHeaderHeight + 'px';
-            mobileMenu.style.top = compactHeaderHeight + 'px';
-        } else {
-            header.classList.remove('compact');
-            header.style.height = fullHeaderHeight + 'px';
-            document.body.style.paddingTop = fullHeaderHeight + 'px';
-            mobileMenu.style.top = fullHeaderHeight + 'px';
-        }
-    }
-
-    function updateMobileMenuPosition() {
-        mobileMenu.style.top = (header.classList.contains('compact') ? compactHeaderHeight : fullHeaderHeight) + 'px';
-    }
+    const SCROLL_THRESHOLD = 40;
 
     function onScroll() {
-        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-
+        const y = window.pageYOffset || document.documentElement.scrollTop;
+        // არ შევცვალოთ header-ი სანამ მობილური მენიუ ღიაა
         if (mobileMenu.classList.contains('show')) {
-            applyCompact(false);
-            lastScroll = currentScroll;
             ticking = false;
             return;
         }
-
-        if (currentScroll <= 0) {
-            applyCompact(false);
-            accumulated = 0;
-            lastScroll = currentScroll;
-            ticking = false;
-            return;
+        const shouldScroll = y > SCROLL_THRESHOLD;
+        if (shouldScroll !== header.classList.contains('scrolled')) {
+            header.classList.toggle('scrolled', shouldScroll);
         }
-
-        const delta = currentScroll - lastScroll;
-
-        if (delta > 0) {
-            accumulated += delta;
-            if (accumulated > threshold) {
-                applyCompact(true);
-            }
-        } else if (delta < 0) {
-            applyCompact(false);
-            accumulated = 0;
-        }
-
-        lastScroll = currentScroll;
         ticking = false;
     }
 
@@ -116,15 +65,10 @@ document.addEventListener('DOMContentLoaded', function() {
             window.requestAnimationFrame(onScroll);
             ticking = true;
         }
-    });
+    }, { passive: true });
 
-    // საწყისი პოზიციის დაყენება
-    updateMobileMenuPosition();
-
-    // ფანჯრის ზომის ცვლილებაზე რეაგირება
-    window.addEventListener('resize', function() {
-        updateMobileMenuPosition();
-    });
+    // საწყისი მდგომარეობა
+    onScroll();
 
     // AUTOCOMPLETE ფუნქცია
     const searchInput = document.querySelector('.searchInput');

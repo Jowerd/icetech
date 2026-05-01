@@ -66,7 +66,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="preload" href="/fonts/BPGMrgvlovaniCaps2010.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ asset('css/chat.css?v=' . filemtime(public_path('css/chat.css'))) }}">
+    <link rel="stylesheet" href="{{ asset('css/chat.css?v='    . filemtime(public_path('css/chat.css'))) }}">
+    <link rel="stylesheet" href="{{ asset('css/compare.css?v=' . filemtime(public_path('css/compare.css'))) }}">
     @stack('styles')
 <!-- Google tag (gtag.js) with Consent Mode -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0VJEBWMJL1"></script>
@@ -93,60 +94,34 @@
     
     <!-- ჰედერი -->
     <header class="header">
-        <!-- ბრენდის სექცია -->
-        <div class="brand-section">
-            <div class="container">
-                <a class="navbar-brand" href="{{ route('home') }}" aria-label="ICETECH მთავარი გვერდი">ICETECH</a>
-                <!-- მობილური მენიუს ღილაკი -->
-                <button class="navbar-toggler" type="button" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-        </div>
+        <div class="container header-row">
+            <!-- ბრენდი -->
+            <a class="navbar-brand" href="{{ route('home') }}" aria-label="ICETECH მთავარი გვერდი">ICETECH</a>
 
-        <!-- ნავიგაციის სექცია -->
-        <div class="nav-section">
-            <div class="container">
-                <nav class="navbar navbar-expand-lg p-0" aria-label="მთავარი ნავიგაცია">
-                    <div class="collapse navbar-collapse" id="mainNavbar">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">მთავარი</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('products*') ? 'active' : '' }}" href="{{ route('products') }}">პროდუქცია</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}">ჩვენს შესახებ</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}" href="{{ route('contact') }}">კონტაქტი</a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-        </div>
+            <!-- დესკტოპის ნავიგაცია -->
+            <nav class="main-nav" aria-label="მთავარი ნავიგაცია">
+                <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">მთავარი</a>
+                <a class="nav-link {{ request()->routeIs('products*') ? 'active' : '' }}" href="{{ route('products') }}">პროდუქცია</a>
+                <a class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}">ჩვენს შესახებ</a>
+                <a class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}" href="{{ route('contact') }}">კონტაქტი</a>
+            </nav>
 
-        <!-- ძიების სექცია -->
-        <div class="search-section">
-            <div class="container">
-                <form action="{{ route('products.search') }}" method="GET" class="search-form" role="search" aria-label="პროდუქტის ძიება">
-                    <div class="search-wrapper">
-                        <span class="search-icon">
-                            <i class="bi bi-search" aria-hidden="true"></i>
-                        </span>
-                        <input class="form-control searchInput" type="search" name="query" placeholder="პროდუქტის ძიება..." aria-label="Search" required autocomplete="off">
-                        <button class="search-button" type="submit" aria-label="მოძებნე">
-                            <i class="bi bi-arrow-right" aria-hidden="true"></i>
-                        </button>
-                        <!-- Autocomplete dropdown -->
-                        <div class="search-suggestions" id="searchSuggestions">
-                            <!-- აქ გამოჩნდება suggestion-ები -->
-                        </div>
-                    </div>
-                </form>
-            </div>
+            <!-- ძიება -->
+            <form action="{{ route('products.search') }}" method="GET" class="search-form" role="search" aria-label="პროდუქტის ძიება">
+                <div class="search-wrapper">
+                    <span class="search-icon"><i class="bi bi-search" aria-hidden="true"></i></span>
+                    <input class="form-control searchInput" type="search" name="query" placeholder="პროდუქტის ძიება..." aria-label="Search" required autocomplete="off">
+                    <button class="search-button" type="submit" aria-label="მოძებნე">
+                        <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    </button>
+                    <div class="search-suggestions" id="searchSuggestions"></div>
+                </div>
+            </form>
+
+            <!-- მობილური მენიუს ღილაკი -->
+            <button class="navbar-toggler" type="button" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
     </header>
 
@@ -228,8 +203,9 @@
 
 <!-- სკრიპტები -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('js/layout.js?v=' . filemtime(public_path('js/layout.js'))) }}" defer></script>
+<script src="{{ asset('js/layout.js?v='  . filemtime(public_path('js/layout.js'))) }}" defer></script>
 <script src="{{ asset('js/cookies.js?v=' . filemtime(public_path('js/cookies.js'))) }}" defer></script>
+<script src="{{ asset('js/compare.js?v=' . filemtime(public_path('js/compare.js'))) }}" defer></script>
 @stack('scripts')
 <!-- ქუქის მაფრთხილებელი ბანერი -->
 <div class="cookie-banner" id="cookieBanner">
@@ -292,6 +268,19 @@
                 შენახვა
             </button>
         </div>
+    </div>
+</div>
+
+{{-- შედარების tray --}}
+<div class="compare-tray" id="compareTray">
+    <div class="ctr-items" id="compareTrayItems"></div>
+    <div class="compare-tray-actions">
+        <a href="/compare" id="compareTrayLink" class="btn-compare-go">
+            <i class="bi bi-arrow-left-right me-1"></i>შედარება (<span id="compareCount">0</span>)
+        </a>
+        <button class="btn-compare-clear" onclick="compareClear()">
+            <i class="bi bi-x-lg"></i>
+        </button>
     </div>
 </div>
 

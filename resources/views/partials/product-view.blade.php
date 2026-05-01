@@ -148,6 +148,19 @@
                         </div>
                     @endif
 
+                    {{-- შედარების ღილაკი --}}
+                    <button class="btn-compare-full mb-3"
+                        onclick="compareToggle(this)"
+                        data-id="{{ $product->id }}"
+                        data-slug="{{ $product->slug }}"
+                        data-name="{{ $product->name }}"
+                        data-image="{{ $product->image ? asset('storage/'.$product->image) : asset('default-product.png') }}"
+                        data-price="{{ number_format($product->price, 2) }}"
+                        title="შედარებაში დამატება">
+                        <i class="bi bi-arrow-left-right me-2"></i>
+                        <span class="compare-btn-text">შედარებაში დამატება</span>
+                    </button>
+
                     {{-- გაზიარების ღილაკები --}}
                     <div class="social-share-buttons card p-3 shadow-sm mb-4">
                         <p class="share-title mb-2 fw-semibold">გააზიარე პროდუქტი:</p>

@@ -157,6 +157,16 @@
                                     <span class="badge {{ $conditionClass }} condition-badge shadow-sm">
                                         <i class="bi {{ $conditionIcon }} me-1"></i>{{ $conditionText }}
                                     </span>
+                                    <button class="btn-compare"
+                                        onclick="event.preventDefault(); compareToggle(this)"
+                                        data-id="{{ $product->id }}"
+                                        data-slug="{{ $product->slug }}"
+                                        data-name="{{ $product->name }}"
+                                        data-image="{{ $product->image ? asset('storage/'.$product->image) : asset('default-product.png') }}"
+                                        data-price="{{ number_format($product->price, 2) }}"
+                                        title="შედარებაში დამატება">
+                                        <i class="bi bi-arrow-left-right"></i>
+                                    </button>
                                     <img
                                         src="{{ $product->image ? asset('storage/' . $product->image) : asset('default-product.png') }}"
                                         alt="{{ $product->name }}"

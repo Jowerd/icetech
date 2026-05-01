@@ -88,6 +88,22 @@ class ProductController extends Controller
     }
 
     /**
+     * Compare selected products.
+     */
+    public function compare(Request $request)
+    {
+        $ids = array_filter(array_map('intval', explode(',', $request->input('ids', ''))));
+        $products = Product::with('category')
+            ->whereIn('id', $ids)
+            ->whereNotNull('slug')
+            ->get()
+            ->sortBy(fn($p) => array_search($p->id, $ids))
+            ->values();
+
+        return view('products.compare', compact('products'));
+    }
+
+    /**
      * Display all products with filters (/products page).
      */
     public function allProducts(Request $request)

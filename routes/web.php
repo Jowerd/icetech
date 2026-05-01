@@ -27,6 +27,7 @@ Route::get('/products/search', [ProductController::class, 'search'])->name('prod
 // პროდუქტის სია და დეტალი
 Route::get('/products', [ProductController::class, 'allProducts'])->name('products');
 
+Route::get('/compare', [ProductController::class, 'compare'])->name('products.compare');
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 
 // კატეგორიის ჩვენება - ორი route იგივე controller action-ისთვის

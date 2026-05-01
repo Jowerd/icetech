@@ -15,8 +15,8 @@ body {
     background-color: rgb(248, 244, 244);
     font-family: 'BPG Mrgvlovani', Tahoma, Arial, sans-serif;
     max-width: 100%;
-    padding-top: 173px;
-    transition: padding-top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-top: 72px;
+    transition: padding-top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @font-face {
@@ -28,173 +28,156 @@ body {
 }
 
 
-/* ჰედერის სტილი 248, 244, 244*/
+/* ===================================================================
+   ჰედერი — ერთრიგიანი, სოლიდური
+=================================================================== */
 .header {
-    background-color: #ffffff;
-    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+    background-color: #1a365d;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1030;
     width: 100%;
-    overflow: hidden;
-    transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 72px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.28s ease;
 }
 
-/* ბრენდის ნაწილი */
-.brand-section {
-    padding: 7px 0;
-    background-color: #1a365d;
+.header.scrolled {
+    height: 60px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
 }
 
+.header-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    height: 100%;
+}
+
+/* ბრენდი */
 .navbar-brand {
     font-weight: 700;
-    font-size: 28px;
-    color: white !important;
+    font-size: 26px;
+    color: #fff !important;
     letter-spacing: 0.8px;
-    transition: all 0.3s ease;
-    margin-right: 0;
-    padding: 5px 0;
-}
-
-.navbar-brand:hover {
-    color: #00a4bd !important;
-    transform: scale(1.02);
-}
-
-/* ნავიგაციის ნაწილი */
-.nav-section {
+    text-decoration: none;
+    flex-shrink: 0;
+    line-height: 1;
     padding: 0;
-    background-color: #f8f9fa;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    margin: 0;
+    transition: color 0.2s ease, transform 0.2s ease;
 }
+.navbar-brand:hover { color: #00a4bd !important; }
+.header.scrolled .navbar-brand { font-size: 23px; }
 
-.navbar-nav {
-    width: 100%;
+/* ნავიგაცია */
+.main-nav {
     display: flex;
-    justify-content: flex-start;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
 }
-
-.navbar-nav .nav-item {
+.main-nav .nav-link {
     position: relative;
-}
-
-.navbar-nav .nav-link {
-    font-size: 16px;
-    color: #495057 !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-size: 13px;
     font-weight: 500;
-    padding: 15px 20px !important;
-    transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    padding: 8px 14px !important;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: color 0.18s, background 0.18s;
+    white-space: nowrap;
 }
-
-.navbar-nav .nav-link:hover {
-    color: #1a365d !important;
-    background-color: rgba(26, 54, 93, 0.05);
+.main-nav .nav-link:hover {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.08);
 }
-
-.navbar-nav .nav-link.active {
-    color: #1a365d !important;
+.main-nav .nav-link.active {
+    color: #fff !important;
+    background: rgba(0, 164, 189, 0.18);
     font-weight: 600;
-    position: relative;
 }
-
-.navbar-nav .nav-link.active:after {
+.main-nav .nav-link.active::after {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background-color: #1a365d;
+    bottom: -2px;
+    left: 14px;
+    right: 14px;
+    height: 2px;
+    background: #00a4bd;
+    border-radius: 2px;
 }
 
-/* ძიების სექცია */
-.search-section {
-    background-color: #f8f9fa;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-
+/* ძიება */
 .search-form {
     position: relative;
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
+    flex: 0 0 auto;
+    width: 320px;
 }
-
 .search-wrapper {
     position: relative;
     width: 100%;
 }
-
-.form-control {
+.form-control.searchInput {
     width: 100%;
-    height: 50px;
-    border-radius: 8px;
-    border: 1px solid #e8e8e8;
-    padding: 14px 55px 14px 45px;
-    font-size: 15px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-    transition: all 0.25s ease;
-    background-color: white;
+    height: 40px;
+    border-radius: 10px;
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    padding: 8px 46px 8px 38px;
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #2b3445;
+    font-weight: 500;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
     -webkit-appearance: none;
-    -moz-appearance: none;
     appearance: none;
-    color: #333;
-    font-weight: 400;
 }
-
-.form-control:focus {
-    border-color: #d0d0d0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+.form-control.searchInput:focus {
+    border-color: #00a4bd;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 164, 189, 0.22);
     outline: none;
-    background-color: #fefefe;
 }
-
-.form-control::placeholder {
-    color: #999;
+.form-control.searchInput::placeholder {
+    color: #718096;
     font-weight: 400;
-    opacity: 1;
-    transition: opacity 0.3s ease;
 }
-
 .search-icon {
     position: absolute;
-    left: 16px;
+    left: 13px;
     top: 50%;
     transform: translateY(-50%);
-    color: #999;
-    font-size: 16px;
+    color: #718096;
+    font-size: 14px;
     z-index: 5;
     pointer-events: none;
 }
-
 .search-button {
     position: absolute;
-    right: 6px;
+    right: 4px;
     top: 50%;
     transform: translateY(-50%);
-    background-color: #1a365d;
+    background-color: #00a4bd;
     border: none;
-    color: white;
-    width: 38px;
-    height: 38px;
-    border-radius: 6px;
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: background 0.18s, transform 0.12s;
     z-index: 5;
+    font-size: 14px;
 }
-
-.search-button:hover {
-    background-color: #0d2240;
-    transform: translateY(-50%) scale(1.02);
-}
+.search-button:hover { background-color: #008fa6; }
+.search-button:active { transform: translateY(-50%) scale(0.95); }
 
 /* გაუმჯობესებული ავტოკომპლიტის სტილები */
 .search-suggestions {
@@ -415,192 +398,149 @@ body {
     padding-right: 15px;
 }
 
-/* მობილური მენიუ */
+/* მობილური მენიუ — slide-down */
 .mobile-menu {
     position: fixed;
-    top: 173px;
+    top: 72px;
     left: 0;
     right: 0;
-    background-color: white;
-    z-index: 1000;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    background: #1a365d;
+    z-index: 1029;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s ease;
+    transition: max-height 0.32s cubic-bezier(0.4, 0, 0.2, 1), top 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 .mobile-menu.show {
-    max-height: 300px;
+    max-height: 360px;
     overflow-y: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
-
 .mobile-menu .nav-link {
-    padding: 15px 20px !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    display: block;
-    font-size: 16px;
-    color: #495057 !important;
+    padding: 14px 20px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.88) !important;
     font-weight: 500;
-    transition: all 0.3s ease;
+    text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    transition: background 0.18s, color 0.18s;
 }
-
+.mobile-menu .nav-link:last-child { border-bottom: none; }
 .mobile-menu .nav-link:hover {
-    color: #1a365d !important;
-    background-color: rgba(26, 54, 93, 0.05);
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.06);
 }
-
 .mobile-menu .nav-link.active {
-    color: #1a365d !important;
+    color: #fff !important;
+    background: rgba(0, 164, 189, 0.18);
     font-weight: 600;
-    background-color: rgba(26, 54, 93, 0.05);
 }
 
-/* მობილური ადაპტაცია */
+/* Toggler */
+.navbar-toggler {
+    display: none;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+.navbar-toggler:hover { background: rgba(255, 255, 255, 0.2); }
+.navbar-toggler-icon {
+    display: block;
+    width: 22px;
+    height: 22px;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 22px;
+}
+
+/* Suggestions უფრო მაღლა */
+.search-suggestions {
+    background: #fff;
+    border: 1px solid #e8edf4;
+    border-top: none;
+}
+
+/* ===================================================================
+   ტაბლეტი / ვიწრო დესკტოპი
+=================================================================== */
+@media (max-width: 1100px) {
+    .header-row { gap: 14px; }
+    .main-nav .nav-link {
+        padding: 8px 10px !important;
+        font-size: 12px;
+        letter-spacing: 0.3px;
+    }
+    .search-form { width: 240px; }
+}
+
+/* ===================================================================
+   მობილური (≤992px) — ნავიგაცია იმალება, მენიუ slide-down
+=================================================================== */
 @media (max-width: 992px) {
-    body {
-        padding-top: 153px;
-    }
-    .mobile-menu {
-        top: 153px;
-    }
-    .brand-section .container {
-        display: flex;
-        justify-content: space-between;
+    body { padding-top: 124px; }
+    .header { height: 124px; }
+    .header.scrolled { height: 60px; }
+    .header.scrolled .search-form { display: none; }
+
+    .header-row {
+        display: grid;
+        grid-template-areas:
+            "brand toggler"
+            "search search";
+        grid-template-columns: 1fr auto;
+        grid-template-rows: 44px 44px;
+        gap: 8px 12px;
         align-items: center;
+        padding: 8px 0;
     }
-    .navbar-toggler {
-        display: block;
-        margin: 0;
-        padding: 6px 10px;
-        background-color: rgba(255, 255, 255, 0.1);
-        border: none;
-        cursor: pointer;
-        transition: all 0.3s ease;
+    .navbar-brand { grid-area: brand; align-self: center; }
+    .navbar-toggler { grid-area: toggler; display: block; align-self: center; }
+    .main-nav { display: none; }
+    .search-form { grid-area: search; width: 100%; align-self: center; }
+
+    .header.scrolled .header-row {
+        grid-template-areas: "brand toggler";
+        grid-template-rows: 44px;
     }
-    .navbar-toggler:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-    }
-    .navbar-toggler-icon {
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        transition: all 0.3s ease;
-    }
-    .nav-section {
-        display: none;
-    }
-    
-    /* მობილური ავტოკომპლიტი */
-    .search-suggestions {
-        border-radius: 0 0 8px 8px;
-        max-height: 280px;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    .suggestion-content-with-image {
-        gap: 10px;
-    }
-    
-    .suggestion-image {
-        width: 36px;
-        height: 36px;
-    }
-    
-    .suggestion-name {
-        font-size: 13px;
-    }
-    
-    .suggestion-category {
-        font-size: 11px;
-    }
-    
-    .suggestion-price {
-        font-size: 12px;
-    }
-    
-    .suggestion-item {
-        min-height: 55px;
-        padding: 10px 14px;
-    }
+
+    .mobile-menu { top: 124px; }
+    .header.scrolled ~ .mobile-menu { top: 60px; }
 }
 
-@media (min-width: 993px) {
-    .navbar-toggler {
-        display: none;
-    }
-    .mobile-menu {
-        display: none;
-    }
-}
-
-@media (max-width: 576px) {
-    body {
-        padding-top: 143px;
-    }
-    .mobile-menu {
-        top: 143px;
-    }
-    .navbar-brand {
-        font-size: 24px;
-    }
-    .form-control {
-        height: 46px;
-        padding: 12px 50px 12px 40px;
-        font-size: 14px;
-    }
-    
-    .search-icon {
-        left: 14px;
-        font-size: 15px;
-    }
-    
-    .search-button {
-        width: 34px;
-        height: 34px;
-        right: 6px;
-    }
-    
-    /* პატარა ეკრანებისთვის ავტოკომპლიტი */
-    .search-suggestions {
-        max-height: 240px;
-        border-radius: 0 0 6px 6px;
-    }
-    
-    .suggestion-item {
-        padding: 8px 12px;
-        min-height: 50px;
-    }
-    
-    .suggestion-content-with-image {
-        gap: 8px;
-    }
-    
-    .suggestion-image {
-        width: 32px;
-        height: 32px;
-    }
-    
-    .suggestion-name {
+@media (max-width: 575px) {
+    body { padding-top: 112px; }
+    .header { height: 112px; }
+    .header-row { grid-template-rows: 40px 38px; }
+    .navbar-brand { font-size: 22px; }
+    .form-control.searchInput {
+        height: 38px;
         font-size: 12px;
+        padding: 8px 42px 8px 36px;
     }
-    
-    .suggestion-category {
-        font-size: 10px;
-    }
-    
-    .suggestion-price {
-        font-size: 11px;
-    }
-    
-    .suggestion-loading {
-        padding: 16px;
-        font-size: 13px;
-    }
-    
-    .suggestion-no-results {
-        padding: 16px 12px;
-        font-size: 13px;
-    }
+    .search-icon { left: 12px; font-size: 13px; }
+    .search-button { width: 30px; height: 30px; }
+    .mobile-menu { top: 112px; }
+    .header.scrolled ~ .mobile-menu { top: 56px; }
+    .header.scrolled { height: 56px; }
+    .header.scrolled .header-row { grid-template-rows: 40px; }
+
+    /* Suggestions */
+    .search-suggestions { max-height: 260px; border-radius: 0 0 8px 8px; }
+    .suggestion-item { padding: 8px 12px; min-height: 50px; }
+    .suggestion-image { width: 34px; height: 34px; }
+    .suggestion-name { font-size: 12px; }
+    .suggestion-category { font-size: 10px; }
+    .suggestion-price { font-size: 11px; }
 }
 
 .footer {
