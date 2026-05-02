@@ -13,7 +13,8 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/home-sliders.css?v=' . filemtime(public_path('css/home-sliders.css'))) }}">
-    <link rel="stylesheet" href="{{ asset('css/layout.css?v=' . filemtime(public_path('css/layout.css'))) }}">
+    <link rel="stylesheet" href="{{ asset('css/layout.css?v='       . filemtime(public_path('css/layout.css'))) }}">
+    <link rel="stylesheet" href="{{ asset('css/category.css?v='     . filemtime(public_path('css/category.css'))) }}">
 @endpush
 
 

@@ -139,32 +139,30 @@
                     @endphp
                     <div class="popular-slide">
                         <a href="{{ route('products.show', $product->slug) }}"
-                           class="home-product-card card h-100 shadow-sm">
+                           class="product-card card h-100 shadow-sm">
 
-                            {{-- სურათი + badge --}}
-                            <div class="home-product-image-wrapper">
-                                <span class="badge {{ $conditionClass }} home-condition-badge shadow-sm">
+                            <div class="product-image-box">
+                                <span class="badge {{ $conditionClass }} condition-badge shadow-sm">
                                     <i class="bi {{ $conditionIcon }} me-1"></i>{{ $conditionText }}
                                 </span>
                                 <img
                                     src="{{ $product->image ? asset('storage/' . $product->image) : asset('default-product.png') }}"
                                     alt="{{ $product->name }}"
-                                    class="home-product-image"
+                                    class="product-card-image"
                                     loading="lazy"
                                     width="300" height="300"
                                 >
                             </div>
 
-                            {{-- ინფო --}}
-                            <div class="home-product-info">
-                                <div class="home-product-country">
-                                    <img src="https://flagcdn.com/w20/{{ $countryCode }}.png" alt="{{ $countryCode }}" loading="lazy" width="20" height="15">
+                            <div class="product-card-info">
+                                <div class="product-card-country">
+                                    <img src="https://flagcdn.com/w40/{{ $countryCode }}.png" alt="{{ $countryCode }}" loading="lazy" width="20" height="15">
                                     <span>{{ strtoupper($product->supplier_country) }}</span>
                                 </div>
-                                <h3 class="home-product-title">{{ $product->name }}</h3>
-                                <div class="home-product-footer">
-                                    <p class="home-product-price">₾ {{ number_format($product->price, 2) }}</p>
-                                    <i class="bi bi-arrow-right-circle-fill home-product-arrow"></i>
+                                <h3 class="product-card-title">{{ $product->name }}</h3>
+                                <div class="product-card-footer">
+                                    <p class="product-card-price">₾ {{ number_format($product->price, 2) }}</p>
+                                    <i class="bi bi-arrow-right-circle-fill product-card-arrow"></i>
                                 </div>
                             </div>
 
@@ -211,32 +209,30 @@
                     @endphp
                     <div class="newest-slide">
                         <a href="{{ route('products.show', $product->slug) }}"
-                           class="home-product-card card h-100 shadow-sm">
+                           class="product-card card h-100 shadow-sm">
 
-                            {{-- სურათი + badge --}}
-                            <div class="home-product-image-wrapper">
-                                <span class="badge {{ $conditionClass }} home-condition-badge shadow-sm">
+                            <div class="product-image-box">
+                                <span class="badge {{ $conditionClass }} condition-badge shadow-sm">
                                     <i class="bi {{ $conditionIcon }} me-1"></i>{{ $conditionText }}
                                 </span>
                                 <img
                                     src="{{ $product->image ? asset('storage/' . $product->image) : asset('default-product.png') }}"
                                     alt="{{ $product->name }}"
-                                    class="home-product-image"
+                                    class="product-card-image"
                                     loading="lazy"
                                     width="300" height="300"
                                 >
                             </div>
 
-                            {{-- ინფო --}}
-                            <div class="home-product-info">
-                                <div class="home-product-country">
-                                    <img src="https://flagcdn.com/w20/{{ $countryCode }}.png" alt="{{ $countryCode }}" loading="lazy" width="20" height="15">
+                            <div class="product-card-info">
+                                <div class="product-card-country">
+                                    <img src="https://flagcdn.com/w40/{{ $countryCode }}.png" alt="{{ $countryCode }}" loading="lazy" width="20" height="15">
                                     <span>{{ strtoupper($product->supplier_country) }}</span>
                                 </div>
-                                <h3 class="home-product-title">{{ $product->name }}</h3>
-                                <div class="home-product-footer">
-                                    <p class="home-product-price">₾ {{ number_format($product->price, 2) }}</p>
-                                    <i class="bi bi-arrow-right-circle-fill home-product-arrow"></i>
+                                <h3 class="product-card-title">{{ $product->name }}</h3>
+                                <div class="product-card-footer">
+                                    <p class="product-card-price">₾ {{ number_format($product->price, 2) }}</p>
+                                    <i class="bi bi-arrow-right-circle-fill product-card-arrow"></i>
                                 </div>
                             </div>
 
