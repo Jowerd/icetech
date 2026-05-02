@@ -124,7 +124,8 @@ class ProductController extends Controller
             ->when($request->min_price,  fn($q) => $q->where('price', '>=', $request->min_price))
             ->when($request->max_price,  fn($q) => $q->where('price', '<=', $request->max_price))
             ->orderBy('price', in_array($request->sort, ['asc', 'desc']) ? $request->sort : 'asc')
-            ->get();
+            ->paginate(20)
+            ->withQueryString();
 
         return view('products', compact('categories', 'products', 'countries', 'absMin', 'absMax', 'currMin', 'currMax'));
     }
@@ -147,10 +148,14 @@ class ProductController extends Controller
             $suggestions = Cache::remember($cacheKey, 120, function () use ($query) {
                 $results = collect();
 
-                // 1. Products — მხოლოდ name-ით, orWhereHas subquery ძვირია
-                $products = Product::where('name', 'LIKE', "%{$query}%")
+                // 1. Products — name + sub_type
+                $products = Product::where(function ($q) use ($query) {
+                        $q->where('name', 'LIKE', "%{$query}%")
+                          ->orWhere('sub_type', 'LIKE', "%{$query}%");
+                    })
                     ->whereNotNull('slug')
                     ->with('category:id,name')
+                    ->orderByRaw("CASE WHEN name LIKE ? THEN 1 ELSE 2 END", ["%{$query}%"])
                     ->limit(5)
                     ->get(['id', 'name', 'slug', 'image', 'price', 'category_id']);
 
@@ -290,30 +295,64 @@ class ProductController extends Controller
      */
     public function search(Request $request)
     {
-        $query = $request->input('query');
-        $minPrice = $request->input('min_price');
-        $maxPrice = $request->input('max_price');
-        $country = $request->input('country');
+        $query     = trim($request->input('query', ''));
+        $minPrice  = $request->input('min_price');
+        $maxPrice  = $request->input('max_price');
+        $country   = $request->input('country');
         $condition = $request->input('condition');
-        $sort = $request->input('sort', 'asc');
-        
-        $products = Product::where(function ($q) use ($query) {
-                $q->where('name', 'LIKE', "%{$query}%")
-                  ->orWhereHas('category', function ($q) use ($query) {
-                      $q->where('name', 'LIKE', "%{$query}%");
-                  })
-                  ->orWhere('sub_type', 'LIKE', "%{$query}%");
+        $sort      = $request->input('sort', 'relevance');
+
+        if ($query === '') {
+            return redirect()->route('products');
+        }
+
+        // Split into individual words (≥2 chars) for AND-logic multi-word search
+        $words = array_values(array_filter(
+            array_map('trim', explode(' ', $query)),
+            fn($w) => mb_strlen($w) >= 2
+        ));
+        if (empty($words)) {
+            $words = [$query];
+        }
+
+        $productsQuery = Product::with('category')
+            ->whereNotNull('slug')
+            ->where(function ($q) use ($words) {
+                foreach ($words as $word) {
+                    $w = "%{$word}%";
+                    $q->where(function ($inner) use ($w) {
+                        $inner->where('name', 'LIKE', $w)
+                              ->orWhereHas('category', fn($c) => $c->where('name', 'LIKE', $w))
+                              ->orWhere('sub_type', 'LIKE', $w)
+                              ->orWhere('description', 'LIKE', $w)
+                              ->orWhere('features_text', 'LIKE', $w);
+                    });
+                }
             })
-            ->when($minPrice, fn($q) => $q->where('price', '>=', $minPrice))
-            ->when($maxPrice, fn($q) => $q->where('price', '<=', $maxPrice))
-            ->when($country, fn($q) => $q->where('supplier_country', $country))
-            ->when($condition, fn($q) => $q->where('condition', $condition))
-            ->with('category')
-            ->orderBy('price', $sort)
-            ->get();
-        
-        $countries = Product::select('supplier_country')->distinct()->pluck('supplier_country');
-        
+            ->when($minPrice,  fn($q) => $q->where('price', '>=', $minPrice))
+            ->when($maxPrice,  fn($q) => $q->where('price', '<=', $maxPrice))
+            ->when($country,   fn($q) => $q->where('supplier_country', $country))
+            ->when($condition, fn($q) => $q->where('condition', $condition));
+
+        if ($sort === 'relevance') {
+            // Name match → highest relevance, description/features → lowest
+            $like = "%{$query}%";
+            $productsQuery->orderByRaw(
+                "CASE
+                    WHEN name LIKE ?       THEN 1
+                    WHEN sub_type LIKE ?   THEN 2
+                    WHEN description LIKE ? THEN 3
+                    ELSE 4
+                END",
+                [$like, $like, $like]
+            );
+        } else {
+            $productsQuery->orderBy('price', $sort === 'desc' ? 'desc' : 'asc');
+        }
+
+        $products  = $productsQuery->get();
+        $countries = Product::whereNotNull('slug')->distinct()->pluck('supplier_country')->filter();
+
         return view('products.search_results', compact('products', 'query', 'sort', 'minPrice', 'maxPrice', 'country', 'condition', 'countries'));
     }
 

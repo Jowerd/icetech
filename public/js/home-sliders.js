@@ -59,8 +59,42 @@ document.addEventListener('DOMContentLoaded', function () {
         if (nextBtn) nextBtn.addEventListener('click', () => moveSlider(1));
 
         sliderContainer.addEventListener('touchstart', onTouchStart, { passive: true });
-        sliderContainer.addEventListener('touchmove',  onTouchMove,  { passive: false }); // false = შეგვიძლია preventDefault
+        sliderContainer.addEventListener('touchmove',  onTouchMove,  { passive: false });
         sliderContainer.addEventListener('touchend',   onTouchEnd,   { passive: true });
+
+        // mouse drag
+        let mouseStartX  = 0;
+        let mouseDrag    = false;
+        let mouseDidDrag = false;
+
+        sliderContainer.style.cursor = 'grab';
+
+        sliderContainer.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            mouseDrag    = true;
+            mouseDidDrag = false;
+            mouseStartX  = e.clientX;
+            sliderContainer.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!mouseDrag) return;
+            if (Math.abs(e.clientX - mouseStartX) > 5) mouseDidDrag = true;
+        });
+
+        document.addEventListener('mouseup', function(e) {
+            if (!mouseDrag) return;
+            mouseDrag = false;
+            sliderContainer.style.cursor = 'grab';
+            if (mouseDidDrag) {
+                const diff = e.clientX - mouseStartX;
+                if (Math.abs(diff) > minSwipeDistance) moveSlider(diff > 0 ? -1 : 1);
+            }
+        });
+
+        sliderContainer.addEventListener('click', function(e) {
+            if (mouseDidDrag) { e.preventDefault(); mouseDidDrag = false; }
+        }, true);
 
         window.addEventListener('resize', () => {
             slidesPerView = getSPV();
@@ -237,14 +271,20 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Mouse drag
+        let mouseDidDrag = false;
         sliderContainer.addEventListener('mousedown', e => {
             e.preventDefault();
             startX = e.clientX; endX = startX;
-            isDragging = true;
+            isDragging   = true;
+            mouseDidDrag = false;
             sliderContainer.style.cursor = 'grabbing';
             pauseAuto();
         });
-        document.addEventListener('mousemove', e => { if (isDragging) endX = e.clientX; });
+        document.addEventListener('mousemove', e => {
+            if (!isDragging) return;
+            endX = e.clientX;
+            if (Math.abs(endX - startX) > 5) mouseDidDrag = true;
+        });
         document.addEventListener('mouseup', () => {
             if (!isDragging) return;
             sliderContainer.style.cursor = 'grab';
@@ -253,6 +293,9 @@ document.addEventListener('DOMContentLoaded', function () {
             isDragging = false;
             resumeAuto();
         });
+        sliderContainer.addEventListener('click', function(e) {
+            if (mouseDidDrag) { e.preventDefault(); mouseDidDrag = false; }
+        }, true);
 
         sliderContainer.addEventListener('mouseenter', pauseAuto);
         sliderContainer.addEventListener('mouseleave', resumeAuto);
@@ -332,10 +375,13 @@ document.addEventListener('DOMContentLoaded', function () {
             slider.style.transform  = `translateX(${currentTranslate}px)`;
         }
 
+        let mouseDidDrag = false;
+
         function dragStart(e) {
-            if (e.target.closest('a')) return;
+            e.preventDefault();
             isDragging    = true;
             dirLocked     = null;
+            mouseDidDrag  = false;
             startX        = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
             startY        = e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
             prevTranslate = currentTranslate;
@@ -370,6 +416,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!e.type.includes('mouse')) e.preventDefault();
                 currentTranslate = prevTranslate + (cx - startX);
                 slider.style.transform = `translateX(${currentTranslate}px)`;
+                mouseDidDrag = true;
             }
         }
 
@@ -393,6 +440,9 @@ document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('mousemove',  dragMove);
         document.addEventListener('mouseup',    dragEnd);
         document.addEventListener('mouseleave', dragEnd);
+        sliderContainer.addEventListener('click', function(e) {
+            if (mouseDidDrag) { e.preventDefault(); mouseDidDrag = false; }
+        }, true);
         window.addEventListener('resize', update);
         update();
     }

@@ -109,6 +109,44 @@
     color: #1a365d;
 }
 
+/* ===================================================================
+   პაგინაცია
+=================================================================== */
+.pagination {
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.pagination .page-item .page-link {
+    border-radius: 8px !important;
+    border: 1.5px solid #e8ecf0;
+    color: #1a365d;
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 6px 13px;
+    transition: all 0.18s ease;
+    background: #fff;
+}
+
+.pagination .page-item .page-link:hover {
+    background: #e8f8fb;
+    border-color: #00a4bd;
+    color: #00a4bd;
+}
+
+.pagination .page-item.active .page-link {
+    background: #00a4bd;
+    border-color: #00a4bd;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 164, 189, 0.35);
+}
+
+.pagination .page-item.disabled .page-link {
+    background: #f8f9fa;
+    border-color: #e8ecf0;
+    color: #adb5bd;
+}
+
 /* Mobile */
 @media (max-width: 575px) {
     .cat-chip {

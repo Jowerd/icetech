@@ -115,7 +115,7 @@
                 </button>
 
                 <div class="d-none d-lg-block">
-                    <p class="text-muted m-0"><small>ნაპოვნია <strong>{{ $products->count() }}</strong> პროდუქტი</small></p>
+                    <p class="text-muted m-0"><small>ნაპოვნია <strong>{{ $products->total() }}</strong> პროდუქტი</small></p>
                 </div>
 
                 <div class="d-none d-md-flex gap-2">
@@ -124,7 +124,7 @@
                 </div>
 
                 <div class="d-lg-none">
-                    <p class="text-muted m-0 small">ნაპოვნია <strong>{{ $products->count() }}</strong></p>
+                    <p class="text-muted m-0 small">ნაპოვნია <strong>{{ $products->total() }}</strong></p>
                 </div>
             </div>
 
@@ -191,6 +191,13 @@
                             </a>
                         </div>
                     @endforeach
+                </div>
+            @endif
+
+            {{-- პაგინაცია --}}
+            @if($products->hasPages())
+                <div class="d-flex justify-content-center mt-4 mb-2">
+                    {{ $products->links('pagination::bootstrap-5') }}
                 </div>
             @endif
 

@@ -117,7 +117,61 @@ document.addEventListener('DOMContentLoaded', function() {
     initDualSlider('mobileMinRange', 'mobileMaxRange', 'mobilePriceDisplay', 'mobileSliderTrack', 'mobileMinPriceHidden', 'mobileMaxPriceHidden');
 
 
-    // --- 3. Grid და List ხედის შეცვლა ---
+    // --- 3. კატეგორიების ზოლის wheel + drag სქროლი ---
+    const catStrip = document.querySelector('.cat-strip');
+    if (catStrip) {
+        // wheel → ჰორიზონტალური სქროლი მხოლოდ მაშინ, როცა strip-ს ადგილი აქვს
+        catStrip.addEventListener('wheel', function(e) {
+            if (e.deltaY === 0) return;
+            const maxScroll = catStrip.scrollWidth - catStrip.clientWidth;
+            const canScrollRight = e.deltaY > 0 && catStrip.scrollLeft < maxScroll;
+            const canScrollLeft  = e.deltaY < 0 && catStrip.scrollLeft > 0;
+            if (canScrollRight || canScrollLeft) {
+                e.preventDefault();
+                catStrip.scrollLeft += e.deltaY;
+            }
+        }, { passive: false });
+
+        // drag-to-scroll
+        let isDragging    = false;
+        let dragStartX    = 0;
+        let dragScrollLeft = 0;
+        let didDrag       = false;
+
+        catStrip.addEventListener('mousedown', function(e) {
+            e.preventDefault(); // native link drag-ს ვაჩერებთ
+            isDragging    = true;
+            didDrag       = false;
+            dragStartX    = e.pageX - catStrip.offsetLeft;
+            dragScrollLeft = catStrip.scrollLeft;
+            catStrip.classList.add('dragging');
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!isDragging) return;
+            const walk = e.pageX - catStrip.offsetLeft - dragStartX;
+            if (Math.abs(walk) > 5) {
+                didDrag = true;
+                catStrip.scrollLeft = dragScrollLeft - walk;
+            }
+        });
+
+        document.addEventListener('mouseup', function() {
+            if (!isDragging) return;
+            isDragging = false;
+            catStrip.classList.remove('dragging');
+        });
+
+        // drag-ის შემდეგ ბმულზე გადასვლის თავიდან აცილება
+        catStrip.addEventListener('click', function(e) {
+            if (didDrag) {
+                e.preventDefault();
+                didDrag = false;
+            }
+        }, true);
+    }
+
+    // --- 4. Grid და List ხედის შეცვლა ---
     const viewBtns = document.querySelectorAll('.btn-view-mode');
     const pContainer = document.getElementById('productsContainer');
 

@@ -59,8 +59,9 @@
             <div class="col-md-2">
                 <label class="filter-label">დალაგება</label>
                 <select name="sort" class="form-select custom-select-styled">
-                    <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>ფასი: ზრდადი</option>
-                    <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>ფასი: კლებადი</option>
+                    <option value="relevance" {{ ($sort ?? 'relevance') == 'relevance' ? 'selected' : '' }}>რელევანტობა</option>
+                    <option value="asc" {{ ($sort ?? '') == 'asc' ? 'selected' : '' }}>ფასი: ზრდადი</option>
+                    <option value="desc" {{ ($sort ?? '') == 'desc' ? 'selected' : '' }}>ფასი: კლებადი</option>
                 </select>
             </div>
 
@@ -203,8 +204,9 @@
             <div class="mb-4">
                 <label class="filter-label">დალაგება</label>
                 <select name="sort" class="form-select custom-select-styled py-2">
-                    <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>ფასი: ზრდადი</option>
-                    <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>ფასი: კლებადი</option>
+                    <option value="relevance" {{ ($sort ?? 'relevance') == 'relevance' ? 'selected' : '' }}>რელევანტობა</option>
+                    <option value="asc" {{ ($sort ?? '') == 'asc' ? 'selected' : '' }}>ფასი: ზრდადი</option>
+                    <option value="desc" {{ ($sort ?? '') == 'desc' ? 'selected' : '' }}>ფასი: კლებადი</option>
                 </select>
             </div>
 
