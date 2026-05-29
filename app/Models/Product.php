@@ -20,9 +20,14 @@ class Product extends Model implements Sitemapable
         'image',
         'supplier_country',
         'condition',
+        'in_stock',
         'video_link',
         'slug',
         'sub_type',
+    ];
+
+    protected $casts = [
+        'in_stock' => 'boolean',
     ];
 
     protected static function boot()

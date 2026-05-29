@@ -13,7 +13,7 @@
         <g:image_link>{{ asset('storage/' . $product->image) }}</g:image_link>
         <g:price>{{ number_format($product->price, 2, '.', '') }} GEL</g:price>
         <g:condition>{{ $conditionMap[$product->condition] ?? 'used' }}</g:condition>
-        <g:availability>in_stock</g:availability>
+        <g:availability>{{ $product->in_stock ? 'in_stock' : 'out_of_stock' }}</g:availability>
         <g:brand>ICETECH</g:brand>
         <g:product_type><![CDATA[{{ $product->category?->name ?? 'კომერციული მოწყობილობები' }}]]></g:product_type>
         <g:identifier_exists>no</g:identifier_exists>

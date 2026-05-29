@@ -49,6 +49,15 @@
                                 <option value="used" {{ $product->condition == 'used' ? 'selected' : '' }}>მეორადი</option>
                             </select>
 
+                            <label class="form-label small fw-bold mt-2">მარაგი</label>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" name="in_stock" id="in_stock" value="1"
+                                    {{ old('in_stock', $product->in_stock ?? true) ? 'checked' : '' }}>
+                                <label class="form-check-label small" for="in_stock">
+                                    {{ ($product->in_stock ?? true) ? 'მარაგშია' : 'არ არის მარაგში' }}
+                                </label>
+                            </div>
+
                             <label class="form-label small fw-bold">ვიდეო ლინკი (YouTube/URL)</label>
                             <input type="url" name="video_link" value="{{ old('video_link', $product->video_link) }}" class="form-control border-2 shadow-none small" placeholder="https://...">
                         </div>

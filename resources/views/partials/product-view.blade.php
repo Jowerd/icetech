@@ -95,19 +95,30 @@
                         </span>
                     </div>
 
-                    {{-- მდგომარეობა --}}
-                    @if($product->condition)
-                        <div class="product-condition-display mb-4">
-                            <strong>მდგომარეობა:</strong>
-                            <span class="condition-value">
-                                @if($product->condition == 'new') ახალი
-                                @elseif($product->condition == 'used') მეორადი
-                                @elseif($product->condition == 'like_new') ახალივით
-                                @else {{ $product->condition }}
-                                @endif
+                    {{-- მდგომარეობა + მარაგი --}}
+                    <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+                        @if($product->condition)
+                            <div class="product-condition-display mb-0">
+                                <strong>მდგომარეობა:</strong>
+                                <span class="condition-value">
+                                    @if($product->condition == 'new') ახალი
+                                    @elseif($product->condition == 'used') მეორადი
+                                    @elseif($product->condition == 'like_new') ახალივით
+                                    @else {{ $product->condition }}
+                                    @endif
+                                </span>
+                            </div>
+                        @endif
+                        @if($product->in_stock)
+                            <span class="badge rounded-pill px-3 py-2" style="background:#e8f8fb; color:#0f7d94; font-size:0.8rem; border:1px solid #b8eaf3;">
+                                <i class="bi bi-check-circle-fill me-1"></i>მარაგშია
                             </span>
-                        </div>
-                    @endif
+                        @else
+                            <span class="badge rounded-pill px-3 py-2" style="background:#fff3f3; color:#c0392b; font-size:0.8rem; border:1px solid #f5c6c6;">
+                                <i class="bi bi-x-circle-fill me-1"></i>არ არის მარაგში
+                            </span>
+                        @endif
+                    </div>
 
                     {{-- პროდუქტის აღწერა --}}
                     <div class="product-description-wrapper description-collapsed mb-3">

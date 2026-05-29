@@ -68,6 +68,7 @@ class ProductController extends Controller
             'price'            => $validatedData['price'],
             'supplier_country' => $validatedData['supplier_country'],
             'condition'        => $validatedData['condition'],
+            'in_stock'         => $request->boolean('in_stock', true),
             'video_link'       => $validatedData['video_link'] ?? null,
             'sub_type'         => $validatedData['sub_type'] ?? null,
             'image'            => $imagePath,
@@ -245,10 +246,11 @@ class ProductController extends Controller
             'category_id'       => $validatedData['category_id'],
             'name'              => $validatedData['name'],
             'description'       => $validatedData['description'],
-            'features_text'     => $validatedData['features_text'], // ✅ ცვლილება: features-ის ნაცვლად
+            'features_text'     => $validatedData['features_text'],
             'price'             => $validatedData['price'],
             'supplier_country'  => $validatedData['supplier_country'],
             'condition'         => $validatedData['condition'],
+            'in_stock'          => $request->boolean('in_stock', true),
             'video_link'        => $validatedData['video_link'],
             'sub_type'          => $validatedData['sub_type'],
             'image'             => $imagePath,
@@ -366,7 +368,7 @@ class ProductController extends Controller
                 ->whereNotNull('slug')
                 ->whereNotNull('image')
                 ->get(['id', 'name', 'slug', 'description', 'price', 'image',
-                       'condition', 'supplier_country', 'category_id']);
+                       'condition', 'in_stock', 'supplier_country', 'category_id']);
         });
 
         $conditionMap = [
