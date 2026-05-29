@@ -178,6 +178,7 @@
                     <li><a href="{{ route('products') }}"><i class="bi bi-chevron-right" aria-hidden="true"></i> პროდუქცია</a></li>
                     <li><a href="{{ route('about') }}"><i class="bi bi-chevron-right" aria-hidden="true"></i> ჩვენს შესახებ</a></li>
                     <li><a href="{{ route('contact') }}"><i class="bi bi-chevron-right" aria-hidden="true"></i> კონტაქტი</a></li>
+                    <li><a href="{{ route('return-policy') }}"><i class="bi bi-chevron-right" aria-hidden="true"></i> დაბრუნების პოლიტიკა</a></li>
                 </ul>
             </div>
             <div class="col-md-4">
