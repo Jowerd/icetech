@@ -22,7 +22,10 @@ Route::get('/', function () {
 })->name('home');
 
 // პროდუქტის ძიება
-Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
+Route::get('/products/search',   [ProductController::class, 'search'])->name('products.search');
+
+// Google Merchant Center feed
+Route::get('/products/feed.xml', [ProductController::class, 'feed'])->name('products.feed');
 
 // პროდუქტის სია და დეტალი
 Route::get('/products', [ProductController::class, 'allProducts'])->name('products');

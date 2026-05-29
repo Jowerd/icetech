@@ -357,6 +357,30 @@ class ProductController extends Controller
     }
 
     /**
+     * Google Merchant Center XML product feed.
+     */
+    public function feed()
+    {
+        $products = Cache::remember('merchant_feed', 60 * 60 * 6, function () {
+            return Product::with('category')
+                ->whereNotNull('slug')
+                ->whereNotNull('image')
+                ->get(['id', 'name', 'slug', 'description', 'price', 'image',
+                       'condition', 'supplier_country', 'category_id']);
+        });
+
+        $conditionMap = [
+            'new'      => 'new',
+            'like_new' => 'refurbished',
+            'used'     => 'used',
+        ];
+
+        return response()
+            ->view('products.feed', compact('products', 'conditionMap'))
+            ->header('Content-Type', 'application/xml; charset=utf-8');
+    }
+
+    /**
      * Reset product views.
      */
     public function resetViews()
