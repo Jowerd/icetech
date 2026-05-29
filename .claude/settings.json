@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git commit -m ' *)",
+      "Bash(rename \"database\\\\migrations\\\\2026_05_29_205658_create_invoice_items_table.php\" \"2026_05_29_205700_create_invoice_items_table.php\")",
+      "PowerShell(Rename-Item \"c:\\\\Users\\\\nkapa\\\\icetech\\\\database\\\\migrations\\\\2026_05_29_205658_create_invoice_items_table.php\" \"2026_05_29_205701_create_invoice_items_table.php\")",
+      "Read(//c/Users/nkapa/OneDrive/Desktop/**)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\nkapa\\OneDrive\\Desktop"
+    ]
+  }
+}

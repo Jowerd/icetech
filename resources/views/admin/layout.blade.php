@@ -206,6 +206,13 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* --- Print: მხოლოდ კონტენტი, ადმინ ჩარჩოს გარეშე --- */
+        @media print {
+            .sidebar, .mobile-header, .overlay { display: none !important; }
+            .content { margin-left: 0 !important; padding: 0 !important; }
+            body { background: #fff !important; }
+        }
     </style>
     
     @yield('styles')
@@ -255,6 +262,12 @@
         <li class="nav-item">
             <a href="{{ route('admin.slides.index') }}" class="nav-link">
                 <i class="bi bi-collection-play-fill"></i> ბანერის სლაიდები
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('admin.invoices.index') }}" class="nav-link">
+                <i class="bi bi-receipt"></i> ინვოისები
             </a>
         </li>
 

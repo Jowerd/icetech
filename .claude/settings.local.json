@@ -6,7 +6,13 @@
       "Bash(php artisan:*)",
       "Bash(grep -n 'image\\\\|photo\\\\|avatar\\\\|$fillable' /c/Users/nkapa/icetech/app/Models/Review.php)",
       "Read(//etc/nginx/**)",
-      "Read(//etc/nginx/sites-enabled/**)"
+      "Read(//etc/nginx/sites-enabled/**)",
+      "Bash(xargs ls *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(cd c:\\\\\\\\Users\\\\\\\\nkapa\\\\\\\\icetech)",
+      "Bash(awk '{print $NF}')"
     ]
   }
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Admin\BlogPostController;
 use App\Http\Controllers\Admin\SlideController;
 use App\Http\Controllers\Admin\ProductImageController;
+use App\Http\Controllers\Admin\InvoiceController;
 
 // ====================
 // 🟢 მომხმარებლის მხარე
@@ -97,6 +98,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // ბანერის სლაიდები
         Route::resource('slides', SlideController::class)->names('slides');
+
+        // ინვოისები
+        Route::resource('invoices', InvoiceController::class)->only(['index','create','store','show','destroy']);
+        Route::get('/invoices-buyers', [InvoiceController::class, 'buyers'])->name('invoices.buyers');
 
         // ნახვების განულების მექანიზმი
         Route::get('/reset-views', function () {
