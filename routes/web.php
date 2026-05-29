@@ -49,6 +49,10 @@ Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
 
+Route::get('/return-policy', function () {
+    return view('return-policy');
+})->name('return-policy');
+
 // =====================
 // 📘 ბლოგის PUBLIC ნაწილი
 // =====================
