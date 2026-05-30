@@ -122,6 +122,54 @@ class InvoiceController extends Controller
         return view('admin.invoices.show', compact('invoice'));
     }
 
+    public function update(Request $request, Invoice $invoice)
+    {
+        $request->validate([
+            'issue_date'  => 'required|date',
+            'seller_name' => 'required|string|max:255',
+            'items'       => 'required|array|min:1',
+            'items.*.name'       => 'required|string',
+            'items.*.quantity'   => 'required|integer|min:1',
+            'items.*.unit_price' => 'required|numeric|min:0',
+        ]);
+
+        $total = collect($request->items)->sum(fn($i) => $i['quantity'] * $i['unit_price']);
+
+        $invoice->update([
+            'issue_date'      => $request->issue_date,
+            'seller_name'     => $request->seller_name,
+            'seller_id_number'=> $request->seller_id_number,
+            'seller_address'  => $request->seller_address,
+            'seller_phone'    => $request->seller_phone,
+            'seller_email'    => $request->seller_email,
+            'seller_bank'     => $request->seller_bank,
+            'seller_account'  => $request->seller_account,
+            'seller_bank2'    => $request->seller_bank2,
+            'seller_account2' => $request->seller_account2,
+            'buyer_name'      => $request->buyer_name,
+            'buyer_id_number' => $request->buyer_id_number,
+            'buyer_address'   => $request->buyer_address,
+            'buyer_phone'     => $request->buyer_phone,
+            'buyer_email'     => $request->buyer_email,
+            'notes'           => $request->notes,
+            'total'           => $total,
+        ]);
+
+        $invoice->items()->delete();
+        foreach ($request->items as $item) {
+            $invoice->items()->create([
+                'product_id' => !empty($item['product_id']) ? $item['product_id'] : null,
+                'name'       => $item['name'],
+                'image'      => !empty($item['image']) ? $item['image'] : null,
+                'quantity'   => $item['quantity'],
+                'unit_price' => $item['unit_price'],
+                'total'      => $item['quantity'] * $item['unit_price'],
+            ]);
+        }
+
+        return redirect()->route('admin.invoices.show', $invoice)->with('success', 'ინვოისი განახლდა!');
+    }
+
     public function destroy(Invoice $invoice)
     {
         $invoice->delete();

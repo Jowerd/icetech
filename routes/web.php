@@ -100,7 +100,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('slides', SlideController::class)->names('slides');
 
         // ინვოისები
-        Route::resource('invoices', InvoiceController::class)->only(['index','create','store','show','destroy']);
+        Route::resource('invoices', InvoiceController::class)->only(['index','create','store','show','update','destroy']);
         Route::get('/invoices-buyers', [InvoiceController::class, 'buyers'])->name('invoices.buyers');
 
         // ნახვების განულების მექანიზმი
