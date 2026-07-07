@@ -119,7 +119,8 @@ class InvoiceController extends Controller
     public function show(Invoice $invoice)
     {
         $invoice->load('items');
-        return view('admin.invoices.show', compact('invoice'));
+        $products = Product::whereNotNull('slug')->orderBy('name')->get(['id', 'name', 'price', 'image']);
+        return view('admin.invoices.show', compact('invoice', 'products'));
     }
 
     public function update(Request $request, Invoice $invoice)
@@ -179,5 +180,19 @@ class InvoiceController extends Controller
     public function buyers()
     {
         return response()->json(InvoiceBuyer::orderBy('name')->get());
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|max:5120', // 5MB
+        ]);
+
+        $path = $request->file('image')->store('invoice_items', 'public');
+
+        return response()->json([
+            'path' => $path,
+            'url'  => asset('storage/' . $path),
+        ]);
     }
 }

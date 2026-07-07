@@ -177,6 +177,27 @@ body.editing .edit-only { display: inline-block; }
 body.editing tr.edit-only { display: table-row; }
 body.editing .view-only { display: none; }
 
+.edit-block { display: none; }
+body.editing .edit-block { display: block; }
+
+/* პროდუქტის ძებნის dropdown */
+.prod-search-wrap { position: relative; margin-bottom: 12px; }
+.prod-search-wrap input {
+    width: 100%; font-family: inherit; font-size: 0.85rem;
+    padding: 8px 12px; border: 2px solid #cfd8e3; border-radius: 6px; outline: none;
+}
+.prod-search-wrap input:focus { border-color: #00a4bd; }
+.prod-dropdown {
+    position: absolute; width: 100%; background: #fff; border: 1px solid #dee2e6;
+    border-radius: 6px; box-shadow: 0 6px 18px rgba(0,0,0,.1); margin-top: 3px;
+    z-index: 999; max-height: 260px; overflow-y: auto;
+}
+.prod-dropdown .pd-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; cursor: pointer; }
+.prod-dropdown .pd-item:hover { background: #f1f7f9; }
+.prod-dropdown .pd-item img { width: 34px; height: 34px; object-fit: contain; border-radius: 4px; border: 1px solid #eee; }
+.prod-dropdown .pd-name { font-size: 0.82rem; font-weight: 600; color: #1a365d; }
+.prod-dropdown .pd-price { font-size: 0.76rem; color: #00a4bd; font-weight: 700; }
+
 body.editing [contenteditable="true"] {
     outline: 1px dashed #00a4bd;
     background: rgba(0,164,189,0.07);
@@ -201,6 +222,14 @@ body:not(.editing) .opt-notes:has(.notes-ev:empty) { display: none; }
     font-weight: 700; margin-right: 6px; cursor: pointer; vertical-align: middle;
 }
 body.editing .row-del { display: inline-block; }
+
+.img-btn {
+    border: none; background: #eef4f7; color: #1a365d;
+    border-radius: 4px; padding: 1px 7px; margin-left: 8px;
+    cursor: pointer; font-size: 0.82rem; vertical-align: middle;
+}
+.img-btn:hover { background: #d9ebf1; }
+.item-file { display: none; }
 </style>
 @endsection
 
@@ -308,6 +337,12 @@ $logo2 = $bankLogo($invoice->seller_bank2);
                 </div>
             </div>
 
+            {{-- პროდუქტის ძებნა კატალოგიდან (მხოლოდ რედაქტირებისას) --}}
+            <div class="edit-block prod-search-wrap" id="prodSearchWrap">
+                <input type="text" id="productSearch" placeholder="🔍 კატალოგიდან პროდუქტის ძებნა და დამატება...">
+                <div id="productDropdown" class="prod-dropdown d-none"></div>
+            </div>
+
             {{-- 3. PRODUCTS TABLE --}}
             <table class="inv-table">
                 <thead>
@@ -326,11 +361,13 @@ $logo2 = $bankLogo($invoice->seller_bank2);
                             <button type="button" class="row-del" title="წაშლა" onclick="delRow(this)">×</button>
                             <span class="rownum">{{ $i + 1 }}</span>
                         </td>
-                        <td>
+                        <td class="name-cell">
                             @if($item->image)
-                                <img src="{{ asset('storage/' . $item->image) }}" class="prod-thumb view-only" alt="">
+                                <img src="{{ asset('storage/' . $item->image) }}" class="prod-thumb" alt="">
                             @endif
                             <span class="ev name" data-ph="დასახელება">{{ $item->name }}</span>
+                            <button type="button" class="img-btn edit-only" title="ფოტოს ატვირთვა" onclick="pickImg(this)"><i class="bi bi-camera"></i></button>
+                            <input type="file" class="item-file" accept="image/*" onchange="uploadRowImage(this)">
                         </td>
                         <td class="text-center"><span class="ev qty">{{ $item->quantity }}</span></td>
                         <td class="text-end"><span class="ev price">{{ number_format($item->unit_price, 2) }}</span> ₾</td>
@@ -396,6 +433,48 @@ $logo2 = $bankLogo($invoice->seller_bank2);
 /* ---------- რიცხვი ტექსტიდან ---------- */
 function num(s) { return parseFloat((s || '').toString().replace(/[^0-9.]/g, '')) || 0; }
 
+/* ---------- ფოტოს ატვირთვა (ხელით დამატებული პროდუქტისთვის) ---------- */
+const CSRF_TOKEN = '{{ csrf_token() }}';
+const UPLOAD_URL = '{{ route('admin.invoices.upload-image') }}';
+
+function pickImg(btn) {
+    const inp = btn.parentElement.querySelector('.item-file');
+    if (inp) inp.click();
+}
+
+function uploadRowImage(input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const tr = input.closest('tr');
+    const btn = tr.querySelector('.img-btn');
+    const oldBtn = btn ? btn.innerHTML : '';
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="bi bi-hourglass-split"></i>'; }
+
+    const fd = new FormData();
+    fd.append('image', file);
+    fd.append('_token', CSRF_TOKEN);
+
+    fetch(UPLOAD_URL, { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(d => {
+            if (!d.path) return Promise.reject();
+            tr.dataset.image = d.path;
+            let img = tr.querySelector('.prod-thumb');
+            if (!img) {
+                img = document.createElement('img');
+                img.className = 'prod-thumb'; img.alt = '';
+                const cell = tr.querySelector('.name-cell');
+                cell.insertBefore(img, cell.firstChild);
+            }
+            img.src = d.url;
+        })
+        .catch(() => alert('ფოტოს ატვირთვა ვერ მოხერხდა.'))
+        .finally(() => {
+            input.value = '';
+            if (btn) { btn.disabled = false; btn.innerHTML = oldBtn; }
+        });
+}
+
 /* ---------- რედაქტირების რეჟიმი ---------- */
 function toggleEdit(on) {
     document.body.classList.toggle('editing', on);
@@ -435,25 +514,92 @@ function delRow(btn) {
     btn.closest('tr').remove();
     renumber(); recalc();
 }
-function addItemRow() {
+function addItemRow(data) {
+    data = data || {};
     const tb = document.getElementById('itemsBody');
     const subtotal = tb.querySelector('.subtotal-row');
     const tr = document.createElement('tr');
     tr.className = 'item-row';
-    tr.dataset.productId = '';
-    tr.dataset.image = '';
+    tr.dataset.productId = data.product_id || '';
+    tr.dataset.image = data.image || '';
     tr.innerHTML =
         '<td class="text-muted">' +
             '<button type="button" class="row-del" title="წაშლა" onclick="delRow(this)">×</button>' +
             '<span class="rownum"></span>' +
         '</td>' +
-        '<td><span class="ev name" data-ph="დასახელება" contenteditable="true"></span></td>' +
+        '<td class="name-cell"><span class="ev name" data-ph="დასახელება" contenteditable="true"></span>' +
+            '<button type="button" class="img-btn edit-only" title="ფოტოს ატვირთვა" onclick="pickImg(this)"><i class="bi bi-camera"></i></button>' +
+            '<input type="file" class="item-file" accept="image/*" onchange="uploadRowImage(this)"></td>' +
         '<td class="text-center"><span class="ev qty" contenteditable="true">1</span></td>' +
         '<td class="text-end"><span class="ev price" contenteditable="true">0.00</span> ₾</td>' +
         '<td class="text-end fw-bold"><span class="rowtotal">0.00</span> ₾</td>';
     tb.insertBefore(tr, subtotal);
+
+    if (data.imageUrl) {
+        const img = document.createElement('img');
+        img.src = data.imageUrl; img.className = 'prod-thumb'; img.alt = '';
+        const cell = tr.querySelector('.name-cell');
+        cell.insertBefore(img, cell.firstChild);
+    }
+    if (data.name) tr.querySelector('.name').textContent = data.name;
+    if (data.price != null && data.price !== '') tr.querySelector('.price').textContent = parseFloat(data.price).toFixed(2);
+
     renumber(); recalc();
     tr.querySelector('.name').focus();
+    return tr;
+}
+
+/* ---------- პროდუქტის ძებნა კატალოგიდან ---------- */
+const CATALOG   = @json($products);
+const STORAGE   = '{{ asset('storage') }}';
+const searchInput = document.getElementById('productSearch');
+const dropdown    = document.getElementById('productDropdown');
+
+if (searchInput) {
+    searchInput.addEventListener('input', function () {
+        const q = this.value.trim().toLowerCase();
+        if (!q) { dropdown.classList.add('d-none'); return; }
+        const matches = CATALOG.filter(p => (p.name || '').toLowerCase().includes(q)).slice(0, 12);
+        if (!matches.length) { dropdown.classList.add('d-none'); return; }
+        dropdown.innerHTML = matches.map(p =>
+            '<div class="pd-item" data-id="' + p.id + '" data-name="' + (p.name || '').replace(/"/g, '&quot;') +
+                '" data-price="' + p.price + '" data-image="' + (p.image || '') + '">' +
+                (p.image ? '<img src="' + STORAGE + '/' + p.image + '" alt="">' : '<div style="width:34px;height:34px;background:#f0f0f0;border-radius:4px;"></div>') +
+                '<div><div class="pd-name">' + (p.name || '') + '</div>' +
+                '<div class="pd-price">₾ ' + parseFloat(p.price).toFixed(2) + '</div></div>' +
+            '</div>'
+        ).join('');
+        dropdown.classList.remove('d-none');
+    });
+
+    dropdown.addEventListener('click', function (e) {
+        const item = e.target.closest('.pd-item');
+        if (!item) return;
+        addItemRow({
+            product_id: item.dataset.id,
+            name:       item.dataset.name,
+            price:      item.dataset.price,
+            image:      item.dataset.image,
+            imageUrl:   item.dataset.image ? STORAGE + '/' + item.dataset.image : ''
+        });
+        searchInput.value = '';
+        dropdown.classList.add('d-none');
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('d-none');
+        }
+    });
+}
+
+/* ---------- ავტომატური რედაქტირება (?edit=1) ---------- */
+if (new URLSearchParams(location.search).get('edit') === '1') {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => toggleEdit(true));
+    } else {
+        toggleEdit(true);
+    }
 }
 
 /* ---------- შენახვა ---------- */

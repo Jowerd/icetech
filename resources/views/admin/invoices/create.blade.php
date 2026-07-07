@@ -195,10 +195,11 @@
     <div class="item-row border rounded-1 p-2 mb-2 bg-light d-flex gap-2 align-items-start">
         <input type="hidden" name="items[__IDX__][product_id]" class="item-product-id">
         <input type="hidden" name="items[__IDX__][image]"      class="item-image">
-        <div class="item-img-wrap flex-shrink-0" style="width:48px;height:48px;background:#fff;border:1px solid #eee;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+        <div class="item-img-wrap flex-shrink-0" title="ფოტოს ატვირთვა" style="width:48px;height:48px;background:#fff;border:1px solid #eee;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;">
             <img class="item-thumb" src="" alt="" style="width:100%;height:100%;object-fit:contain;display:none;">
-            <i class="bi bi-box-seam text-muted item-noimg"></i>
+            <i class="bi bi-camera text-muted item-noimg"></i>
         </div>
+        <input type="file" class="item-file" accept="image/*" style="display:none;">
         <div class="flex-grow-1">
             <input type="text" name="items[__IDX__][name]" placeholder="დასახელება *"
                    class="form-control form-control-sm border-1 shadow-none mb-1 small item-name" required>
@@ -222,6 +223,29 @@
 <script>
 const products = @json($products);
 let rowIndex = 0;
+
+const CSRF = '{{ csrf_token() }}';
+const UPLOAD_URL = '{{ route('admin.invoices.upload-image') }}';
+
+function uploadCreateImage(input, row) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const wrap = row.querySelector('.item-img-wrap');
+    const fd = new FormData();
+    fd.append('image', file);
+    fd.append('_token', CSRF);
+    fetch(UPLOAD_URL, { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(d => {
+            if (!d.path) return Promise.reject();
+            row.querySelector('.item-image').value = d.path;
+            const thumb = row.querySelector('.item-thumb');
+            thumb.src = d.url; thumb.style.display = '';
+            row.querySelector('.item-noimg').style.display = 'none';
+        })
+        .catch(() => alert('ფოტოს ატვირთვა ვერ მოხერხდა.'))
+        .finally(() => { input.value = ''; });
+}
 
 // პროდუქტების ძიება
 const searchInput  = document.getElementById('productSearch');
@@ -289,6 +313,8 @@ function addRow(data = {}) {
     row.querySelector('.item-qty').addEventListener('input',   () => updateRow(row));
     row.querySelector('.item-price').addEventListener('input',  () => updateRow(row));
     row.querySelector('.remove-row').addEventListener('click',  () => { row.remove(); updateTotal(); });
+    row.querySelector('.item-img-wrap').addEventListener('click', () => row.querySelector('.item-file').click());
+    row.querySelector('.item-file').addEventListener('change', function () { uploadCreateImage(this, row); });
 
     document.getElementById('itemsContainer').appendChild(row);
     updateRow(row);

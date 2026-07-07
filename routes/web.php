@@ -102,6 +102,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // ინვოისები
         Route::resource('invoices', InvoiceController::class)->only(['index','create','store','show','update','destroy']);
         Route::get('/invoices-buyers', [InvoiceController::class, 'buyers'])->name('invoices.buyers');
+        Route::post('/invoices-upload-image', [InvoiceController::class, 'uploadImage'])->name('invoices.upload-image');
 
         // ნახვების განულების მექანიზმი
         Route::get('/reset-views', function () {

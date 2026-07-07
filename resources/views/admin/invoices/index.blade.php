@@ -43,7 +43,10 @@
                             <td class="text-muted">{{ $invoice->items_count ?? '—' }}</td>
                             <td class="text-end fw-bold">₾ {{ number_format($invoice->total, 2) }}</td>
                             <td class="text-end pe-3">
-                                <a href="{{ route('admin.invoices.show', $invoice) }}" class="btn btn-sm btn-light border rounded-1 me-1">
+                                <a href="{{ route('admin.invoices.show', $invoice) }}?edit=1" class="btn btn-sm btn-light border rounded-1 me-1" title="რედაქტირება">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a href="{{ route('admin.invoices.show', $invoice) }}" class="btn btn-sm btn-light border rounded-1 me-1" title="ნახვა / ბეჭდვა">
                                     <i class="bi bi-printer"></i>
                                 </a>
                                 <form action="{{ route('admin.invoices.destroy', $invoice) }}" method="POST" class="d-inline"

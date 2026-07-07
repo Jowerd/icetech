@@ -7,7 +7,9 @@
       "Read(//c/Users/nkapa/OneDrive/Desktop/**)",
       "Bash(git commit -m '@ *)",
       "Bash(git commit *)",
-      "Bash(rm .git/COMMIT_MSG_TMP.txt)"
+      "Bash(rm .git/COMMIT_MSG_TMP.txt)",
+      "Bash(php artisan *)",
+      "Bash(git add *)"
     ],
     "additionalDirectories": [
       "C:\\Users\\nkapa\\OneDrive\\Desktop"
