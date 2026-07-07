@@ -2,6 +2,14 @@
 
 @php
     use Illuminate\Support\Str;
+
+    // ტექსტი ისე გამოჩნდეს, როგორც ჩაიწერა: თუ HTML არ არის (plain text),
+    // ხაზების გადატანები შევინარჩუნოთ; თუ TinyMCE-ის HTML-ია — ისე დავტოვოთ.
+    $article_html = $blogPost->content ?? '';
+    if (!preg_match('/<(p|div|br|h[1-6]|ul|ol|li|blockquote|table|img|section|span)\b/i', $article_html)) {
+        $article_html = nl2br(e(trim($article_html)));
+    }
+
     $blog_meta_desc   = $blogPost->excerpt ?? Str::limit(strip_tags($blogPost->content), 160);
     $blog_image_url   = $blogPost->image ? url('storage/' . $blogPost->image) : url('images/icetech-og-image.jpg');
     $word_count       = preg_match_all('/\S+/u', strip_tags($blogPost->content), $_m) ? $_m[0] : [];
@@ -394,7 +402,7 @@
     ]])
 
     <article class="article-body mt-4">
-        {!! $blogPost->content !!}
+        {!! $article_html !!}
     </article>
 
     <hr class="article-divider">
