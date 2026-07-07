@@ -18,6 +18,55 @@ if (!empty($product->features_text)) {
         }
     }
 }
+
+// შეფასებები Schema-სთვის
+$productReviews = $product->reviews()->get();
+$avgRating      = $productReviews->avg('rating');
+$totalReviews   = $productReviews->count();
+
+// ერთიანი Product structured data (offers + features + reviews)
+$schemaProduct = [
+    '@context'    => 'https://schema.org/',
+    '@type'       => 'Product',
+    'name'        => $product->name,
+    'image'       => $product->image ? url('storage/' . $product->image) : url('images/icetech-og-image.jpg'),
+    'description' => $clean_description,
+    'brand'       => ['@type' => 'Brand', 'name' => 'ICETECH'],
+];
+
+if ($product->price) {
+    $schemaProduct['offers'] = [
+        '@type'         => 'Offer',
+        'url'           => url()->current(),
+        'priceCurrency' => 'GEL',
+        'price'         => (string) $product->price,
+        'itemCondition' => 'https://schema.org/' . ($product->condition === 'used' ? 'UsedCondition' : 'NewCondition'),
+        'availability'  => 'https://schema.org/' . ($product->in_stock ? 'InStock' : 'OutOfStock'),
+    ];
+}
+
+if (!empty($features_for_schema)) {
+    $schemaProduct['additionalProperty'] = array_map(fn ($f) => [
+        '@type' => 'PropertyValue', 'name' => $f['name'], 'value' => $f['value'],
+    ], $features_for_schema);
+}
+
+if ($totalReviews > 0) {
+    $schemaProduct['aggregateRating'] = [
+        '@type'       => 'AggregateRating',
+        'ratingValue' => (string) round($avgRating, 1),
+        'reviewCount' => (string) $totalReviews,
+        'bestRating'  => '5',
+        'worstRating' => '1',
+    ];
+    $schemaProduct['review'] = $productReviews->map(fn ($r) => [
+        '@type'         => 'Review',
+        'author'        => ['@type' => 'Person', 'name' => $r->author_name],
+        'datePublished' => optional($r->created_at)->toDateString(),
+        'reviewBody'    => $r->content,
+        'reviewRating'  => ['@type' => 'Rating', 'ratingValue' => (string) $r->rating, 'bestRating' => '5', 'worstRating' => '1'],
+    ])->all();
+}
 @endphp
 
 @section('meta_description', $meta_desc)
@@ -52,41 +101,9 @@ if (!empty($product->features_text)) {
     <meta property="product:item_group_id" content="commercial-equipment" />
     <meta property="product:supplier_country" content="{{ $product->supplier_country ?? '' }}" />
     
-    @if($product->price)
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org/",
-        "@type": "Product",
-        "name": "{{ $product->name }}",
-        "image": "{{ $product->image ? url('storage/' . $product->image) : url('images/icetech-og-image.jpg') }}",
-        "description": "{{ $clean_description }}",
-        "brand": {
-            "@type": "Brand",
-            "name": "ICETECH"
-        },
-        "offers": {
-            "@type": "Offer",
-            "url": "{{ url()->current() }}",
-            "priceCurrency": "GEL",
-            "price": "{{ $product->price }}",
-            "itemCondition": "https://schema.org/{{ $product->condition == 'new' ? 'NewCondition' : ($product->condition == 'used' ? 'UsedCondition' : 'NewCondition') }}",
-            "availability": "https://schema.org/InStock"
-        }
-        {{-- ✅ ცვლილება: მახასიათებლების დამატება JSON-LD-ში ახალი ლოგიკით --}}
-        @if(!empty($features_for_schema))
-        ,"additionalProperty": [
-            @foreach($features_for_schema as $feature)
-            {
-                "@type": "PropertyValue",
-                "name": "{{ $feature['name'] }}",
-                "value": "{{ $feature['value'] }}"
-            }{{ !$loop->last ? ',' : '' }}
-            @endforeach
-        ]
-        @endif
-    }
+    {!! json_encode($schemaProduct, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
     </script>
-    @endif
 
     <script type="application/ld+json">
     {

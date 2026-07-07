@@ -223,50 +223,7 @@
     foreach ($productReviews as $r) { $starCounts[$r->rating] = ($starCounts[$r->rating] ?? 0) + 1; }
 @endphp
 
-{{-- JSON-LD: Product + AggregateRating (Google Rich Snippets) --}}
-@if($totalReviews > 0)
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": "{{ addslashes($product->name) }}",
-    "description": "{{ addslashes(strip_tags($product->description ?? '')) }}",
-    "image": "{{ $product->image ? asset('storage/' . $product->image) : asset('default-product.png') }}",
-    "url": "{{ route('products.show', $product) }}",
-    "brand": { "@type": "Brand", "name": "IceTech" },
-    "offers": {
-        "@type": "Offer",
-        "priceCurrency": "GEL",
-        "price": "{{ number_format($product->price, 2, '.', '') }}",
-        "availability": "https://schema.org/InStock",
-        "url": "{{ route('products.show', $product) }}"
-    },
-    "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "{{ number_format($avgRating, 1, '.', '') }}",
-        "reviewCount": "{{ $totalReviews }}",
-        "bestRating": "5",
-        "worstRating": "1"
-    },
-    "review": [
-        @foreach($productReviews as $review)
-        {
-            "@type": "Review",
-            "author": { "@type": "Person", "name": "{{ addslashes($review->author_name) }}" },
-            "datePublished": "{{ $review->created_at->toDateString() }}",
-            "reviewBody": "{{ addslashes($review->content) }}",
-            "reviewRating": {
-                "@type": "Rating",
-                "ratingValue": "{{ $review->rating }}",
-                "bestRating": "5",
-                "worstRating": "1"
-            }
-        }{{ !$loop->last ? ',' : '' }}
-        @endforeach
-    ]
-}
-</script>
-@endif
+{{-- Product structured data ერთიანად product_show.blade.php-შია (offers + features + reviews) --}}
 
 <section class="product-reviews-section">
     <div>

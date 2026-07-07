@@ -1,5 +1,27 @@
 @extends('layouts.app')
-@section('title', 'ბლოგი')
+
+@section('title', 'ბლოგი — რჩევები კომერციული სამზარეულოს ტექნიკაზე • ICETECH')
+@section('meta_description', 'ICETECH-ის ბლოგი — რჩევები და გზამკვლევები კომერციული სამზარეულოს ტექნიკის შესარჩევად: მაცივრები, ღუმელები და აღჭურვილობა კაფეების, რესტორნებისა და ბიზნესებისთვის.')
+@section('meta_keywords', 'ICETECH ბლოგი, კომერციული სამზარეულოს რჩევები, სამზარეულოს ტექნიკის შერჩევა, მაცივრები, ღუმელები, რესტორნის აღჭურვილობა, კაფეს ტექნიკა, საქართველო')
+
+@section('og_title', 'ICETECH-ის ბლოგი — რჩევები კომერციული სამზარეულოს ტექნიკაზე')
+@section('og_description', 'რჩევები და გზამკვლევები კომერციული სამზარეულოს ტექნიკის სწორად შესარჩევად — მაცივრები, ღუმელები და აღჭურვილობა ბიზნესებისთვის.')
+@section('twitter_title', 'ICETECH-ის ბლოგი — რჩევები კომერციული სამზარეულოს ტექნიკაზე')
+@section('twitter_description', 'რჩევები და გზამკვლევები კომერციული სამზარეულოს ტექნიკის სწორად შესარჩევად — მაცივრები, ღუმელები და აღჭურვილობა ბიზნესებისთვის.')
+
+@push('meta')
+    <meta property="og:type" content="website" />
+    <script type="application/ld+json">
+    {!! json_encode([
+        '@context'    => 'https://schema.org',
+        '@type'       => 'Blog',
+        'name'        => 'ICETECH-ის ბლოგი',
+        'description' => 'რჩევები და გზამკვლევები კომერციული სამზარეულოს ტექნიკის შესარჩევად.',
+        'url'         => url('/blog'),
+        'publisher'   => ['@type' => 'Organization', 'name' => 'ICETECH', 'url' => url('/')],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+    </script>
+@endpush
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/layout.css?v=' . filemtime(public_path('css/layout.css'))) }}">
