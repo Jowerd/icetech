@@ -182,6 +182,168 @@ class InvoiceController extends Controller
         return response()->json(InvoiceBuyer::orderBy('name')->get());
     }
 
+    public function exportExcel(Invoice $invoice)
+    {
+        $invoice->load('items');
+
+        // --- მონაცემების აწყობა row-ებად ---
+        $rows = [];
+        $rows[] = [['ინვოისი ' . $invoice->invoice_number, 's']];
+        $rows[] = [['თარიღი: ' . $invoice->issue_date->format('d.m.Y'), 's']];
+        if ($invoice->buyer_name) {
+            $rows[] = [['მყიდველი: ' . $invoice->buyer_name, 's']];
+        }
+        $rows[] = [['', 's']];
+
+        $headerRowNum = count($rows) + 1;
+        $rows[] = [
+            ['#', 's'], ['დასახელება', 's'], ['რაოდენობა', 's'],
+            ['ერთეულის ფასი (₾)', 's'], ['ჯამი (₾)', 's'],
+        ];
+
+        $i = 0;
+        foreach ($invoice->items as $item) {
+            $i++;
+            $rows[] = [
+                [$i, 'n'],
+                [$item->name, 's'],
+                [(int) $item->quantity, 'n'],
+                [(float) $item->unit_price, 'n'],
+                [(float) $item->total, 'n'],
+            ];
+        }
+
+        $totalRowNum = count($rows) + 1;
+        $rows[] = [
+            ['', 's'], ['', 's'], ['', 's'],
+            ['სულ:', 's'], [(float) $invoice->total, 'n'],
+        ];
+
+        $boldRows = [1, $headerRowNum, $totalRowNum];
+        $filename = $invoice->invoice_number . '.xlsx';
+
+        // ZipArchive არ არსებობს — CSV fallback
+        if (!class_exists(\ZipArchive::class)) {
+            return $this->invoiceCsv($rows, $invoice->invoice_number . '.csv');
+        }
+
+        return $this->invoiceXlsx($rows, $boldRows, $filename);
+    }
+
+    private function invoiceXlsx(array $rows, array $boldRows, string $filename)
+    {
+        $sheet = $this->invoiceSheetXml($rows, $boldRows);
+
+        $contentTypes = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            . '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+            . '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+            . '<Default Extension="xml" ContentType="application/xml"/>'
+            . '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
+            . '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+            . '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'
+            . '</Types>';
+
+        $rels = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            . '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            . '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>'
+            . '</Relationships>';
+
+        $workbook = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            . '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+            . '<sheets><sheet name="ინვოისი" sheetId="1" r:id="rId1"/></sheets></workbook>';
+
+        $wbRels = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            . '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            . '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'
+            . '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
+            . '</Relationships>';
+
+        $styles = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            . '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+            . '<fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts>'
+            . '<fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills>'
+            . '<borders count="1"><border/></borders>'
+            . '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+            . '<cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
+            . '<xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs>'
+            . '</styleSheet>';
+
+        $tmp = tempnam(sys_get_temp_dir(), 'inv') . '.xlsx';
+        $zip = new \ZipArchive();
+        $zip->open($tmp, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+        $zip->addFromString('[Content_Types].xml', $contentTypes);
+        $zip->addFromString('_rels/.rels', $rels);
+        $zip->addFromString('xl/workbook.xml', $workbook);
+        $zip->addFromString('xl/_rels/workbook.xml.rels', $wbRels);
+        $zip->addFromString('xl/styles.xml', $styles);
+        $zip->addFromString('xl/worksheets/sheet1.xml', $sheet);
+        $zip->close();
+
+        return response()->download($tmp, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ])->deleteFileAfterSend(true);
+    }
+
+    private function invoiceSheetXml(array $rows, array $boldRows): string
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            . '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+            . '<cols><col min="1" max="1" width="6"/><col min="2" max="2" width="42"/>'
+            . '<col min="3" max="3" width="12"/><col min="4" max="5" width="16"/></cols>'
+            . '<sheetData>';
+
+        foreach ($rows as $ri => $cells) {
+            $rowNum = $ri + 1;
+            $xml .= '<row r="' . $rowNum . '">';
+            foreach ($cells as $ci => $cell) {
+                [$value, $type] = $cell;
+                $ref = $this->colLetter($ci) . $rowNum;
+                $s = in_array($rowNum, $boldRows, true) ? ' s="1"' : '';
+                if ($type === 'n' && $value !== '' && is_numeric($value)) {
+                    $xml .= '<c r="' . $ref . '"' . $s . '><v>' . $value . '</v></c>';
+                } else {
+                    $xml .= '<c r="' . $ref . '"' . $s . ' t="inlineStr"><is><t xml:space="preserve">'
+                        . htmlspecialchars((string) $value, ENT_QUOTES | ENT_XML1, 'UTF-8')
+                        . '</t></is></c>';
+                }
+            }
+            $xml .= '</row>';
+        }
+
+        $xml .= '</sheetData></worksheet>';
+        return $xml;
+    }
+
+    private function colLetter(int $index): string
+    {
+        $letter = '';
+        $index++;
+        while ($index > 0) {
+            $mod = ($index - 1) % 26;
+            $letter = chr(65 + $mod) . $letter;
+            $index = intdiv($index - 1, 26);
+        }
+        return $letter;
+    }
+
+    private function invoiceCsv(array $rows, string $filename)
+    {
+        $out = "\xEF\xBB\xBF"; // UTF-8 BOM (Excel-ისთვის)
+        foreach ($rows as $cells) {
+            $line = [];
+            foreach ($cells as $cell) {
+                $v = (string) $cell[0];
+                $line[] = '"' . str_replace('"', '""', $v) . '"';
+            }
+            $out .= implode(';', $line) . "\r\n";
+        }
+
+        return response($out, 200, [
+            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
+
     public function uploadImage(Request $request)
     {
         $request->validate([

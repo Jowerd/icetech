@@ -265,6 +265,9 @@ $logo2 = $bankLogo($invoice->seller_bank2);
         <button onclick="window.print()" class="tb-view btn btn-light border rounded-1 small fw-bold">
             <i class="bi bi-printer me-1"></i> ბეჭდვა
         </button>
+        <a href="{{ route('admin.invoices.excel', $invoice) }}" class="tb-view btn btn-light border rounded-1 small fw-bold text-success">
+            <i class="bi bi-file-earmark-excel me-1"></i> Excel
+        </a>
 
         <button onclick="saveInvoice(this)" class="tb-edit d-none btn btn-success rounded-1 small fw-bold">
             <i class="bi bi-check-lg me-1"></i> შენახვა

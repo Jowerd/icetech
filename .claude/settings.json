@@ -10,7 +10,9 @@
       "Bash(rm .git/COMMIT_MSG_TMP.txt)",
       "Bash(php artisan *)",
       "Bash(git add *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(php -r \"echo class_exists\\('ZipArchive'\\)?'ZipArchive OK':'MISSING';\")",
+      "Bash(php artisan tinker '--execute= *)"
     ],
     "additionalDirectories": [
       "C:\\Users\\nkapa\\OneDrive\\Desktop"
